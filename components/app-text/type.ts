@@ -3,8 +3,8 @@ import type {
   UFontSizes,
   UFontStyles,
   UFontWeights,
-} from "@/constants/typography";
-import type { UColorNames } from "@/constants/themes";
+} from "@/styles/typography";
+import type { UColorNames } from "@/styles/themes";
 
 type ToScreen = {
   screenName: string;

@@ -4,7 +4,7 @@ import { shapes } from "./shapes";
 import { spacings } from "./spacings";
 import { typography } from "./typography";
 
-export const CONST = {
+export const STYLES = {
   boxShadows,
   dimension,
   shapes,

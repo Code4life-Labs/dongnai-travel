@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "expo-router";
 import { Text, Linking } from "react-native";
 
-// Import from constants
-import { CONST } from "@/constants";
-
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
 
 // Import from utils
 import { ComponentUtils } from "@/utils/component";
+
+// Import from styles
+import { STYLES } from "@/styles";
 
 // Import types
 import { AppTextProps } from "./type";
@@ -35,7 +35,7 @@ export default function AppText({
   const { theme } = useTheme();
   const textStyle = React.useMemo(
     () => [
-      CONST.typography.fonts[fontStyle][weight][size],
+      STYLES.typography.fonts[fontStyle][weight][size],
       { color: theme[color] },
     ],
     [fontStyle, weight, size, color, theme]
