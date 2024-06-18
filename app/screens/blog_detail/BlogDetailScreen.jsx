@@ -136,7 +136,7 @@ const BlogDetailScreen = withTheme(({
                 setIcon={
                   blogDetails.author.avatar
                   ? (
-                    <Image style={{width: 42, aspectRatio: 1, borderRadius: 9999}} source={{uri: blogDetails.author.avatar}} />
+                    <Image style={styles.avatar} source={{uri: blogDetails.author.avatar}} />
                   )
                   : (
                     <Ionicons style={{margin: -6}} size={48} name="person-circle-outline" />
@@ -240,11 +240,7 @@ const BlogDetailScreen = withTheme(({
               {/* <AppText>{langData.relatedPlacesDataMessage[langCode]}</AppText> */}
               <Image 
                 source={require('../../assets/images/no-data.png')} 
-                style={{
-                  height: 300,
-                  width: 300,
-                  alignSelf: 'center'
-                }}/>
+                style={styles.imageNoData}/>
             </View>
             : (
               relatedBlogs.map(relatedBlog => (
@@ -287,11 +283,7 @@ const BlogDetailScreen = withTheme(({
           />
           <AppText font="body3">{NumberUtility.toMetricNumber(blogDetails.userFavoritesTotal)}</AppText>
         </View>
-        <View style={[app_sp.mh_8, {
-          width: 1,
-          height: "50%",
-          backgroundColor: "#000"
-        }]}/>
+        <View style={styles.seperate}/>
         <View style={[app_sp.me_12, { flexDirection: 'row', alignItems: 'center' }]}>
           <CircleButton
             defaultColor="type_5"

@@ -52,7 +52,7 @@ const toMetricNumber = function (number) {
  * @returns 
  */
 const getRandomNumber = function(max = 10, min = 0) {
-  return Math.round(Math.random() * (max - min) + 1);
+  return Math.round(Math.random() * (max - min));
 }
 
 /**

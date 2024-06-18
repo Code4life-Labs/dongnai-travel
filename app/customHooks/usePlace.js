@@ -251,8 +251,8 @@ export const {
  */
 export function usePlaceInteractionActions(place) {
   const [extendedPlaceInfo, setExtendedPlaceInfo] = React.useState({
-    isLiked: place.isLiked ? true : false,
-    isVisited: place.isVisited ? true : false
+    isLiked: place?.isLiked ? true : false,
+    isVisited: place?.isVisited ? true : false
   });
 
   /**

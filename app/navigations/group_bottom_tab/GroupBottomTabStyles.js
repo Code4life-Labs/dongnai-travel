@@ -43,8 +43,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     textAlign: 'center',
-    // borderColor: 'white',
-    // borderWidth: 1,
     ...app_sp.p_0,
   },
 

@@ -1,5 +1,5 @@
 // Phuong: screen này có trách nhiệm: điều hướng, xác thực, phân group màn hình
-import { View, Text } from 'react-native'
+import { View, Text, Platform } from 'react-native'
 import React, { useState } from 'react'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -38,6 +38,7 @@ import ChatBotNavigator from 'navigations/chatbot_navigator/ChatBotNavigator'
 import OnboardingChatbot from 'screens/onaboarding_chatbot/OnboardingChatbot'
 import MapScreen from 'screens/map/MapScreen'
 import TestNavigator from 'navigations/test_navigator/TestNavigator'
+import { withTheme } from 'hocs/withTheme'
 
 /**
  * AuthNavigator sẽ chịu trách nhiệm cho việc xác thực người dùng thông qua `SplashScreen`.
@@ -54,7 +55,7 @@ const AppStack = createNativeStackNavigator()
  * @param {any} props 
  * @returns 
  */
-const AuthNavigator = ({navigation}) => {
+const AuthNavigator = withTheme( ({navigation, theme}) => {
   const {
     isFirstTimeLaunch,
     isAuthenticated,
@@ -143,10 +144,10 @@ const AuthNavigator = ({navigation}) => {
     <AppStack.Screen 
         name="MapFullScreen" 
         component={MapScreen} 
-        options={{ headerShown: false}} 
+        options={{ headerShown: Platform.OS === 'ios' ? true : false, title: 'Bản đồ', headerBackTitleVisible: false}} 
       />
     </AppStack.Navigator>
   )
-}
+})
 
 export default AuthNavigator

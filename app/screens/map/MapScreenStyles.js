@@ -353,7 +353,7 @@ export const styles = StyleSheet.create({
     top: 0,
     right: 0,
     left: 0,
-    backgroundColor: app_c.HEX.primary,
+    backgroundColor: 'white',
     ...app_shdw.type_2
   },
   backbtn: {
@@ -385,7 +385,8 @@ export const styles = StyleSheet.create({
   },
   headerRouteInfo: {
     color: app_c.HEX.ext_second,
-    ...app_typo.fonts.normal.bolder.h4
+    ...app_typo.fonts.normal.bolder.h4,
+    marginTop: 10
   },
   frameRouteInfo: {
     display: 'flex',

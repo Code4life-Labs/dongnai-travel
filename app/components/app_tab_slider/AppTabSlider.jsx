@@ -44,7 +44,8 @@ import { ViewProps } from 'types/index.d'
 const AppTabSlider = ({
   children,
   lineIndexTranslateXStart = 20,
-  slideTranslateXStart = 100
+  slideTranslateXStart = 100,
+  selectTabIndex
 }) => {
   if(!children) return null;
   if(!children.length) return children;
@@ -74,6 +75,8 @@ const AppTabSlider = ({
   const opacityAnim = new Animated.Value(0);
 
   const handleButtonPress = React.useCallback((index) => {
+    // Call về thằng cpn cha để biết trả về index
+    selectTabIndex(index)
     sliderInfoRef.current.isSliderButtonPress = true;
     setSlideIndex(prevState => {
       sliderInfoRef.current.prevSlideIndex = prevState;

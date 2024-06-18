@@ -60,7 +60,7 @@ const SettingScreen = withTheme(({ route, navigation , theme, toggleTheme}) => {
               <RectangleButton
                 overrideShape="rounded_8"
                 style={[styles.option_setting,{backgroundColor: theme.subBackground}]}
-                handlePressButton={() => navigation.navigate("Places")}
+                onPress={() => navigation.navigate("SavedPlacesScreen")}
               >
                 <AppText>
                   <View style={{ ...styles.rectangle_button_container }}>
@@ -77,7 +77,7 @@ const SettingScreen = withTheme(({ route, navigation , theme, toggleTheme}) => {
               <RectangleButton
                 overrideShape="rounded_8"
                 style={[styles.option_setting,{backgroundColor: theme.subBackground}]}
-                handlePressButton={() => navigation.navigate("Blogs")}
+                onPress={() => navigation.navigate("SavedBlogsScreen")}
               >
                 <AppText>
                   <View style={{ ...styles.rectangle_button_container }}>

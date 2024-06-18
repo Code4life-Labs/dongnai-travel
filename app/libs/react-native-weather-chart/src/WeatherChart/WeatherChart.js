@@ -6,11 +6,12 @@ import { Image } from 'react-native';
 import { weatherIcons } from 'utilities/mapdata';
 import { app_c, app_shdw } from 'globals/styles';
 import { View } from 'react-native';
+import { withTheme } from 'hocs/withTheme';
 const Interpolate = (value, minVal, maxVal, YTop, YBottom) => {
   return YBottom - ((value - minVal) / (maxVal - minVal)) * (YBottom - YTop);
 };
 
-const WeatherChart = ({data, settings, selectedIndex, handeChangeIndex}) => {
+const WeatherChart = withTheme(({data, settings, selectedIndex, handeChangeIndex, theme}) => {
   const [chartSize, setchartSize] = useState({width: 0, height: 0});
   const {values, textTop, textBottom, iconTop, iconBottom} = data;
   if (!values) return new Error('values field is required');
@@ -35,7 +36,7 @@ const WeatherChart = ({data, settings, selectedIndex, handeChangeIndex}) => {
     vlineStroke: '5,5',
     topTextColor: '#A6BCD0',
     bottomTextColor: '#A6BCD0',
-    markerFillColor: 'white',
+    markerFillColor: theme.background,
     markerStrokeColor: 'lightgray',
     noDataText: 'There is no data',
     noDataTextColor: '#A6BCD0',
@@ -208,6 +209,6 @@ const WeatherChart = ({data, settings, selectedIndex, handeChangeIndex}) => {
       </Svg>
     </ScrollView>
   );
-};
+}) 
 const WeatherChartMemoized = React.memo(WeatherChart);
 export default WeatherChartMemoized;

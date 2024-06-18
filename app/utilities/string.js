@@ -1,4 +1,6 @@
 import { FILE_URL_RULE } from "./validators";
+
+ import NumberUtility from "./number";
 // by Tuan
 // Tham khảo tại Issue: https://github.com/FromSunNews/DongNaiTravelApp/issues/18
 // Lưu ý: line sẽ thay thế cho string (có thể tương ứng với câu - sentence), tránh nhầm lẫn với keyword
@@ -214,6 +216,27 @@ function getTextParts(text, options) {
   return textParts;
 }
 
+/**
+ * Dùng để tạo random id
+ */
+const getRandomID = (function() {
+  let alphabet = "abcdefghijklmnopqrstuvw0123456789xyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let alphabetN = alphabet.length;
+  return function(prefix = "dntrvel", numParts = 3, numCharsInPart = 7) {
+    let id = prefix + "-";
+    for(let i = 0; i < numParts; i++) {
+      for(let j = 0; j < numCharsInPart; j++) {
+        let r = NumberUtility.getRandomNumber(alphabetN - 1, 0);
+        let letter = alphabet[r];
+        id += letter;
+      }
+      id += "-";
+    }
+
+    return id.substring(0, id.length - 1);
+  }
+})();
+
 const StringUtility = {
   splitLineBySeperator,
   removeSeparatorFromLine,
@@ -224,7 +247,8 @@ const StringUtility = {
   createTextContentInHTMLTagGetter,
   hasLink,
   getTextParts,
-  repeatStr
+  repeatStr,
+  getRandomID
 };
 
 export default StringUtility;

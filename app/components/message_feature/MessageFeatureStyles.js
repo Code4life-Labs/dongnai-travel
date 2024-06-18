@@ -26,6 +26,12 @@ export const styles = StyleSheet.create({
     height: 70,
     alignSelf: 'center'
   },
+  imageCardDay: {
+    width: 120,
+    height: 120,
+    borderRadius: 12,
+    ...app_shdw.type_3
+  },
   cardNoImage: {
     width: '100%',
     height: 70,
@@ -52,6 +58,11 @@ export const styles = StyleSheet.create({
     color: app_c.HEX.fourth,
     ...app_typo.fonts.normal.normal.body2
   },
+  cardDayDescription: {
+    color: app_c.HEX.fourth,
+    ...app_typo.fonts.normal.normal.body2,
+    textAlign: 'justify'
+  },
   buttonViewMap: {
     marginTop: 2,
     color: app_c.HEX.third,
@@ -70,8 +81,8 @@ export const styles = StyleSheet.create({
   },
   loadingForMap: {
     position: 'absolute',
-    elevation: 2,
-    zIndex: 2,
+    elevation: 99,
+    zIndex: 99,
     top: 0,
     bottom: 0,
     right: 0,

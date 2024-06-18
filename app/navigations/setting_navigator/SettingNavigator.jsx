@@ -1,6 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useSelector } from "react-redux";
+
+import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
+
 import { AppHeader } from "components";
 import SettingScreen from "screens/settings/SettingScreen";
 import EditProfileScreen from "screens/edit_profile/EditProfileScreen";
@@ -15,8 +19,8 @@ import ReportsScreen from "screens/reports/ReportsScreen";
 import CreatePost from "screens/create_post/CreatePostScreen";
 import BlogDetailScreen from "screens/blog_detail/BlogDetailScreen";
 import ViewStatsScreen from "screens/view_stats/ViewStatsScreen";
-import { useSelector } from "react-redux";
-import { selectCurrentLanguage } from "../../redux/language/LanguageSlice";
+import SavedBlogsScreen from "screens/saved_blogs/SavedBlogsScreen";
+import SavedPlacesScreen from "screens/saved_places/SavedPlacesScreen";
 
 const SettingStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
@@ -62,6 +66,18 @@ const SettingNavigator = () => {
         name="Help & Support"
         options={{title: `${langCode === "vi" ? "Hỗ trợ" : "Help & support" }`}}
         component={HelpAndSupportScreen}
+      />
+
+      <SettingStack.Screen
+        name="SavedPlacesScreen"
+        options={{title: `${langCode === "vi" ? "Địa điểm đã lưu" : "Saved places" }`}}
+        component={SavedPlacesScreen}
+      />
+
+      <SettingStack.Screen
+        name="SavedBlogsScreen"
+        options={{title: `${langCode === "vi" ? "Bài viết đã lưu" : "Saved blogs" }`}}
+        component={SavedBlogsScreen}
       />
       
       <ProfileStack.Screen

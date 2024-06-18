@@ -56,7 +56,7 @@ import { styles } from './MapScreenStyles'
 import { app_c, app_dms, app_sh, app_shdw, app_sp, app_typo } from 'globals/styles'
 
 // Related to components
-import { BottomSheetScroll, CheckBoxText } from 'components'
+import { BottomSheetScroll, CheckBoxText, CircleButton } from 'components'
 import ImagePromise from 'components/image_promise/ImagePromise'
 import ReviewSectionPromise from 'components/review_section_promise/ReviewSectionPromise'
 import Filter from 'components/filter/Filter'
@@ -1461,6 +1461,18 @@ const Map = ({navigator}) => {
       {
         (!isShowDirectionsBottomSheet && isShowRoutePanel) && 
         <View style={styles.seachTypeContainer}>
+          {/* <TouchableOpacity style={{
+            left: 18,
+            height: 40,
+            width: 40,
+            borderRadius: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+            ...app_shdw.type_2,
+            marginBottom: 10,
+          }}>
+             <Ionicons name="chevron-back-outline" size={18} color={app_c.HEX.third}/>
+          </TouchableOpacity> */}
           <View style={styles.searchContainer}>
             <InputAutoComplete
               onPlaceSelected={(details) => {

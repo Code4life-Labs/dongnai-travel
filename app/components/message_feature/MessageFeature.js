@@ -1,9 +1,9 @@
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Image, Platform, ActivityIndicator } from 'react-native'
-import React, { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { Component, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // import styles from './ChatBotScreenStyles'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice'
-import useTheme from 'customHooks/useTheme'
+// import useTheme from 'customHooks/useTheme'
 import { getMorePlacesTextSearchAPI, getPlacesTextSearchAPI, getPlacesTextSearchAPIWithoutLoading, getRouteDirectionAPI, getRouteDirectionAPIWithoutLoading, getTextChatBotAPI } from 'apis/axios'
 import { selectCurrentUser } from 'redux/user/UserSlice'
 import { selectTemporaryUserId } from 'redux/user/UserSlice'
@@ -31,7 +31,12 @@ import { Animated } from 'react-native'
 import { debounce } from 'lodash'
 import { PolyLineDirection } from 'components/polyline_direction/PolyLineDirection'
 import InputAutoComplete from 'components/input_auto_complete/InputAutoComplete'
-import { selectCurrentManifold } from 'redux/manifold/ManifoldSlice'
+import { selectCurrentManifold, updateNotif } from 'redux/manifold/ManifoldSlice'
+import { socketIoInstance } from '../../../App'
+import FunctionsUtility from 'utilities/functions'
+import ButtonInText from 'components/button_in_text/ButtonInText'
+import Skeleton from 'components/skeleton/Skeleton'
+import { selectCurrentItinerary, updateCurrentItinerary } from 'redux/itinerary/ItinerarySlice'
 
 /**
  * @author FSN
@@ -42,12 +47,13 @@ import { selectCurrentManifold } from 'redux/manifold/ManifoldSlice'
  */
 const MessageFeature = ({action, data = {}}) => {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
 
   // ====================================input.suggest-place==========================
   const [places, setPlaces] = useState(null);
   const [typePlace] = useState("all");
 
-  const themeColor = useTheme();
+  // const themeColor = useTheme();
 
   // ====================================input.get-weather==========================
   const [weatherHourSelectedIndex, setWeatherHourSelectedIndex] = useState(0)
@@ -82,6 +88,7 @@ const MessageFeature = ({action, data = {}}) => {
   
   const [isModeScrollOn, setIsModeScrollOn] = useState(false)
   const [isShowLoading, setIsShowLoading] = useState(true)
+  const [isShowLoading1, setIsShowLoading1] = useState(true)
   
 
   const loadMoreCardDebouncer = useMemo(() => debounce(
@@ -233,9 +240,42 @@ const MessageFeature = ({action, data = {}}) => {
   // ====================================input.where-am-i==========================
   const [myLocation, setMyLocation] = useState(currentMap.userLocation)
 
+  // ====================================input.travel-itinerary==========================
 
+  const itinerary = useSelector(selectCurrentItinerary)
+  const user = useSelector(selectCurrentUser)
+  const temporaryUserId = useSelector(selectTemporaryUserId)
 
-
+  
+  const [textEnding, setTextEnding] = useState('')
+  // const [textEnding, setTextEnding] = useState('Trên đây là kế hoạch chi tiết cho chuyến đi của bạn đến Hà Giang trong 5 ngày. Bạn có thể điều chỉnh kế hoạch này để phù hợp với sở thích và ngân sách của bạn. Chúc bạn có một chuyến đi thú vị và trọn vẹn tại Hà Giang!')
+  const [textIntroduce, setTextIntroduce] = useState('')
+  // const [textIntroduce, setTextIntroduce] = useState('Dưới đây là một kế hoạch chi tiết cho chuyến đi 5 ngày của bạn đến Hà Giang:')
+  const fakeDatData = [{"afternoon": "Tham quan [Đồn Pháp đỉnh núi Cấm], một di tích lịch sử quan trọng với kiến trúc Pháp cổ điển và tầm nhìn tuyệt đẹp ra cảnh quan xung quanh.", "evening": "Dạo chơi tại [Quán ăn ngon], nơi bạn có thể thưởng thức các món ăn địa phương ngon và rẻ.", "morning": "Từ thành phố Hà Nội, bạn có thể di chuyển đến Hà Giang bằng xe buýt hoặc xe máy. Đến Hà Giang, bạn có thể nhận phòng tại khách sạn của bạn.", "noon": "Thưởng thức một bữa trưa ngon tại [Nhà hàng Cơm Dân Tộc], nơi bạn có thể thưởng thức các món ăn đặc sản của vùng miền.", "numberOfDay": 1}, {"afternoon": "Tham quan [Cây Trái Tim Hà Giang], một điểm đến lãng mạn với cây cỏ hình trái tim và không gian yên bình.", "evening": "Thưởng thức một bữa tối ngon tại [Quán Ăn A Giang], nơi bạn có thể thưởng thức các món ăn đặc sản miền núi.", "morning": "Tham quan [Lung Khuy Cave], một hang động nổi tiếng với kiến trúc độc đáo và hệ thống đèn chiếu sáng tạo nên không gian ma mị.", "noon": "Ăn trưa tại [Nhà hàng Đà điểu Hà Giang], nơi bạn có thể thưởng thức các món ăn đặc sản từ đà điểu.", "numberOfDay": 2}, {"afternoon": "Tham quan [Ahatrip Hà Giang], một điểm đến phổ biến với cảnh quan đẹp và hoạt động thể thao mạo hiểm như leo núi, trượt nước và đạp xe địa hình.", "evening": "Dạo chơi tại [Quán ăn], nơi bạn có thể thưởng thức các món ăn địa phương ngon và rẻ.", "morning": "Tham quan [Nà Thác Palms], một khu rừng nguyên sinh nổi tiếng với cây cổ thụ và thác nước tuyệt đẹp.", "noon": "Ăn trưa tại [Quán ăn vặt], nơi bạn có thể thưởng thức các món ăn vặt địa phương.", "numberOfDay": 3}, {"afternoon": "Tham quan [Cổng Trời Quản Bạ], một cổng trời nổi tiếng với kiến trúc độc đáo và tầm nhìn tuyệt đẹp ra cảnh quan xung quanh.", "evening": "Thưởng thức một bữa tối ngon tại [Nhà Hàng Sông Núi], nơi bạn có thể thưởng thức các món ăn đặc sản miền núi.", "morning": "Tham quan [Núi đôi Quản Bạ], một ngọn núi nổi tiếng với cảnh quan đẹp và đường mòn leo núi thú vị.", "noon": "Ăn trưa tại [Nhà hàng ngỗng K9 Hà Giang], nơi bạn có thể thưởng thức các món ăn đặc sản từ ngỗng.", "numberOfDay": 4}, {"afternoon": "Tham quan [Chiêu Lầu Thi], một ngôi đền thờ nổi tiếng với kiến trúc độc đáo và không gian yên bình.", "evening": "Thưởng thức một bữa tối ngon tại [Nhà Hàng Sơn Thúy], nơi bạn có thể thưởng thức các món ăn đặc sản miền núi.", "morning": "Tham quan [Ruộng Bậc Thang Hoàng Su Phì], một khu ruộng bậc thang nổi tiếng với cảnh quan đẹp và màu sắc đa dạng của lúa.", "noon": "Ăn trưa tại [Nhà Hàng Cơm Dân Tộc], nơi bạn có thể thưởng thức các món ăn đặc sản của vùng miền.", "numberOfDay": 5}] 
+  const [dataDay, setDataDay] = useState([])
+  const [numberDay, setNumberDay] = useState(prev => {
+    if (data?.numberDayToTravel) {
+      const array = []
+      for (let index = 1; index <= data.numberDayToTravel; index++) {
+        array.push(index)
+      }
+      return array
+    } else {
+      return [1, 2]
+    }
+  })
+  const [numberDayToTravel, setNumberDayToTravel] = useState(prev => {
+    if (data?.numberDayToTravel) {
+      const array = []
+      for (let index = 1; index <= data.numberDayToTravel; index++) {
+        array.push(index)
+      }
+      return array
+    } else {
+      return [1, 2]
+    }
+  })
+  
   // ====================================chung==========================
   useEffect(() => {
     if (action === 'input.suggest-place') {
@@ -325,6 +365,7 @@ const MessageFeature = ({action, data = {}}) => {
       // }
       data.isCallFromChatBot = true
       // gọi api direction
+      console.log('isShowLoading1', isShowLoading1)
       getRouteDirectionAPIWithoutLoading(data).then(dataReturn => {
         console.log("🚀 ~ file: MessageFeature.js:300 ~ getRouteDirectionAPIWithoutLoading ~ dataReturn:", dataReturn)
         if (dataReturn?.error) {
@@ -363,11 +404,169 @@ const MessageFeature = ({action, data = {}}) => {
         }
       })
       // stop loading 
-      setIsShowLoading(false)
+      setTimeout(() => {
+        setIsShowLoading1(prev => false)
+      }, 1000);
     } else if (action === 'input.where-am-i') {
       moveToMap(myLocation, 14, 0)
+    } else if (action === 'input.travel-itinerary') {
+      console.log('data', data)
+      if (textIntroduce === '' && textEnding==='' && dataDay.length === 0) {
+        console.log('Listen and emit event create_travel_itinerary')
+      
+        socketIoInstance.on('s_create_travel_itinerary', (dataReturn) => {
+          handleListenCreateTravelItinerary(dataReturn)
+        })
+  
+        socketIoInstance.emit('c_create_travel_itinerary', {
+          question: data.question,
+          travelPlaces: data.travelPlaces,
+          fnbPlaces: data.fnbPlaces,
+          currentUserId: user?._id ? user._id : temporaryUserId,
+        })
+      }
     }
 }, [])
+
+
+useEffect(() => {
+  dispatch(updateCurrentItinerary({
+    textEnding,
+    textIntroduce,
+    dataDay
+  }))
+}, [textEnding, textIntroduce, dataDay.length])
+
+const handleListenCreateTravelItinerary= (dataReturn) => {
+  let messageFull = ''
+  if (dataReturn.isOver && dataReturn.isOver === 'DONE') {
+    // messageFull += dataReturn.messageReturn 
+    // console.log("🚀 ~ file: MessageFeature.js:391 ~ socketIoInstance.on ~ dataReturn.messageReturn:", dataReturn.messageReturn)
+    
+    const result = []
+
+    // phân tách từng đoạn một ra
+    const paragraphArray = dataReturn.allText.split('\n\n')
+
+    if (paragraphArray.length > 0) {
+
+      // console.log('🚀 ~ file: chatbot.service.js:336 ~ testChatGPT ~ paragraphArray:', paragraphArray)
+      // lấy ra được đoaạn đầu và đoạn cuối (Mở đầu và kết thúc)
+      setTextIntroduce(prev => paragraphArray[0].trim()) 
+      // dispatch(updateCurrentItinerary({
+      //   dataDay,
+      //   textIntroduce: paragraphArray[0].trim(),
+      //   textEnding
+      // }))
+      // Xóa phần tử đàu của mảng
+      paragraphArray.shift()
+
+      // có một lưu ý nhỏ, khi streaming chắc chắn sẽ chưa có đoạn cuối ngay được nên phải check với isDoneTreaming
+      setTextEnding(prev => paragraphArray[paragraphArray.length - 1].trim())
+      // dispatch(updateCurrentItinerary({
+      //   textIntroduce,
+      //   textEnding: paragraphArray[paragraphArray.length - 1].trim(),
+      //   dataDay
+      // }))
+
+      // xóa phần tử cuối của mảng
+      paragraphArray.pop()
+
+      if (paragraphArray.length > 0) {
+        paragraphArray.map((paragraph, index) => {
+          // phân ra từ "\n" và xóa thằng đàu tiền của mảng
+          const originalDay = paragraph.split('\n')
+          originalDay.shift()
+          // console.log('🚀 ~ file: chatbot.service.js:347 ~ paragraphArray.map ~ originalDay:', originalDay)
+          const dataDay = {
+            numberOfDay: index + 1,
+            morning: originalDay[0].replace('- Sáng:', '').trim() ?? originalDay[0].replace('Sáng:', '').trim(),
+            noon: originalDay[1].replace('- Trưa:', '').trim() ?? originalDay[1].replace('Trưa:', '').trim(),
+            afternoon: originalDay[2].replace('- Chiều:', '').trim() ?? originalDay[2].replace('Chiều:', '').trim(),
+            evening: originalDay[3].replace('- Tối:', '').trim() ?? originalDay[3].replace('Tối:', '').trim()
+          }
+          result.push(dataDay)
+        })
+      }
+      setDataDay(prev => result)
+      // dispatch(updateCurrentItinerary({
+      //   textEnding,
+      //   textIntroduce,
+      //   dataDay: paragraphArray[0].trim()
+      // }))
+      console.log("🚀 ~ file: MessageFeature.js:463 ~ handleListenCreateTravelItinerary ~ result:", result)
+      setNumberDayToTravel(prev => {
+        const array = []
+        for (let index = 1; index <= numberDayToTravel.length - result.length; index++) {
+          array.push(index)
+        }
+        return array
+      })
+    }
+
+    socketIoInstance.removeAllListeners('s_create_travel_itinerary')
+  } else {
+    // messageFull += dataReturn.messageReturn 
+    // console.log("🚀 ~ file: MessageFeature.js:391 ~ socketIoInstance.on ~ dataReturn.messageReturn:", dataReturn.messageReturn)
+    
+    const result = []
+
+    // phân tách từng đoạn một ra
+    const paragraphArray = dataReturn.messageReturn.split('\n\n')
+
+    if (paragraphArray.length > 0) {
+
+      // console.log('🚀 ~ file: chatbot.service.js:336 ~ testChatGPT ~ paragraphArray:', paragraphArray)
+      // lấy ra được đoaạn đầu và đoạn cuối (Mở đầu và kết thúc)
+      setTextIntroduce(prev => paragraphArray[0].trim()) 
+      // dispatch(updateCurrentItinerary({
+      //   textEnding,
+      //   dataDay,
+      //   textIntroduce: paragraphArray[0].trim()
+      // }))
+      // Xóa phần tử đàu của mảng
+      paragraphArray.shift()
+
+      // có một lưu ý nhỏ, khi streaming chắc chắn sẽ chưa có đoạn cuối ngay được nên phải check với isDoneTreaming
+      // if (isDoneTreaming) {
+      //   setTextEnding(prev => paragraphArray[paragraphArray.length - 1].trim())
+      // }
+
+      // xóa phần tử cuối của mảng
+      paragraphArray.pop()
+
+      if (paragraphArray.length > 0) {
+        paragraphArray.map((paragraph, index) => {
+          // phân ra từ "\n" và xóa thằng đàu tiền của mảng
+          const originalDay = paragraph.split('\n')
+          originalDay.shift()
+          // console.log('🚀 ~ file: chatbot.service.js:347 ~ paragraphArray.map ~ originalDay:', originalDay)
+          const dataDay = {
+            numberOfDay: index + 1,
+            morning: originalDay[0].replace('- Sáng:', '').trim() ?? originalDay[0].replace('Sáng:', '').trim(),
+            noon: originalDay[1].replace('- Trưa:', '').trim() ?? originalDay[1].replace('Trưa:', '').trim(),
+            afternoon: originalDay[2].replace('- Chiều:', '').trim() ?? originalDay[2].replace('Chiều:', '').trim(),
+            evening: originalDay[3].replace('- Tối:', '').trim() ?? originalDay[3].replace('Tối:', '').trim()
+          }
+          result.push(dataDay)
+        })
+      }
+      setDataDay(prev => result)
+      // dispatch(updateCurrentItinerary({
+      //   textEnding,
+      //   textIntroduce,
+      //   dataDay: paragraphArray[0].trim()
+      // }))
+      setNumberDayToTravel(prev => {
+        const array = []
+        for (let index = 1; index <= numberDayToTravel.length - result.length; index++) {
+          array.push(index)
+        }
+        return array
+      })
+    }
+  }
+}
 
 const handleFitCoors = (arrPlace ,edgePadding, haveAnimate) => {
   mapRef.current?.fitToCoordinates(
@@ -402,7 +601,21 @@ const handleMarkerPress = (mapEventData) => {
   setMapIndex(markerID)
   cardScrollViewRef.current.scrollTo({ x, y: 0, animated: false })
 }
-
+const handlePressPlace = (placeName) => {
+  // console.log("🚀 ~ file: MessageFeature.js:529 ~ handlePressPlace ~ placeName:", placeName)
+  const placeToNavigate = data.dataTravelPlaces.find(i => i.name === placeName) ?? data.dataFnbPlaces.find(i => i.name === placeName)
+  if (placeToNavigate)
+    navigation.navigate('MapFullScreen', {
+      place_id: placeToNavigate.place_id,
+      fromScreen: 'ChatBotScreen',
+      isFullScreen: true
+    })
+  else 
+    dispatch(updateNotif({
+      appearNotificationBottomSheet: true,
+      contentNotificationBottomSheet: `Không thể tìm thấy "${placeName}"`
+    }))
+}
 
   if (action ==='input.welcome') {
     return
@@ -410,7 +623,7 @@ const handleMarkerPress = (mapEventData) => {
     return (
       <ScrollView 
         horizontal={true}
-        style={[{backgroundColor:themeColor.primary}, app_sp.pb_10]}
+        style={[{backgroundColor: 'white'}, app_sp.pb_10]}
         contentContainerStyle={{flexGrow: 1}}
         showsHorizontalScrollIndicator={false}
       >
@@ -749,7 +962,8 @@ const handleMarkerPress = (mapEventData) => {
       <View style={{
         height: 400,
         width: 300,
-        marginTop: 15
+        marginTop: 15,
+        position: 'relative'
       }}>
         <MapView
           ref={mapRef}
@@ -890,7 +1104,11 @@ const handleMarkerPress = (mapEventData) => {
                     </Text>
 
                     <TouchableOpacity
-                      onPress={() => navigation.navigate('MapFullScreen', {place_id: place.place_id})}
+                      onPress={() => navigation.navigate('MapFullScreen', {
+                        place_id: place.place_id, 
+                        fromScreen: 'ChatBotScreen',
+                        isFullScreen: true
+                      })}
                     >
                       <Text
                         style={styles.buttonViewMap}
@@ -1062,7 +1280,8 @@ const handleMarkerPress = (mapEventData) => {
       <View style={{
         height: 400,
         width: 300,
-        marginTop: 15
+        marginTop: 15,
+        position: 'relative'
       }}>
         <MapView
           ref={mapRef}
@@ -1152,98 +1371,12 @@ const handleMarkerPress = (mapEventData) => {
           } 
         </MapView>
 
-        {/* Input */}
-        {/* <View style={styles.optionalContainer}>
-          <View style={styles.iconOriDesContainer}>
-            <Ionicons
-              name="navigate-circle"
-              size={20}
-              color={app_c.HEX.third}
-            />
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={20}
-              color={app_c.HEX.ext_second}
-              style={{
-                marginVertical: 5
-              }}
-            />
-            <Ionicons
-              name='location' 
-              size={20} 
-              color='#eb4141'
-            />
-          </View>
-          <View style={styles.oriDesContainer}>
-            <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0}}>
-              <InputAutoComplete
-                placeholder={'Hãy chọn nơi đến...'}
-                onPlaceSelected={(details) => {
-                  // setDesRouteInfo(details)
-                  setIsFocusedDesInput(false)
-                }}
-                // isFocusedInput={isFocusedDesInput}
-                // handleFocus={(condition) => setIsFocusedDesInput(condition)}
-                inputRef={desInputRef}
-                map_api_key={map_api_key}
-                predefinedPlaces={[{
-                  description: 'Địa điểm của tôi',
-                  geometry: { location: { lat: currentMap.userLocation.latitude, lng: currentMap.userLocation.longitude } },
-                }]}
-                predefinedPlacesDescriptionStyle={styles.predefinedPlacesDescription}
-                isHaveLeftButton={false}
-                textInputStyle={styles.textInput}
-                listViewStyle={styles.listView}
-                loaddingText={() =>  desInputRef.current?.setAddressText(textDestination)}
-              />
-            </View>
-            <View style={{ position: 'absolute', top: 0, left: 0, right: 0}}>
-              <InputAutoComplete
-                placeholder={'Hãy nhập nơi muốn đi...'}
-                onPlaceSelected={(details) => {
-                  // setOriRouteInfo(details)
-                  setIsFocusedOriInput(false)
-                }}
-                isFocusedInput={isFocusedOriInput}
-                handleFocus={(condition) => setIsFocusedOriInput(condition)}
-                inputRef={oriInputRef}
-                map_api_key={map_api_key}
-                predefinedPlaces={[{
-                  description: 'Địa điểm của tôi',
-                  geometry: { location: { lat: currentMap.userLocation.latitude, lng: currentMap.userLocation.longitude } },
-                }]}
-                isHaveLeftButton={false}
-                textInputStyle={styles.textInput}
-                listViewStyle={styles.listView}
-                predefinedPlacesDescriptionStyle={styles.predefinedPlacesDescription}
-                loaddingText={() =>  oriInputRef.current?.setAddressText(textOrigin)}
-              />
-            </View>
-            
-          </View>
-          <TouchableOpacity 
-            onPress={()=> null}
-            style={{ marginHorizontal: 10, 
-              width: 45,
-                height: 30,
-                borderRadius: 4,
-                backgroundColor: app_c.HEX.third,
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
-              <Text style={{
-                
-                color: app_c.HEX.primary,
-              }}>Tạo</Text>
-          </TouchableOpacity>
-        </View> */}
-
         {/* Loading for map */}
         {
-          isShowLoading &&
+          isShowLoading1 ?
           <View style={styles.loadingForMap}>
             <ActivityIndicator size="small" color={app_c.HEX.fourth}/>
-          </View>
+          </View> : null
         }
         
         {
@@ -1401,7 +1534,9 @@ const handleMarkerPress = (mapEventData) => {
       <View style={{
         height: 300,
         width: 300,
-        marginTop: 15
+        marginTop: 15,
+        ...app_sh.rounded_16,
+        overflow: 'hidden'
       }}>
         <MapView
           ref={mapRef}
@@ -1478,9 +1613,340 @@ const handleMarkerPress = (mapEventData) => {
         </TouchableOpacity>
       </View>
     )
+  } else if (action ==='input.travel-itinerary') {
+    return (
+      <View style={{
+        width: 310,
+        marginTop: 15,
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 10,
+        ...app_shdw.type_3
+      }}>
+        <TouchableOpacity
+          style={{
+            width: '100%',
+            marginBottom: 5,
+            marginTop: -3,
+            display: 'flex',
+            alignItems:'flex-end',
+          }}
+          onPress={() => navigation.navigate('ItineraryDetailScreen', {
+            dataDay,
+            placeToTravel: data?.placeToTravel,
+            numberDayToTravel: numberDay,
+            textIntroduce,
+            textEnding,
+            dataFnbPlaces: data?.dataFnbPlaces,
+            dataTravelPlaces: data?.dataTravelPlaces
+          })}
+        >
+          <FontAwesome
+            name="external-link"
+            size={20}
+            color={app_c.HEX.third}
+          />
+        </TouchableOpacity>
+        {
+          textIntroduce ? 
+          <Text style={{
+            marginHorizontal: 5,
+            marginBottom: 10,
+            ...app_typo.fonts.normal.normal.body1,
+            color: app_c.HEX.fourth,
+            textAlign: 'justify'
+          }}>{textIntroduce}</Text> :
+          <View style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginBottom: 10
+          }}>
+            {
+              [1, 2, 3].map(i => (
+                <Skeleton
+                  skeletonStyle={{
+                    height: 15,
+                    width: "100%",
+                    borderRadius: 12,
+                    marginTop: 5
+                  }}
+                />
+              ))
+            }
+          </View>
+        }
+
+
+        {/* {
+          [1, 2, 3].map(i => (
+            <View>
+              <View style={{
+                flexDirection: 'row',
+              }}>
+                <Skeleton
+                  skeletonStyle={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: 12,
+                    marginTop: 10
+                  }}
+                />
+              
+                <View style={{
+                  flexDirection: 'column',
+                  flex: 1,
+                  marginLeft: 10,
+                  justifyContent: 'center'
+                }}>
+                  {
+                    [1,2,3,4,5,6].map(i => (
+                      <Skeleton
+                        skeletonStyle={{
+                          height: 15,
+                          width: "100%",
+                          borderRadius: 12,
+                          marginTop: 5
+                        }}
+                      />
+                    ))
+                  }
+                </View>
+              </View>
+            </View>
+          ))
+        } */}
+            
+        {
+          dataDay.length > 0 &&
+          dataDay.map((dataSlice, index) => {
+           
+            const regex = /\[(.*?)\]/g
+
+            let getPhoto, namePlaces
+            const afternoonPlaces = dataSlice.afternoon.match(regex)
+            namePlaces = afternoonPlaces && afternoonPlaces.map(match => match.slice(1, -1));
+            // console.log("🚀 ~ file: MessageFeature.js:1585 ~ MessageFeature ~ namePlaces:", namePlaces)
+            getPhoto = data.dataTravelPlaces.find(i => i.name === namePlaces[0])?.photos[0].photo_reference ?? data.dataFnbPlaces.find(i => i.name === namePlaces[0])?.photos[0].photo_reference
+            // console.log("🚀 ~ file: MessageFeature.js:1586 ~ MessageFeature ~ getPhoto:", getPhoto)
+            // if (!getPhoto) {
+            //   const noonPlaces = dataSlice.noon.match(regex)
+            //   namePlaces = noonPlaces && noonPlaces.map(match => match.slice(1, -1));
+            //   getPhoto = data.dataTravelPlaces.find(i => i.name === namePlaces[0])?.photos[0].photo_reference ?? data.dataFnbPlaces.find(i => i.name === namePlaces[0])?.photos[0].photo_reference
+            // }
+
+            // if (!getPhoto) {
+            //   const afternoonPlaces = dataSlice.afternoon.match(regex)
+            //   namePlaces = afternoonPlaces && afternoonPlaces.map(match => match.slice(1, -1));
+            //   getPhoto = data.dataTravelPlaces.find(i => i.name === namePlaces[0])?.photos[0].photo_reference ?? data.dataFnbPlaces.find(i => i.name === namePlaces[0])?.photos[0].photo_reference
+            // }
+
+            // if (!getPhoto) {
+            //   const eveningPlaces = dataSlice.evening.match(regex)
+            //   namePlaces = eveningPlaces && eveningPlaces.map(match => match.slice(1, -1));
+            //   getPhoto = data.dataTravelPlaces.find(i => i.name === namePlaces[0])?.photos[0].photo_reference ?? data.dataFnbPlaces.find(i => i.name === namePlaces[0])?.photos[0].photo_reference
+            // }
+
+            return (
+              <TouchableOpacity
+                style={{
+                  flexDirection:'row',
+                  alignItems: 'center',
+                  marginTop: index !==0 ? 15 : 0,
+                  position: 'relative',
+                  elevation: 0
+                }}
+                onPress={() => {
+                  navigation.navigate('ItineraryDetailScreen', {
+                    dataDay,
+                    placeToTravel: data?.placeToTravel,
+                    numberDayToTravel: numberDay,
+                    textIntroduce,
+                    textEnding,
+                    dataFnbPlaces: data?.dataFnbPlaces,
+                    dataTravelPlaces: data?.dataTravelPlaces
+                  })
+                }}
+              >
+                {
+                  getPhoto ?
+                  <View style={{...app_shdw.type_3}}>
+                    <ImagePromise
+                      fromChatBot={true}
+                      isTranformData={false}
+                      photoReference={getPhoto}
+                      styleImage={styles.imageCardDay}
+                      map_api_key={map_api_key}
+                    />
+                  </View> :
+                  <View
+                    style={[styles.imageCardDay, {backgroundColor: app_c.HEX.ext_primary}]}
+                  />
+                }
+                <View style={{
+                  position: 'absolute',
+                  top: Platform.OS === 'ios' ? 15 : 25,
+                  left: 8,
+                  display: 'flex',
+                  height: 20,
+                  width: 65,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 6,
+                  backgroundColor: app_c.HEX.third,
+                  opacity: 0.8,
+                  flexDirection: 'row'
+                }}>
+                  <FontAwesome5 name='calendar-day' size={10} color={app_c.HEX.primary} style={{
+                    marginTop: -2
+                  }}/>
+                  <Text style={{
+                    color: app_c.HEX.primary,
+                    ...app_typo.fonts.italic.bolder.body2,
+                    marginLeft: 5
+                  }}>Ngày {dataSlice.numberOfDay}</Text>
+                </View>
+                <View style={{
+                  flexDirection: 'column',
+                  width: 1,
+                  marginLeft: 5,
+                }}>
+                  <View style={{
+                    flexDirection: 'row',
+                    width: 150,
+                    marginTop: 5,
+                  }}>
+                    <Octicons
+                      name='dot-fill'
+                      size={10}
+                      color={app_c.HEX.ext_second}
+                      style={{ marginHorizontal: 5, marginTop: 2,}}
+                    />
+                    <ButtonInText numberOfLines={2} textRaw={'Buổi sáng: ' + dataSlice.morning} handlePressPlace={(placeName) => handlePressPlace(placeName)}/>
+                  </View>
+
+                  <View style={{
+                    flexDirection: 'row',
+                    width: 150,
+                    marginTop: 5,
+                  }}>
+                    <Octicons
+                      name='dot-fill'
+                      size={10}
+                      color={app_c.HEX.ext_second}
+                      style={{ marginHorizontal: 5, marginTop: 2}}
+                    />
+                      <ButtonInText numberOfLines={2} textRaw={'Buổi trưa: ' + dataSlice.noon} handlePressPlace={(placeName) => handlePressPlace(placeName)}/>
+                  </View>
+
+                  <View style={{
+                    flexDirection: 'row',
+                    width: 150,
+                    marginTop: 5,
+                  }}>
+                    <Octicons
+                      name='dot-fill'
+                      size={10}
+                      color={app_c.HEX.ext_second}
+                      style={{ marginHorizontal: 5, marginTop: 2}}
+                    />
+                    <ButtonInText numberOfLines={2} textRaw={'Buổi chiều: ' + dataSlice.afternoon} handlePressPlace={(placeName) => handlePressPlace(placeName)}/>
+                  </View>
+
+                  <View style={{
+                    flexDirection: 'row',
+                    width: 150,
+                    marginTop: 5,
+                  }}>
+                    <Octicons
+                      name='dot-fill'
+                      size={10}
+                      color={app_c.HEX.ext_second}
+                      style={{ marginHorizontal: 5, marginTop: 2}}
+                    />
+                      <ButtonInText numberOfLines={2} textRaw={'Buổi tối: ' + dataSlice.evening} handlePressPlace={(placeName) => handlePressPlace(placeName)}/>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )
+          })
+        }
+
+        {
+          numberDayToTravel.map(i => (
+            <View>
+              <View style={{
+                flexDirection: 'row',
+              }}>
+                <Skeleton
+                  skeletonStyle={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: 12,
+                    marginTop: 10
+                  }}
+                />
+              
+                <View style={{
+                  flexDirection: 'column',
+                  flex: 1,
+                  marginLeft: 10,
+                  justifyContent: 'center'
+                }}>
+                  {
+                    [1,2,3,4,5,6].map(i => (
+                      <Skeleton
+                        skeletonStyle={{
+                          height: 15,
+                          width: "100%",
+                          borderRadius: 12,
+                          marginTop: 5
+                        }}
+                      />
+                    ))
+                  }
+                </View>
+              </View>
+            </View>
+          ))
+        }
+
+        {
+          textEnding ? 
+          <Text style={{
+            marginHorizontal: 5,
+            marginTop: 15,
+            marginBottom: 10,
+            ...app_typo.fonts.normal.normal.body1,
+            color: app_c.HEX.fourth,
+            textAlign: 'justify'
+          }}>{textEnding}</Text> :
+          <View style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginVertical: 10
+          }}>
+            {
+              [1, 2, 3].map(i => (
+                <Skeleton
+                  skeletonStyle={{
+                    height: 15,
+                    width: "100%",
+                    borderRadius: 12,
+                    marginTop: 5
+                  }}
+                />
+              ))
+            }
+          </View>
+        }
+      </View>
+    )
   } else {
     return 
   }
 }
 
-export default MessageFeature
+export default memo(MessageFeature) 

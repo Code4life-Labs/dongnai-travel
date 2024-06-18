@@ -31,9 +31,9 @@ import { API_ROOT } from 'utilities/constants'
 
 import { app_c, app_typo } from 'globals/styles'
 
-// import { LogBox } from 'react-native';
-// LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-// LogBox.ignoreAllLogs();//Ignore all log notifications
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 // Phương: này là dùng cho socket
 export const socketIoInstance = getSocket()
 injectStore(store)
@@ -51,18 +51,18 @@ export default function App() {
     setTimeout(checkInternetConnection, 3000) // Kiểm tra lại sau 5 giây
   }
 
-  // const changeScreenOrientation = async () => {
-  //   // để khóa xoay ngang
-  //   await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
-  // }
+  const changeScreenOrientation = async () => {
+    // để khóa xoay ngang
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+  }
 
-  // useEffect(() => {
-  //   changeScreenOrientation()
-  //   checkInternetConnection()
-  // }, [])
+  useEffect(() => {
+    changeScreenOrientation()
+    checkInternetConnection()
+  }, [])
 
-  useEffect(async () => {
-    if (!isConnected && isPrevConnected) {
+  useEffect(() => {
+    if(!isConnected && isPrevConnected) {
       store.dispatch(updateNotif({
         appearNotificationBottomSheet: true,
         contentNotificationBottomSheet: 'Không có kết nối internet'

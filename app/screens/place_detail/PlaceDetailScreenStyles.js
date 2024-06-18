@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
 
   pd_background_image: {
-    position: 'absolute',
+    // position: 'absolute',
     width: '100%',
     aspectRatio: 1,
     top: 0

@@ -29,7 +29,7 @@ const HomeBannerSlider = ()=>{
       
       <Swiper
         style={styles.wrapper}
-        autoplay
+        // autoplay
         loop
         dot={
           <View

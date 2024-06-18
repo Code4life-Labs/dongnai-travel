@@ -6,8 +6,11 @@ import ComponentUtility from 'utilities/component'
 import styles from './VerticalPlaceCardStyles'
 
 import { ViewProps } from 'types/index.d'
-import { app_sh, app_shdw, app_sp } from 'globals/styles'
-import { useTheme } from 'customHooks/useTheme'
+
+import { app_c, app_sh, app_shdw, app_sp } from 'globals/styles'
+import {useTheme} from 'customHooks/useTheme'
+import Skeleton from 'components/skeleton/Skeleton'
+
 
 /**
  * @param {ViewProps} props Props của component. Chình là props của View.
@@ -21,27 +24,45 @@ const VerticalPlaceCardSkeleton = (props) => {
   return (
     <View {...props} style={[containerStyle,{backgroundColor: theme.subBackground}]}>
       {/* Image */}
-      <View style={[styles.card_image, { backgroundColor: theme.subOutline }]}></View>
+      <Skeleton
+        skeletonStyle={[styles.card_image, {backgroundColor: app_c.HEX.ext_primary}]}
+      />
       {/* Button & Recommended tag */}
-      <View style={styles.card_mid}>
-        <View style={[styles.card_ske_bg, app_sh.rounded_4, { backgroundColor: theme.subOutline, height: 15, width: '50%' }]}></View>
-      </View>
+      <Skeleton
+        skeletonStyle={[
+          styles.card_mid,
+          styles.card_ske_bg, 
+          app_sh.rounded_4, 
+          { backgroundColor: app_c.HEX.ext_primary, height: 15, width: '50%', marginBottom: 3}
+        ]}
+      />
 
       {/* Content */}
       <View style={styles.card_content_container}>
-        <View style={[styles.card_ske_bg, app_sp.mb_6, app_sh.rounded_4, {backgroundColor: theme.subOutline, height: 19, width: '100%' }]}></View>
+        <Skeleton
+          skeletonStyle={[styles.card_ske_bg, app_sh.rounded_4, {backgroundColor: app_c.HEX.ext_primary, height: 19, width: '100%', marginBottom: 3 }]}
+        />
 
         {/* Sub-information */}
         <View style={styles.card_content_sub_information_container}>
-          <View style={[styles.card_ske_bg, app_sh.rounded_4, {backgroundColor: theme.subOutline, height: 15, width: '70%' }]}></View>
-          <View style={[styles.card_ske_bg, app_sh.rounded_4, {backgroundColor: theme.subOutline, height: 15, width: '30%' }]}></View>
+          <Skeleton
+            skeletonStyle={[styles.card_ske_bg, app_sh.rounded_4, {backgroundColor: app_c.HEX.ext_primary, height: 15, width: '70%' }]}
+          />
+          <Skeleton
+            skeletonStyle={[styles.card_ske_bg, app_sh.rounded_4, {backgroundColor: app_c.HEX.ext_primary, height: 15, width: '30%' , marginTop: 3, marginBottom: 5}]}
+          />
         </View>
       </View>
 
       {/* Like button */}
-      <View style={styles.card_buttons_container}>
-        <View style={[styles.card_ske_bg, app_sh.rounded_4, { backgroundColor: theme.subOutline,height: 30, flex: .5 }]}></View>
-        <View style={[styles.card_ske_bg, app_sh.rounded_4, {backgroundColor: theme.subOutline, height: 30, flex: .5 }]}></View>
+      <View style={[styles.card_buttons_container, {paddingTop: 3,}]}>
+        <Skeleton
+          skeletonStyle={[styles.card_ske_bg, app_sh.rounded_4, { backgroundColor: app_c.HEX.ext_primary,height: 30, flex: .48 }]}
+        />
+        <View style={{ flex: .04 }}></View>
+        <Skeleton
+          skeletonStyle={[styles.card_ske_bg, app_sh.rounded_4, {backgroundColor: app_c.HEX.ext_primary, height: 30, flex: .48 }]}
+        />
       </View>
     </View>
   )

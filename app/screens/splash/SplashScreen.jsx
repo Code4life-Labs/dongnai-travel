@@ -51,12 +51,12 @@ const SplashScreen = withTheme(({
         opacity,
         {
           toValue: 1,
-          duration: 1000,
+          duration: 2000,
           useNativeDriver: false,
           easing: Easing.ease
         }
       ).start()
-    }, 3000);
+    }, 500);
     
     setTimeout(() => {
       
@@ -71,6 +71,7 @@ const SplashScreen = withTheme(({
         navigation.replace('OnboardingScreen')
       else {
         if (isAuthenticated) {
+          console.log("🚀 ~ file: SplashScreen.jsx:70 ~ useEffect ~ isAuthenticated:", isAuthenticated)
           navigation.replace('GroupBottomTab', {
             isGetFullUserInfo: true
           })
@@ -85,11 +86,19 @@ const SplashScreen = withTheme(({
   const lottieViewRef = useRef(null)
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Animated.Text
+    <View style={[styles.container, {backgroundColor: theme.background}]}>
+      {/* <Animated.Text
         style={[styles.label, {opacity: opacity}]}
-      >DongNaiTravelApp</Animated.Text>
-      <View>
+      >DongNaiTravelApp</Animated.Text> */}
+      <Animated.Image
+        source={require('../../assets/logo/logo_text.png')}
+        style={{
+          height: 400,
+          width: 400,
+          opacity: opacity
+        }}
+      />
+      {/* <View>
         <LottieView
           ref={lottieViewRef}
           onLayout={() => {lottieViewRef.current?.play()}}
@@ -102,7 +111,7 @@ const SplashScreen = withTheme(({
           }}
           source={require('../../assets/animations/loading1.json')}
         />
-      </View>
+      </View> */}
     </View>
   )
 });

@@ -48,7 +48,25 @@ const styles = StyleSheet.create({
     ...app_sp.pv_6,
     ...app_shdw.type_1,
     ...app_sh.capsule
+  },
+  imageNoData: {
+    height: 300,
+    width: 300,
+    alignSelf: 'center'
+  },
+  avatar: {
+    width: 42, 
+    height: 42,  
+    borderRadius: 21
+    // width: 42, aspectRatio: 1, borderRadius: 9999
+  },
+  seperate: {
+    ...app_sp.mh_8, 
+    width: 1,
+    height: "50%",
+    backgroundColor: "#000"
   }
+
 });
 
 export default styles

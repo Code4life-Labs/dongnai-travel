@@ -118,7 +118,8 @@ const AppHeader = ({
             canSetBackButton
             && (
               <CircleButton
-                defaultColor='type_4'
+                defaultColor="type_5"
+                boxShadowType="type_1"
                 typeOfButton="opacity"
                 onPress={() => navigation.goBack()}
                 setIcon={(isActive, currentLabelStyle) => (
@@ -149,7 +150,8 @@ const AppHeader = ({
           (
             <>
               <CircleButton
-                defaultColor='type_4'
+                defaultColor="type_5"
+                boxShadowType="type_1"
                 typeOfButton="opacity"
                 setIcon={<Ionicons name="search-outline" size={18} />}
                 onPress={() => {
@@ -163,7 +165,8 @@ const AppHeader = ({
           title === langData.home[langCode] && (
             <View style={{paddingLeft:10}}>
               <CircleButton
-                defaultColor='type_4'
+                defaultColor="type_5"
+                boxShadowType="type_1"
                 typeOfButton="opacity"
                 onPress={() => navigation.navigate('Notification')}
                 setIcon={<Ionicons name="notifications-sharp" size={18} style={{color: numberOfVisited !== 0 ? '#FFC72C' : null}} />}

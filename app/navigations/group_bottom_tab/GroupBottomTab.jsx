@@ -39,8 +39,6 @@ import { useTheme } from 'customHooks/useTheme'
 // Phương: Socket 
 
 import { selectCurrentUser, updateTemporaryUserId } from 'redux/user/UserSlice'
-import 'react-native-get-random-values'
-import { v4 as uuidv4 } from 'uuid'
 import { updateUserLocation } from 'redux/map/mapSlice'
 
 // Related to Expo
@@ -51,6 +49,7 @@ import { signInUserAPI } from '../../apis/axios'
 import { selectCurrentWareHouse } from '../../redux/warehouse/WareHouseSlice'
 import FunctionsUtility from '../../utilities/functions'
 import { EMAIL_RULE } from '../../utilities/validators'
+import StringUtility from 'utilities/string'
 
 const tabIcon = {
 	'HomeScreen': {
@@ -141,14 +140,14 @@ const BottomTabBar = ({
 							key={route.name}
 							style={styles.tab_bottom_button}
 						>
-							<View style={tabIcon[route.name].isHighlight ? [styles.tab_bottom_hl_icon_conatiner, {backgroundColor: theme.primary,
-    borderColor: theme.onPrimary}] : styles.tab_bottom_icon_conatiner}>
+							<View style={tabIcon[route.name].isHighlight ? [styles.tab_bottom_hl_icon_conatiner, {backgroundColor: theme.secondary,
+    borderColor: theme.background}] : styles.tab_bottom_icon_conatiner}>
 								{
 									tabIcon[route.name].isHighlight ?
 										(<Ionicons
 											size={tabIcon[route.name].size}
 											name={isFocused ? tabIcon[route.name].active : tabIcon[route.name].inactive}
-											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: theme.onPrimary }] : [styles.tab_bottom_hl_icon_inactive, {color: theme.onSubOutline}]}
+											style={isFocused ? [styles.tab_bottom_hl_icon_active, { color: theme.onPrimary }] : [styles.tab_bottom_hl_icon_inactive, {color: theme.background}]}
 										/>) :
 										(<Ionicons
 											size={tabIcon[route.name].size}
@@ -205,7 +204,7 @@ const GroupBottomTab = () => {
 		if (user?._id)
 			userId = user._id
 		else {
-			userId = uuidv4()
+			userId = StringUtility.getRandomID();
 			console.log("🚀 ~ file: GroupBottomTab.jsx:175 ~ useEffect ~ userId:", userId)
 			dispatch(updateTemporaryUserId(userId))
 		}
@@ -245,9 +244,11 @@ const GroupBottomTab = () => {
 			dispatch(updateNewNotifs(data.notif))
 		})
 
-		return function() {
-			socketIoInstance.disconnect();
-		}
+		return () => socketIoInstance.removeListener('s_notification_to_user', (data) => {
+			// nếu nhận được thì lưu vào state của thằng được follow
+			dispatch(updateCurrentUser(data.userReceived))
+			dispatch(updateNewNotifs(data.notif))
+		})
 	}, [])
 
 	return (

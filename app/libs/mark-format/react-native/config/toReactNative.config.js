@@ -1,5 +1,6 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { LOW_MARK_CONVENTIONS, HIGH_MARK_CONVENTIONS } from "../../src/rules.js"
+import app_dms from "globals/styles/dimension.js";
 
 /*
   Đây là những format cơ bản nhất.
@@ -189,9 +190,13 @@ const formatTypeToStyle = {
   [IMAGE_TYPE] : {
     format: IMAGE_TYPE,
     hasDescription: true,
-    style: {
+    style: Platform.OS === "ios" ? {
       width: "100%",
       aspectRatio: 16 / 9,
+      marginVertical: 8
+    } : {
+      heigth: 300,
+      width: app_dms.screenWidth,
       marginVertical: 8
     }
   },

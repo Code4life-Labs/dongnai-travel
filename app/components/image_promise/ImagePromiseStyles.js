@@ -1,4 +1,4 @@
-import { app_c, app_dms, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_shdw, app_typo } from 'globals/styles'
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
@@ -36,5 +36,11 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     color: app_c.HEX.fourth,
     ...app_typo.fonts.normal.normal.body1
+  },
+  imageCardDay: {
+    width: 120,
+    height: 120,
+    borderRadius: 12,
+    ...app_shdw.type_3
   },
 })

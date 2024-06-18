@@ -7,7 +7,7 @@
       "tool": "expo-cli"
     },
     "orientation": "portrait",
-    "icon": "./app/assets/images/icon.png",
+    "icon": "./app/assets/logo/logo_big.png",
     "userInterfaceStyle": "light",
     "plugins": [
       [
@@ -42,12 +42,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./app/assets/images/adaptive-icon.png",
+        "foregroundImage": "./app/assets/logo/logo_big.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./app/assets/images/favicon.png"
+      "favicon": "./app/assets/logo/logo_big.png"
     }
   }
 }

@@ -1,4 +1,4 @@
-import { app_c, app_dms, app_sh, app_sp, app_typo } from 'globals/styles'
+import { app_c, app_dms, app_sh, app_shdw, app_sp, app_typo } from 'globals/styles'
 
 import { StyleSheet } from 'react-native'
 
@@ -20,7 +20,12 @@ const styles = StyleSheet.create({
     ...app_sp.mt_22,
     width: '100%',
     ...app_sh.rounded_8,
-    borderRadius:20
+    borderRadius:20,
+       shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.23,
+    shadowRadius: 13.97,
+    elevation: 20,
   },
   temperature: {
     width:'100%',

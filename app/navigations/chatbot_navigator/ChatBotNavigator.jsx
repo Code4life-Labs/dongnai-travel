@@ -18,6 +18,8 @@ import {
 import ChatBotScreen from 'screens/chat_bot/ChatBotScreen'
 import OnboardingChatbot from 'screens/onaboarding_chatbot/OnboardingChatbot'
 import PlaceDetailScreen from 'screens/place_detail/PlaceDetailScreen'
+import ItineraryDetailScreen from 'screens/itinerary_detail/ItineraryDetailScreen'
+import MapScreen from 'screens/map/MapScreen'
 
 const ChatBotStack = createNativeStackNavigator();
 
@@ -54,8 +56,15 @@ const ChatBotNavigator = ({navigation}) => {
       <ChatBotStack.Screen
         name="ChatBotScreen"
         options={{
-          title: 'TravelBot',
-          presentation: 'containedModal'
+          header: props => (
+            <AppHeader
+              {...props}
+              setRightPart={() => (
+                <></>
+              )}
+            />
+          ),
+          title: 'TravelBot'
         }}
         component={ChatBotScreen}
       />
@@ -68,6 +77,38 @@ const ChatBotNavigator = ({navigation}) => {
         }}
         component={PlaceDetailScreen}
       />
+
+      <ChatBotStack.Screen
+        name='ItineraryDetailScreen'
+        options={{
+          header: props => (
+            <AppHeader
+              {...props}
+              setRightPart={() => (
+                <></>
+              )}
+            />
+          ),
+          title: 'Chi Tiết Lịch Trình'
+        }}
+        component={ItineraryDetailScreen}
+      />
+
+      {/* <ChatBotStack.Screen
+        name='MapFullScreen'
+        options={{
+          header: props => (
+            <AppHeader
+              {...props}
+              setRightPart={() => (
+                <></>
+              )}
+            />
+          ),
+          title: 'Bản Đồ'
+        }}
+        component={MapScreen}
+      /> */}
     </ChatBotStack.Navigator>
   )
 }
