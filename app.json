@@ -1,53 +1,34 @@
 {
   "expo": {
-    "name": "DongNaiTravelApp",
-    "slug": "DongNaiTravelApp",
+    "name": "my-app",
+    "slug": "my-app",
     "version": "1.0.0",
-    "developer": {
-      "tool": "expo-cli"
-    },
     "orientation": "portrait",
-    "icon": "./app/assets/logo/logo_big.png",
-    "userInterfaceStyle": "light",
-    "plugins": [
-      [
-        "expo-av",
-        {
-          "microphonePermission": "Allow DongNaiTravelApp to access your microphone."
-        }
-      ],
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
-        }
-      ],
-      [
-        "expo-screen-orientation",
-        {
-          "initialOrientation": "DEFAULT"
-        }
-      ],
-      "expo-localization",
-      "expo-build-properties"
-    ],
-    "updates": {
-      "fallbackToCacheTimeout": 0
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./app/assets/logo/logo_big.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./app/assets/logo/logo_big.png"
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }
