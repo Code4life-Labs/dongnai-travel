@@ -44,6 +44,31 @@ export const placesSlice = createSlice({
     },
 
     /**
+     * Use to update an existing place's details with `id`
+     * @param state
+     * @param action
+     */
+    updatePlaceDetails(state, action) {
+      const { id, placeDetails } = action.payload as {
+        id: string;
+        placeDetails: Place;
+      };
+
+      state.detailsOfPlaces.set(id, placeDetails);
+    },
+
+    /**
+     * Use to clear a place details by id
+     * @param state
+     * @param action
+     */
+    clearPlaceDetails(state, action) {
+      let placeId = action.payload;
+      if (state.detailsOfPlaces.get(placeId))
+        state.detailsOfPlaces.delete(placeId);
+    },
+
+    /**
      * Use to update a brief place (for caching)
      * @param state
      * @param action
@@ -91,17 +116,6 @@ export const placesSlice = createSlice({
     clearCurrentPlaces(state) {
       state.currentPlaces = _createDefaultBriefPlace();
     },
-
-    /**
-     * Use to clear a place details by id
-     * @param state
-     * @param action
-     */
-    clearPlaceDetails(state, action) {
-      let placeId = action.payload;
-      if (state.detailsOfPlaces.get(placeId))
-        state.detailsOfPlaces.delete(placeId);
-    },
   },
   extraReducers(builder) {
     builder.addCase(
@@ -118,7 +132,7 @@ export const placesSlice = createSlice({
     );
 
     builder.addCase(
-      placesThunks.getPlacesByTypeAsync.fulfilled,
+      placesThunks.getPlaceDetailsByIdAsync.fulfilled,
       (state, action) => {
         let [placeId, placeDetails] = action.payload;
 

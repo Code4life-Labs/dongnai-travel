@@ -44,6 +44,30 @@ export const blogsSlice = createSlice({
     },
 
     /**
+     * Use to update an existing blog's details with `id`
+     * @param state
+     * @param action
+     */
+    updateBlogDetails(state, action) {
+      const { id, blogDetails } = action.payload as {
+        id: string;
+        blogDetails: Blog;
+      };
+
+      state.detailsOfBlogs.set(id, blogDetails);
+    },
+
+    /**
+     * Use to clear a blog details by id
+     * @param state
+     * @param action
+     */
+    clearBlogDetails(state, action) {
+      let blogId = action.payload;
+      if (state.detailsOfBlogs.get(blogId)) state.detailsOfBlogs.delete(blogId);
+    },
+
+    /**
      * Use to update a brief blog (for caching)
      * @param state
      * @param action
@@ -91,23 +115,12 @@ export const blogsSlice = createSlice({
     clearCurrentBlogs(state) {
       state.currentBlogs = _createDefaultBriefBlog();
     },
-
-    /**
-     * Use to clear a blog details by id
-     * @param state
-     * @param action
-     */
-    clearBlogDetails(state, action) {
-      let blogId = action.payload;
-      if (state.detailsOfBlogs.get(blogId))
-        state.detailsOfBlogs.delete(blogId);
-    },
   },
   extraReducers(builder) {
     builder.addCase(
       blogsThunks.getBlogsByTypeAsync.fulfilled,
       (state, action) => {
-        let [typeOfBlog blogs] = action.payload;
+        let [typeOfBlog, blogs] = action.payload;
 
         if (blogs.length !== 0) {
           state.currentBlogs.type = typeOfBlog;
@@ -118,7 +131,7 @@ export const blogsSlice = createSlice({
     );
 
     builder.addCase(
-      blogsThunks.getBlogsByTypeAsync.fulfilled,
+      blogsThunks.getBlogDetailsByIdAsync.fulfilled,
       (state, action) => {
         let [blogId, blogDetails] = action.payload;
 

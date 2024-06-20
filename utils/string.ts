@@ -151,7 +151,7 @@ export class StringUtils {
    * @returns
    */
   static hasLink(text: string) {
-    return REGEXES.NOT_ALLOWED_CHARS.test(text);
+    return REGEXES.URL.test(text);
   }
 
   /**

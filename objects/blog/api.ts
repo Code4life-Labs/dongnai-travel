@@ -1,3 +1,7 @@
 export class BlogAPI {
-  constructor() {}
+  constructor(http: any) {}
+
+  async getBlogAsync(id: string) {}
+  async getBlogsAsync() {}
+  async updateBlogAsync() {}
 }

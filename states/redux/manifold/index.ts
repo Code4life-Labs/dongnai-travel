@@ -3,38 +3,32 @@ import { createSlice } from "@reduxjs/toolkit";
 export const manifoldSlice = createSlice({
   name: "manifold",
   initialState: {
-    current: {
-      shownNotificationBottomSheet: false,
-      contentNotificationBottomSheet: "",
+    settings: {},
+    status: {
       isLoading: false,
-      privateKeys: null,
-      hiddenStatusBar: false,
+      isMaintaining: false,
+      hasNetworkConnection: false,
+    },
+    bottomSheet: {
+      isShown: false,
+      content: null,
+    },
+    statusBar: {
+      isShown: false,
     },
   },
 
   reducers: {
-    updateCurrentManifold(state, action) {
-      const manifold = action.payload;
-      state.current = manifold;
-    },
-
-    updateNotification(state, action) {
-      state.current.shownNotificationBottomSheet =
-        action.payload.shownNotificationBottomSheet;
-      state.current.contentNotificationBottomSheet =
-        action.payload.contentNotificationBottomSheet;
-    },
-
     updateIsLoading(state, action) {
-      state.current.isLoading = action.payload;
+      state.status.isLoading = action.payload as boolean;
     },
 
-    updatePrivateKeys(state, action) {
-      state.current.privateKeys = action.payload;
+    updateIsMaintaining(state, action) {
+      state.status.isMaintaining = action.payload as boolean;
     },
 
-    updateStatusBar(state, action) {
-      state.current.hiddenStatusBar = action.payload;
+    updateHasNetworkConnection(state, action) {
+      state.status.hasNetworkConnection = action.payload as boolean;
     },
   },
 });

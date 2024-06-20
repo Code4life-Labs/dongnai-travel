@@ -1,3 +1,3 @@
-import AppText from "./app-text";
+import AppText from "./app_text";
 
 export const FC = { AppText };

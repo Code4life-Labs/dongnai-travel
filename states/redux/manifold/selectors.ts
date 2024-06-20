@@ -2,7 +2,7 @@
 import type { AppState } from "../type";
 
 export const manifoldSelectors = {
-  selectCurrent(state: AppState) {
-    return state.manifold.current;
+  selectStatus(state: AppState) {
+    return state.manifold.status;
   },
 };

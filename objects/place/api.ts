@@ -1,3 +1,7 @@
 export class PlaceAPI {
-  constructor() {}
+  constructor(http: any) {}
+
+  async getPlaceAsync(id: string) {}
+  async getPlacesAsync() {}
+  async updatePlaceAynsc() {}
 }
