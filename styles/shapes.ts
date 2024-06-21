@@ -134,3 +134,5 @@ export const shapes = StyleSheet.create({
     borderBottomLeftRadius: 16,
   },
 });
+
+export type UShapes = keyof typeof shapes;

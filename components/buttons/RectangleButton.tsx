@@ -1,0 +1,84 @@
+import React from "react";
+import { View } from "react-native";
+
+// Import from components
+import AppText from "../app_text";
+
+// Import from hooks
+import { useTheme } from "@/hooks/useTheme";
+
+// Import from utils
+import { ComponentUtils } from "@/utils/component";
+import { ButtonUtils } from "./utils";
+
+// Import styles
+import { getButtonColors } from "./styles";
+import { Styles } from "@/styles";
+
+// Import types
+import type { RectangleButtonProps } from "./type";
+
+const defaultStyle = {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: 30,
+  ...Styles.spacings.ph_18,
+  ...Styles.spacings.pv_10,
+};
+
+/**
+ * __Creator__: @NguyenAnhTuan1912
+ *
+ * Rectangle button là những button hình chữ nhật ở trong app, tuỳ theo container cha mà chiều rộng của nó cũng sẽ thay đổi theo,
+ * ngoài ra thì còn hỗ trợ việc "ghi đè shape" của nó như là capsule, rounded.
+ * @param props - Props của component.
+ * @returns Trả về `TouchableOpacity` | `TouchableWithoutFeedback` | `TouchableHighLight` Component (tuỳ theo lựa chọn).
+ */
+export default function RectangleButton(props: RectangleButtonProps) {
+  const { theme } = useTheme();
+
+  // Prepare
+  const Button = ComponentUtils.getTouchable(props.type);
+  const colors = getButtonColors(theme);
+  const buttonColors = ButtonUtils.getButtonColors(props, colors);
+  const {
+    isActive = false,
+    isTransparent = false,
+    isOnlyContent = false,
+    type = "none",
+    defaultColor = "type_1",
+    activeColor,
+    boxShadowType,
+    border,
+    ...rest
+  } = props;
+
+  // Build styles
+  let { contentContainerStyle, currentLabelStyle } =
+    ButtonUtils.buildRectangleButtonStyles(
+      props,
+      colors,
+      defaultStyle,
+      buttonColors
+    );
+
+  const ButtonChildren =
+    typeof props.children === "function" ? (
+      (rest.children as any)(props.isActive, currentLabelStyle)
+    ) : (
+      <AppText style={currentLabelStyle}>{props.children}</AppText>
+    );
+
+  console.log("Container Style: ", contentContainerStyle);
+
+  return (
+    <Button {...rest} style={type === "none" ? {} : contentContainerStyle}>
+      {type === "none" ? (
+        <View style={contentContainerStyle}>{<>{ButtonChildren}</>}</View>
+      ) : (
+        <>{ButtonChildren}</>
+      )}
+    </Button>
+  );
+}

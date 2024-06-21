@@ -9,7 +9,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { ComponentUtils } from "@/utils/component";
 
 // Import from styles
-import { STYLES } from "@/styles";
+import { Styles } from "@/styles";
 
 // Import types
 import { AppTextProps } from "./type";
@@ -35,7 +35,7 @@ export default function AppText({
   const { theme } = useTheme();
   const textStyle = React.useMemo(
     () => [
-      STYLES.typography.fonts[fontStyle][weight][size],
+      Styles.typography.fonts[fontStyle][weight][size],
       { color: theme[color] },
     ],
     [fontStyle, weight, size, color, theme]
@@ -64,6 +64,9 @@ export default function AppText({
       </Link>
     );
   }
+
+  console.log("Outside style: ", props.style);
+  console.log("Text style: ", textCompleteStyle);
 
   return (
     <Text {...props} style={textCompleteStyle}>

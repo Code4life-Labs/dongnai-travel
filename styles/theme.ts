@@ -51,5 +51,6 @@ const data = {
 };
 
 export const theme = { colorNames, data };
+export type ThemeData = typeof data;
 export type UThemeSchemes = keyof typeof data;
 export type UColorNames = keyof typeof colorNames;

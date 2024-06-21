@@ -4,7 +4,7 @@ import type {
   UFontStyles,
   UFontWeights,
 } from "@/styles/typography";
-import type { UColorNames } from "@/styles/themes";
+import type { UColorNames } from "@/styles/theme";
 
 type ToScreen = {
   screenName: string;

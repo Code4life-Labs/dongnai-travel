@@ -41,3 +41,5 @@ export const boxShadows = StyleSheet.create({
     elevation: 21,
   },
 });
+
+export type UBoxShadowTypes = keyof typeof boxShadows;
