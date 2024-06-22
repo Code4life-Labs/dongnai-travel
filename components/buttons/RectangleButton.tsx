@@ -7,13 +7,13 @@ import AppText from "../app_text";
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
 
-// Import from utils
-import { ComponentUtils } from "@/utils/component";
-import { ButtonUtils } from "./utils";
-
 // Import styles
 import { getButtonColors } from "./styles";
 import { Styles } from "@/styles";
+
+// Import from utils
+import { ComponentUtils } from "@/utils/component";
+import { ButtonUtils } from "./utils";
 
 // Import types
 import type { RectangleButtonProps } from "./type";
@@ -69,8 +69,6 @@ export default function RectangleButton(props: RectangleButtonProps) {
     ) : (
       <AppText style={currentLabelStyle}>{props.children}</AppText>
     );
-
-  console.log("Container Style: ", contentContainerStyle);
 
   return (
     <Button {...rest} style={type === "none" ? {} : contentContainerStyle}>

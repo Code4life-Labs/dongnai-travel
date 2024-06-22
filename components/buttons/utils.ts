@@ -15,13 +15,13 @@ export class ButtonUtils {
     const defaultColor = props.defaultColor ? props.defaultColor : "type_1";
     const isTransparent = props.isTransparent ? props.isTransparent : false;
     const isOnlyContent = props.isOnlyContent ? props.isOnlyContent : false;
-    const typeOfButton = props.typeOfButton ? props.typeOfButton : "none";
+    const type = props.type ? props.type : "none";
     return {
       activeColor,
       defaultColor,
       isTransparent,
       isOnlyContent,
-      typeOfButton,
+      type,
     };
   }
 
@@ -147,8 +147,6 @@ export class ButtonUtils {
       _.contentContainerStyle.push(Styles.shapes[shape]);
     else
       ComponentUtils.mergeStyle(_.contentContainerStyle, Styles.shapes[shape]);
-
-    console.log("Content: ", _.contentContainerStyle);
 
     return _;
   }

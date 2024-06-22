@@ -7,13 +7,13 @@ import AppText from "../app_text";
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
 
-// Import from utils
-import { ComponentUtils } from "@/utils/component";
-import { ButtonUtils } from "./utils";
-
 // Import styles
 import { getButtonColors } from "./styles";
 import { Styles } from "@/styles";
+
+// Import from utils
+import { ComponentUtils } from "@/utils/component";
+import { ButtonUtils } from "./utils";
 
 // Import types
 import type { CircleButtonProps } from "./type";
