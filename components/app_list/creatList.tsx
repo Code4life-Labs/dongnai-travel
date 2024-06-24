@@ -14,6 +14,13 @@ import type {
   AppUnorderedListProps,
 } from "./type";
 
+/**
+ * __Creator__: @NguyenAnhTuan
+ *
+ * Use this HOC to create list, there are 2 types of list.
+ * @param type
+ * @returns
+ */
 export function createList(type: UListTypes) {
   return function AppList({
     level = 0,

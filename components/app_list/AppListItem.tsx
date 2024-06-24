@@ -7,6 +7,13 @@ import { ListUtils } from "./utils";
 // Import types
 import type { AppListItemProps } from "./type";
 
+/**
+ * __Creator__: @NguyenAnhTuan
+ *
+ * Component is used to render a item of list
+ * @param props
+ * @returns
+ */
 export default function AppListItem(props: AppListItemProps) {
   if (
     Array.isArray(props.children) &&

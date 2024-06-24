@@ -114,7 +114,7 @@ export class ListUtils {
   }
 
   /**
-   * Render a list of item
+   * Render an item of list
    * @param item
    * @param index
    * @param level
