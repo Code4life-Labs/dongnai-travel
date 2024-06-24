@@ -1,15 +1,24 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { BASE_API_URL, CallBackInterceptorObject } from "./config";
-//Import from utils
-import { LocalStorageUtils } from "@/utils/local-storage";
+// Import base url
+import { BASE_API_URL } from "@/api/config";
+// Import common config for interceptor
+import { CommonConfigInterceptor } from "@/api/untils";
+// Import types
+import { BuildInterceptorConfigs, EApiMethod, UInterceptorType } from "@/api/type";
 
 class BaseAPI {
-  private api = axios.create({
+  private _api = axios.create({
     baseURL: BASE_API_URL,
   });
 
-  public getApiInstance() {
-    return this.api;
+  builder: BaseAPIBuilder;
+
+  constructor() {
+    this.builder = new BaseAPIBuilder(this._api);
+  }
+
+  ejectInterceptor(interceptorId: number) {
+    this._api.interceptors.request.eject(interceptorId);
   }
 }
 
@@ -18,54 +27,31 @@ class BaseAPIBuilder {
 
   constructor(api: AxiosInstance) {
     this.api = api;
+    // default when creating it will add interceptor to response so that catch the error
+    this.start();
   }
 
-  async handleResponseInterceptor(error: AxiosError) {
-    // Thiết lập interceptor response
-    // Xử lý lỗi phản hồi, ví dụ như Unauthorized (401)
-    if (error.response?.status === 401) {
-      console.error('Unauthorized error:', error);
-      // Xử lý 401 Unauthorized ở đây, ví dụ clear token
-      await LocalStorageUtils.clearToken();
-      // xử lý disptach logout
-      // dispatch(logOut..)..
-    }
-    return Promise.reject(error);
-  }
-
-  buildInterceptor(type: 'request' | 'response', obj: CallBackInterceptorObject) {
+  private _buildInterceptor(type: UInterceptorType, obj: BuildInterceptorConfigs) {
     return this.api.interceptors[type].use(
       obj.cbConfig ? ((config) => obj.cbConfig && obj.cbConfig(config)) : (config => config),
       obj.cbError ? ((error) => obj.cbError && obj.cbError(error)) : (error => Promise.reject(error))
     )
   };
 
+  buildRequestInterceptor(obj: BuildInterceptorConfigs) {
+    return this._buildInterceptor(EApiMethod.REQUEST, obj);
+  }
+
+  buildResponseInterceptor(obj: BuildInterceptorConfigs) {
+    return this._buildInterceptor(EApiMethod.RESPONSE, obj);
+  }
+
   start() {
     // default settings for cacth error handling when response.
-    this.buildInterceptor('response', {
-      cbError: this.handleResponseInterceptor
+    this._buildInterceptor(EApiMethod.RESPONSE, {
+      cbError: CommonConfigInterceptor.errorResponse
     });
   }
 }
 
-class CommonInterceptor {
-  static async authorization(config: any) {
-    const token = await LocalStorageUtils.getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  }
-
-  // static async notifSnackBar(response: any) {
-  //   if (response) {
-  //     // ... dispatchEvents(response.success)
-  //   }
-  //   return response;
-  // }
-}
-
-const baseApi = new BaseAPI();
-const baseAPIBuilder = new BaseAPIBuilder(baseApi.getApiInstance());
-baseAPIBuilder.start();
-export default baseAPIBuilder;
+export const baseAPI = new BaseAPI();

@@ -1,9 +1,13 @@
-import { AxiosResponse } from "axios";
-import { BaseResponse } from "../dto/base-response";
 import qs from "qs";
-import { HTTPUtil } from "@/utils/http";
-import baseAPIBuilder from "..";
-import { InterceptorCustom } from "../config";
+// base reponse type
+import { BaseResponse } from "@/api/dto/base-response";
+// base of api
+import { baseAPI } from "@/api";
+// base of methods 
+import { baseMethod } from "@/api/methods";
+// type
+import { CustomInterceptor } from "@/api/type";
+
 /**
  * 
  * @param endpoint ex: /v1/places
@@ -11,29 +15,12 @@ import { InterceptorCustom } from "../config";
  * @param interceptor (ontional) ex: { typeInterceptor: 'request', cbConfig: (config) => {// do sth with config... } || cbConfig: CommonInterceptor.authorization}
  * @returns 
  */
-export async function get<T>(endpoint: string, params?: Record<string, any>, interceptor?: InterceptorCustom): Promise<BaseResponse<T>> {
-  try {
-    let interceptorInstance;
-    if (typeof interceptor === 'object') {
-      interceptorInstance = baseAPIBuilder.buildInterceptor(interceptor.typeInterceptor, { ...interceptor });
-    }
+export async function get<T>(endpoint: string, params?: Record<string, any>, interceptor?: CustomInterceptor): Promise<BaseResponse<T>> {
+  return baseMethod<T>(async () => {
     const queryString = qs.stringify(params);
     const requestURL = queryString ? `${endpoint}?${queryString}` : endpoint;
-    const response: AxiosResponse<T> = await baseAPIBuilder.api.get(requestURL);
-    // eject interceptor
-    interceptorInstance && baseAPIBuilder.api.interceptors.request.eject(interceptorInstance);
-    return response.data as BaseResponse<T>;
-  } catch (error) {
-    console.error('GET request error: ' + endpoint, params);
-    const newObj: BaseResponse<T> = {
-      status: HTTPUtil.StatusCodes[409].title,
-      data: null,
-      error: 'Conflict at request GET',
-      code: 409,
-      success: null
-    };
-    return newObj;
-  }
+    return await baseAPI.builder.api.get(requestURL);
+  }, interceptor)
 }
 
 export default get;

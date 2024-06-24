@@ -1,8 +1,12 @@
-import { AxiosResponse } from "axios";
-import { BaseResponse } from "../dto/base-response";
-import { HTTPUtil } from "@/utils/http";
-import { InterceptorCustom } from "../config";
-import baseAPIBuilder from "..";
+// base reponse type
+import { BaseResponse } from "@/api/dto/base-response";
+// base of api
+import { baseAPI } from "@/api";
+// base of methods 
+import { baseMethod } from "@/api/methods";
+// type
+import { CustomInterceptor } from "@/api/type";
+
 /**
  * 
  * @param endpoint ex: /v1/users/create
@@ -10,27 +14,8 @@ import baseAPIBuilder from "..";
  * @param interceptor (ontional) | ex: { typeInterceptor: 'request', cbConfig: (config) => {// do sth with config... } || cbConfig: CommonInterceptor.authorization}
  * @returns 
  */
-async function post<T>(endpoint: string, data?: any, interceptor?: InterceptorCustom): Promise<BaseResponse<T>> {
-  try {
-    let interceptorInstance;
-    if (typeof interceptor === 'object') {
-      interceptorInstance = baseAPIBuilder.buildInterceptor(interceptor.typeInterceptor, { ...interceptor });
-    }
-    const response: AxiosResponse<T> = await baseAPIBuilder.api.post(endpoint, data);
-    // eject interceptor
-    interceptorInstance && baseAPIBuilder.api.interceptors.request.eject(interceptorInstance);
-    return response.data as BaseResponse<T>;
-  } catch (error) {
-    console.error('POST request error: ' + endpoint, data, error);
-    const newObj: BaseResponse<T> = {
-      status: HTTPUtil.StatusCodes[409].title,
-      data: null,
-      error: 'Conflic at request POST',
-      code: 409,
-      success: null
-    };
-    return newObj;
-  }
+export async function post<T, V>(endpoint: string, data?: V, interceptor?: CustomInterceptor): Promise<BaseResponse<T>> {
+  return baseMethod<T>(async () => {
+    return await baseAPI.builder.api.post(endpoint, data);
+  }, interceptor)
 }
-
-export default post;

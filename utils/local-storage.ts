@@ -1,6 +1,4 @@
-import { USER_TOKEN } from '@/api/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 export class LocalStorageUtils {
   /**
@@ -19,7 +17,7 @@ export class LocalStorageUtils {
         console.log('Failed to save data.');
       }
    */
-  static async setItemsStorage(data: Map<string, string>): Promise<boolean> {
+  static async setItems(data: Map<string, string>): Promise<boolean> {
     try {
       const promises = [];
 
@@ -50,7 +48,7 @@ export class LocalStorageUtils {
         console.log('Failed to save data.');
       }
    */
-  static async setItemStorage(data: Map<string, string>): Promise<boolean> {
+  static async setItem(data: Map<string, string>): Promise<boolean> {
     try {
       // Lấy cặp key-value đầu tiên từ Map
       const [key, value] = data.entries().next().value;
@@ -76,7 +74,7 @@ export class LocalStorageUtils {
         console.log('Failed to got data.');
       }
    */
-  static async getItemsStorage(keys: string[]): Promise<Map<string, string>> {
+  static async getItems(keys: string[]): Promise<Map<string, string>> {
     const result = new Map<string, string>();
     try {
       const promises = keys.map(async (key) => {
@@ -111,7 +109,7 @@ export class LocalStorageUtils {
         console.log('Failed to got data.');
       }
    */
-  static async getItemStorage(key: string): Promise<string> {
+  static async getItem(key: string): Promise<string> {
     try {
       const value = await AsyncStorage.getItem(`@${key}:key`);
       if (value !== null) {
@@ -123,63 +121,4 @@ export class LocalStorageUtils {
       return '';
     }
   };
-
-  /**
-   * 
-   * @example
-      const result = await saveToken('value');
-  
-      if (result) {
-        console.log('Save token successfully!');
-      } else {
-        console.log('Failed to save token.');
-      }
-   */
-  static async saveToken(value: string): Promise<boolean> {
-    try {
-      await AsyncStorage.setItem(`@${USER_TOKEN}:key`, value);
-      return true;
-    } catch (error) {
-      console.error('Error saving token to AsyncStorage:', error);
-      return false;
-    }
-  };
-
-  /**
-   * 
-   * @example
-      await clearToken();
-   */
-  static async clearToken(): Promise<void> {
-    try {
-      await AsyncStorage.removeItem(`@${USER_TOKEN}:key`);
-    } catch (error) {
-      console.error('Error clearing token from AsyncStorage:', error);
-    }
-  };
-
-  /**
-   * 
-   * @example
-      const result = await getToken();
-  
-      if (result) {
-        console.log('Get token successfully!');
-      } else {
-        console.log('Failed to get token.');
-      }
-   */
-  static async getToken(): Promise<string> {
-    try {
-      const value = await AsyncStorage.getItem(`@${USER_TOKEN}:key`);
-      if (value !== null) {
-        return value;
-      }
-      return '';
-    } catch (error) {
-      console.error('Error getting token from AsyncStorage:', error);
-      return '';
-    }
-  };
-
 }

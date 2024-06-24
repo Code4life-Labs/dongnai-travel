@@ -1,36 +1,21 @@
-import { AxiosResponse } from "axios";
-import { BaseResponse } from "../dto/base-response";
-import { HTTPUtil } from "@/utils/http";
-import { InterceptorCustom } from "../config";
-import baseAPIBuilder from "..";
+// base reponse type
+import { BaseResponse } from "@/api/dto/base-response";
+// base of api
+import { baseAPI } from "@/api";
+// base of methods 
+import { baseMethod } from "@/api/methods";
+// type
+import { CustomInterceptor } from "@/api/type";
 
 /**
  * 
- * @param endpoint ex: /v1/users/2
- * @param interceptor (optional) ex: { typeInterceptor: 'request', cbConfig: (config) => {// do sth with config... } || cbConfig: CommonInterceptor.authorization}
+ * @param endpoint ex: /v1/users/create
+ * @param data (ontional) | ex: {id: 2, email: fsn@gmail.com, password: 123456}
+ * @param interceptor (ontional) | ex: { typeInterceptor: 'request', cbConfig: (config) => {// do sth with config... } || cbConfig: CommonInterceptor.authorization}
  * @returns 
  */
-async function del<T>(endpoint: string, interceptor?: InterceptorCustom): Promise<BaseResponse<T>> {
-  try {
-    let interceptorInstance;
-    if (typeof interceptor === 'object') {
-      interceptorInstance = baseAPIBuilder.buildInterceptor(interceptor.typeInterceptor, { ...interceptor });
-    }
-    const response: AxiosResponse<T> = await baseAPIBuilder.api.delete(endpoint);
-    // eject interceptor
-    interceptorInstance && baseAPIBuilder.api.interceptors.request.eject(interceptorInstance);
-    return response.data as BaseResponse<T>;
-  } catch (error) {
-    console.error('DELETE request error: ' + endpoint, error);
-    const newObj: BaseResponse<T> = {
-      status: HTTPUtil.StatusCodes[409].title,
-      data: null,
-      error: 'Conflict at request DELETE',
-      code: 409,
-      success: null
-    };
-    return newObj;
-  }
+export async function del<T>(endpoint: string, interceptor?: CustomInterceptor): Promise<BaseResponse<T>> {
+  return baseMethod<T>(async () => {
+    return await baseAPI.builder.api.delete(endpoint);
+  }, interceptor)
 }
-
-export default del;
