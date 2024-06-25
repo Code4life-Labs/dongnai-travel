@@ -1,7 +1,8 @@
-import { Tabs } from "expo-router";
 import React from "react";
+import { Tabs } from "expo-router";
 
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+// Import from components
+import { FC } from "@/components";
 
 export default function TabLayout() {
   return (
@@ -15,7 +16,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
+            <FC.TabBarIcon
               name={focused ? "home" : "home-outline"}
               color={color}
             />
@@ -27,7 +28,7 @@ export default function TabLayout() {
         options={{
           title: "Explore",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
+            <FC.TabBarIcon
               name={focused ? "code-slash" : "code-slash-outline"}
               color={color}
             />

@@ -39,12 +39,12 @@ export function getButtonColors(theme: ThemeData[UThemeSchemes]) {
         btn: theme.tertiary,
       },
       type_4: {
-        lbl: theme.background,
-        btn: theme.onBackground,
+        lbl: theme.onBackground,
+        btn: theme.background,
       },
       type_5: {
-        lbl: theme.subBackground,
-        btn: theme.onSubBackground,
+        lbl: theme.onSubBackground,
+        btn: theme.subBackground,
       },
       type_6: {
         lbl: theme.outline,

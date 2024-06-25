@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     width: "100%",
-    height: 46,
+    height: 50,
     borderWidth: 0,
     ...Styles.spacings.ph_18,
     ...Styles.boxShadows.type_1,
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default styles;
+export { styles };
