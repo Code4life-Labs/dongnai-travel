@@ -28,12 +28,11 @@ const defaultStyle = {
 };
 
 /**
- * __Creator__: @NguyenAnhTuan1912
- *
  * Rectangle button là những button hình chữ nhật ở trong app, tuỳ theo container cha mà chiều rộng của nó cũng sẽ thay đổi theo,
  * ngoài ra thì còn hỗ trợ việc "ghi đè shape" của nó như là capsule, rounded.
  * @param props - Props của component.
  * @returns Trả về `TouchableOpacity` | `TouchableWithoutFeedback` | `TouchableHighLight` Component (tuỳ theo lựa chọn).
+ * @NguyenAnhTuan1912
  */
 export default function RectangleButton(props: RectangleButtonProps) {
   const { theme } = useTheme();

@@ -35,7 +35,7 @@ export class BooleanUtils {
       }
 
       default:
-        return false;
+        return data === undefined || data === null || false;
     }
   }
 }

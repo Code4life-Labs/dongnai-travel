@@ -8,7 +8,10 @@ import AppText from "../app_text";
 import { BooleanUtils } from "@/utils/boolean";
 
 // Import from local
+// Import styles
 import { styles } from "./styles";
+
+// Import utils
 import { AppHeaderUtils } from "./utils";
 
 // Import types

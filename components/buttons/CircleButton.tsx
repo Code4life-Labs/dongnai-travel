@@ -28,12 +28,11 @@ const defaultStyle = {
 };
 
 /**
- * __Creator__: @NguyenAnhTuan1912
- *
  * Circle Button là những button nhỏ ở trong app, có hình dạng là một hình tròn. Button này chỉ
  * có icon.
  * @param props Props của component.
  * @returns Trả về `TouchableOpacity` | `TouchableWithoutFeedback` | `TouchableHighLight` Component (tuỳ theo lựa chọn).
+ * @NguyenAnhTuan1912
  */
 export default function CircleButton(props: CircleButtonProps) {
   const { theme } = useTheme();

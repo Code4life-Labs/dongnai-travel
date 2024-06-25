@@ -1,15 +1,9 @@
-import { View, Animated, ScrollView, FlatList } from 'react-native'
-import React, { useCallback } from 'react'
+import { View, Animated } from 'react-native'
+import React from 'react'
 
-import StringUtility from 'utilities/string'
-import ComponentUtility from 'utilities/component'
-
-import AppText from '../app_text/AppText'
-import RectangleButton from '../buttons/RectangleButton'
-import TypeScrollView from '../type_scroll_view/TypeScrollView'
+import TypeScrollView from '../buttons_scroll_bar'
 
 import styles from './AppTabSliderStyles'
-import { app_dms } from 'globals/styles'
 
 import { ViewProps } from 'types/index.d'
 
@@ -47,8 +41,8 @@ const AppTabSlider = ({
   slideTranslateXStart = 100,
   selectTabIndex
 }) => {
-  if(!children) return null;
-  if(!children.length) return children;
+  if (!children) return null;
+  if (!children.length) return children;
 
   const [hasFirstSlideHeight, setHasFirstSlideHeight] = React.useState(false);
   const [count, setCount] = React.useState(0);
@@ -65,8 +59,8 @@ const AppTabSlider = ({
   const listSlideName = React.useMemo(() => {
     return children.map(child => (
       child.type.name === "Child" && child.props.name !== "" && child.props.name
-      ? child.props.name
-      : null
+        ? child.props.name
+        : null
     )).join(";");
   }, [children]);
 
@@ -84,13 +78,13 @@ const AppTabSlider = ({
     });
   });
 
-  if(sliderInfoRef.current.isSliderButtonPress) {
+  if (sliderInfoRef.current.isSliderButtonPress) {
     Animated.timing(translateAnim, {
       toValue: 0,
       duration: 200,
       useNativeDriver: true
     }).start();
-  
+
     Animated.timing(opacityAnim, {
       toValue: 1,
       duration: 100,
@@ -103,7 +97,7 @@ const AppTabSlider = ({
 
   sliderInfoRef.current.isSliderButtonPress = false;
 
-  if(!renderedSlidesInfo.current.renderedSlides[currentSlideIndex]) {
+  if (!renderedSlidesInfo.current.renderedSlides[currentSlideIndex]) {
     renderedSlidesInfo.current.renderedSlides[currentSlideIndex] = children[currentSlideIndex];
   }
 
@@ -116,7 +110,7 @@ const AppTabSlider = ({
         callBack={(type, typeIndex) => { handleButtonPress(typeIndex) }}
         buttonStyle="underline"
         lineIndexTranslateXStart={lineIndexTranslateXStart}
-        style={{position: "relative", zIndex: 2}}
+        style={{ position: "relative", zIndex: 2 }}
       />
       <View style={styles.slide_container}>
         <Animated.View

@@ -32,5 +32,12 @@ export type CircleButtonProps = {
 } & $ExtendableButtonProps;
 
 export type RectangleButtonProps = {
+  children?:
+    | string
+    | JSX.Element
+    | ((
+        isActive: boolean,
+        currentLabelStyle: StyleProp<TextStyle>
+      ) => JSX.Element);
   shape?: UShapes;
 } & $ExtendableButtonProps;

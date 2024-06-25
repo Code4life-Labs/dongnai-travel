@@ -17,9 +17,12 @@ import { Styles } from "@/styles";
 import { BooleanUtils } from "@/utils/boolean";
 
 // Import from local
+// Import components
 import CenterPart from "./HeaderCenterPart";
-import { StackLeftPart, TabLeftPart } from "./HeaderLeftPart";
 import RightPart from "./HeaderRightPart";
+import { StackLeftPart, TabLeftPart } from "./HeaderLeftPart";
+
+// Import styles
 import { styles } from "./styles";
 
 // Import types
