@@ -12,12 +12,12 @@ import { themeSelectors } from "@/states/redux/theme/selectors";
  */
 export function useTheme() {
   const theme = useSelector(themeSelectors.selectCurrentScheme);
-  const themeMode = useSelector(themeSelectors.selectMode);
+  const currentScheme = useSelector(themeSelectors.selectMode);
   const dispatch = useDispatch();
 
   return {
     theme,
-    themeMode,
+    currentScheme,
     toggleTheme: function () {
       return dispatch(themeActions.toggleThemeState());
     },

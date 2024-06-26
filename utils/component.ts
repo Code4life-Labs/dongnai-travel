@@ -7,7 +7,7 @@ import {
   TextStyle,
 } from "react-native";
 
-type UTouchables = "highlight" | "opacity";
+export type UTouchables = "none" | "highlight" | "opacity";
 
 export class ComponentUtils {
   /**
@@ -17,7 +17,7 @@ export class ComponentUtils {
    * @param type Kiểu của touchable. Bao gồm 3 kiểu là `highlight`, `opacity`
    * @returns Một Touchable tương ứng với type. Nếu như type không là `highlight` hoặc `opacity` thì sẽ trả về `TouchableWithoutFeedback`
    */
-  static getTouchable(type: UTouchables) {
+  static getTouchable(type?: UTouchables) {
     switch (type) {
       case "highlight":
         return TouchableHighlight;
@@ -45,6 +45,8 @@ export class ComponentUtils {
       | Array<StyleProp<ViewStyle | TextStyle>>,
     ...otherStyles: Array<StyleProp<ViewStyle | TextStyle>>
   ) {
-    return otherStyles.concat(baseStyle);
+    if (Array.isArray(baseStyle)) return baseStyle.concat(otherStyles);
+
+    return [baseStyle, ...otherStyles];
   }
 }

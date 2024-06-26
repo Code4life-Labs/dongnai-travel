@@ -14,7 +14,9 @@ type GetTextPartsOptions = {
 
 export class StringUtils {
   static Alphabet =
-    "abcdefghijklmnopqrstuvw0123456789xyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  static Characters = "abcdefghijklmnopqrstuvwxyz";
+  static Digits = "1234567890";
 
   /**
    * __Creator__: @NguyenAnhTuan1912

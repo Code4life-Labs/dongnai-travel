@@ -1,7 +1,6 @@
 import { usePathname } from "expo-router";
 import { Platform, Share } from "react-native";
 import * as FileSystem from "expo-file-system";
-import { callWithGlobalLoading } from "./reduxStore";
 
 // Import utils
 import { StringUtils } from "./string";
@@ -164,6 +163,35 @@ export class OtherUtils {
   }
 
   /**
+   * __Creator__: @NguyenAnhTuan
+   *
+   * Use this method to create a static singleton class
+   * @deprecated
+   * @param name
+   * @param fn
+   */
+  static createSingleton<
+    Class,
+    T extends Record<string, any>,
+    Args extends Array<keyof T>,
+  >(name: string, fn: (instance: Class, ...args: Args) => void) {
+    let _instance: any;
+
+    return class {
+      constructor(...args: Args) {
+        if (_instance) return _instance;
+
+        fn.call(this, this as any, ...args);
+        _instance = this;
+      }
+
+      get [Symbol.toStringTag]() {
+        return name;
+      }
+    } as { new (): Class };
+  }
+
+  /**
    * __Creator__: @FromSunNews
    *
    * Đây là hàm dùng để chia sẻ hình ảnh của bài viết lên các nền tảng mạng xả hội
@@ -173,38 +201,33 @@ export class OtherUtils {
    * @returns
    */
   static async shareImageToSocial(message: string, url: string, title: string) {
-    let base64Data;
-
-    await callWithGlobalLoading(async () => {
-      // Kiểm tra xem url này có phải là một đường dẫn hay không
-      if (StringUtils.hasLink(url)) {
-        base64Data = url;
-        return;
-      }
-
-      base64Data = "data:image/jpeg;base64,";
-      try {
-        const { uri } = await FileSystem.downloadAsync(
-          url,
-          FileSystem.documentDirectory + "bufferimg.png"
-        );
-
-        base64Data += await FileSystem.readAsStringAsync(uri, {
-          encoding: "base64",
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    });
-
-    Share.share({
-      message: message, // supporting android
-      url: base64Data, // not supporting
-      title: title,
-    })
-      .then((result) => console.log(result))
-      .catch((errorMsg) => console.log(errorMsg));
-
+    // let base64Data;
+    // await callWithGlobalLoading(async () => {
+    //   // Kiểm tra xem url này có phải là một đường dẫn hay không
+    //   if (StringUtils.hasLink(url)) {
+    //     base64Data = url;
+    //     return;
+    //   }
+    //   base64Data = "data:image/jpeg;base64,";
+    //   try {
+    //     const { uri } = await FileSystem.downloadAsync(
+    //       url,
+    //       FileSystem.documentDirectory + "bufferimg.png"
+    //     );
+    //     base64Data += await FileSystem.readAsStringAsync(uri, {
+    //       encoding: "base64",
+    //     });
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // });
+    // Share.share({
+    //   message: message, // supporting android
+    //   url: base64Data, // not supporting
+    //   title: title,
+    // })
+    //   .then((result) => console.log(result))
+    //   .catch((errorMsg) => console.log(errorMsg));
     // if (Platform.OS === "android") {
     //   Share.share({
     //     message: message, // supporting android

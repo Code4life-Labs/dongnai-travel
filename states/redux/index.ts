@@ -5,33 +5,33 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Import slices
 import { themeSlice } from "./theme";
 import { blogsSlice } from "./blogs";
-import { notificationSlice } from "./notifications";
+// import { notificationSlice } from "./notifications";
 import { placesSlice } from "./places";
 import { mapSlice } from "./map";
-import { profileSlice } from "./profile";
-import { settingSlice } from "./setting";
-import { userSlice } from "./user";
+// import { profileSlice } from "./profile";
+// import { settingSlice } from "./setting";
+// import { userSlice } from "./user";
 import { manifoldSlice } from "./manifold";
-import { warehouseSlice } from "./warehouse";
-import { filterSlice } from "./filter";
+// import { warehouseSlice } from "./warehouse";
+// import { filterSlice } from "./filter";
 import { languageSlice } from "./language";
-import { itinerarySlice } from "./itinerary";
+// import { itinerarySlice } from "./itinerary";
 
 // Central Reducer.
 const reducers = combineReducers({
   [themeSlice.name]: themeSlice.reducer,
   [blogsSlice.name]: blogsSlice.reducer,
-  [notificationSlice.name]: notificationSlice.reducer,
+  // [notificationSlice.name]: notificationSlice.reducer,
   [placesSlice.name]: placesSlice.reducer,
   [mapSlice.name]: mapSlice.reducer,
-  [profileSlice.name]: profileSlice.reducer,
-  [settingSlice.name]: settingSlice.reducer,
-  [userSlice.name]: userSlice.reducer,
+  // [profileSlice.name]: profileSlice.reducer,
+  // [settingSlice.name]: settingSlice.reducer,
+  // [userSlice.name]: userSlice.reducer,
   [manifoldSlice.name]: manifoldSlice.reducer,
-  [warehouseSlice.name]: warehouseSlice.reducer,
-  [filterSlice.name]: filterSlice.reducer,
+  // [warehouseSlice.name]: warehouseSlice.reducer,
+  // [filterSlice.name]: filterSlice.reducer,
   [languageSlice.name]: languageSlice.reducer,
-  [itinerarySlice.name]: itinerarySlice.reducer,
+  // [itinerarySlice.name]: itinerarySlice.reducer,
 });
 
 const persistConfig = {

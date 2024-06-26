@@ -5,11 +5,11 @@ import { Text, Linking } from "react-native";
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
 
+// Import from styles
+import { Styles } from "@/styles";
+
 // Import from utils
 import { ComponentUtils } from "@/utils/component";
-
-// Import from styles
-import { STYLES } from "@/styles";
 
 // Import types
 import { AppTextProps } from "./type";
@@ -33,16 +33,13 @@ export default function AppText({
   ...props
 }: AppTextProps) {
   const { theme } = useTheme();
-  const textStyle = React.useMemo(
-    () => [
-      STYLES.typography.fonts[fontStyle][weight][size],
-      { color: theme[color] },
-    ],
-    [fontStyle, weight, size, color, theme]
-  );
-  const textCompleteStyle = ComponentUtils.mergeStyle(textStyle, props.style);
 
-  // Sẽ thêm hàm validate url sau, tạm thời dùng điệu kiện hyperLink !== ''
+  const textCompleteStyle = ComponentUtils.mergeStyle(
+    [Styles.typography.fonts[fontStyle][weight][size], { color: theme[color] }],
+    props.style
+  );
+
+  // Link
   if (hyperLink && hyperLink !== "") {
     return (
       <Text
@@ -55,6 +52,7 @@ export default function AppText({
     );
   }
 
+  // Route
   if (toScreen.screenName !== "") {
     return (
       <Link href={{ pathname: toScreen.screenName, params: toScreen.params }}>

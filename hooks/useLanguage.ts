@@ -20,6 +20,10 @@ export const { useLanguage, useLanguageActions, useLanguageState } =
         updateData(data: any) {
           dispatch(languageActions.updateData(data));
         },
+
+        loadLanguage(data: any) {
+          dispatch(languageActions.updateData(data));
+        },
       };
     };
 
