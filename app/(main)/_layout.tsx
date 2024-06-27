@@ -7,6 +7,7 @@ import { FC } from "@/components";
 export default function TabLayout() {
   return (
     <Tabs
+      tabBar={(props) => <FC.BottomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
       }}
@@ -24,7 +25,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(explore)"
+        name="explore"
         options={{
           title: "Explore",
           tabBarIcon: ({ color, focused }) => (

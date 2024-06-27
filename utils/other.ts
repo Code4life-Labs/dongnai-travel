@@ -7,12 +7,10 @@ import { StringUtils } from "./string";
 
 export class OtherUtils {
   /**
-   * __Creator__: @NguyenAnhTuan1912
-   *
    * Hàm trả về tên của một route đang được active. Nếu như muốn setup title cho cho các screen trong navigator con, ví dụ như là
    * một Stack navigator nằm trong screen của Tab navigator, thì dùng hàm này cho thuộc tính `options` của Tab screen.
-   *
-   * __How to use?__
+   * @returns Trả về tên của route đang được active.
+   * @NguyenAnhTuan1912
    * @example
    * ```jsx
    * <Tab.Screen
@@ -23,21 +21,18 @@ export class OtherUtils {
    *  )}
    * />
    * ```
-   *
-   * @returns Trả về tên của route đang được active.
    */
   static getHeaderTitle() {
     return usePathname();
   }
 
   /**
-   * __Creator__: @NguyenAnhTuan1912
-   *
    * Hàm sẽ so sánh 2 Số, chuỗi đối tượng hoặc function nào đó (gọi chung là đối tượng đi). Để kiểm tra xem
    * 2 đối tượng đó có giống nhau không? Không chỉ về ref mà còn là key và value.
    * @param a Số, chuỗi, đối tượng hoặc function đầu tiên muốn so sánh.
    * @param b Số, chuỗi, đối tượng hoặc function thứ hai muốn so sánh.
    * @returns
+   * @NguyenAnhTuan1912
    *
    * @example
    *
@@ -98,12 +93,11 @@ export class OtherUtils {
   }
 
   /**
-   * __Creator__: @FromSunNews
-   *
    * Hàm này để kiểm tra xem text có đúng với regex đã cung cấp hay chưa
    * @param text đoạn văn bản được cung cấp
    * @param regex được cung cấp
    * @returns
+   * @FromSunNews
    */
   static validateRegex(text: string, regex: RegExp) {
     return regex.test(text);
@@ -115,6 +109,7 @@ export class OtherUtils {
    * @param arr
    * @param selectValueToCompare
    * @param value
+   * @NguyenAnhTuan1912
    */
   static removeFrom<T>(
     arr: Array<T>,
@@ -128,12 +123,11 @@ export class OtherUtils {
   }
 
   /**
-   * __Creator__: @NguyenAnhTuan1912
-   *
    * Dùng hàm này với async function để delay một tác vụ nào đó.
    * @param callBack
    * @param timeout
    * @returns
+   * @NguyenAnhTuan1912
    */
   static wait(callBack: () => void, timeout: number) {
     return new Promise((res) => {
@@ -145,11 +139,10 @@ export class OtherUtils {
   }
 
   /**
-   * __Creator__: @NguyenAnhTuan1912
-   *
    * Hàm này dùng để bind tất cả các methods trong một object với `obj` đó.
    * @param obj object cần bind tất cả các method của nó.
    * @param options
+   * @NguyenAnhTuan1912
    */
   static autoBind(obj: any, options: { protoProps: string[] }) {
     let propNames = options?.protoProps
@@ -163,12 +156,11 @@ export class OtherUtils {
   }
 
   /**
-   * __Creator__: @NguyenAnhTuan
-   *
    * Use this method to create a static singleton class
    * @deprecated
    * @param name
    * @param fn
+   * @NguyenAnhTuan1912
    */
   static createSingleton<
     Class,
@@ -192,13 +184,12 @@ export class OtherUtils {
   }
 
   /**
-   * __Creator__: @FromSunNews
-   *
    * Đây là hàm dùng để chia sẻ hình ảnh của bài viết lên các nền tảng mạng xả hội
    * @param message lời nhắn khi chia sẻ
    * @param url đường dẫn hoặc dạng base64 của hình ảnh muốn chia sẻ
    * @param title tiêu đề của bài chia sẻ
    * @returns
+   * @FromSunNews
    */
   static async shareImageToSocial(message: string, url: string, title: string) {
     // let base64Data;

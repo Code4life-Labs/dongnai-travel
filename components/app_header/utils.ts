@@ -10,9 +10,9 @@ export class AppHeaderUtils {
 
     if (BooleanUtils.isEmpty(props.options)) return title;
 
-    if (!BooleanUtils.isEmpty(props.options.title)) title = props.options.title;
-    if (!BooleanUtils.isEmpty(props.screenName)) title = props.screenName;
     if (!BooleanUtils.isEmpty(props.route)) title = props.route.name;
+    if (!BooleanUtils.isEmpty(props.screenName)) title = props.screenName;
+    if (!BooleanUtils.isEmpty(props.options.title)) title = props.options.title;
 
     return title;
   }

@@ -55,8 +55,6 @@ export default function AppHeader(
     <TabLeftPart {...(props as AppTabHeaderProps)} />
   );
 
-  console.log("State:", (props as any).back);
-
   return (
     <View style={headerStyle}>
       {LeftPart}

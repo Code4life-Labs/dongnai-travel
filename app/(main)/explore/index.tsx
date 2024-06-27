@@ -7,14 +7,14 @@ import { FC } from "@/components";
 export default function ExploreScreen() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      {/* <FC.AppText>Welcome to explore screen</FC.AppText>
+      <FC.AppText>Welcome to explore screen</FC.AppText>
       <FC.RectangleButton
         type="opacity"
         onPress={() => router.navigate("/details")}
       >
         Hello
-      </FC.RectangleButton> */}
-      <FC.ButtonsScrollBar
+      </FC.RectangleButton>
+      {/* <FC.ButtonsScrollBar
         buttonType="underline"
         buttonContents={[
           { label: "Google", value: "google" },
@@ -26,7 +26,7 @@ export default function ExploreScreen() {
           { label: "Reddit", value: "reddit" },
         ]}
         onButtonPress={(content) => console.log("Button's content:", content)}
-      />
+      /> */}
     </View>
   );
 }
