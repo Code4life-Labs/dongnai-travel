@@ -121,24 +121,28 @@ export const placesSlice = createSlice({
     builder.addCase(
       placesThunks.getPlacesByTypeAsync.fulfilled,
       (state, action) => {
-        let [typeOfPlace, places] = action.payload;
+        if (!action.payload) return;
+
+        const [type, places] = action.payload;
+
+        if (!places) return;
 
         if (places.length !== 0) {
-          state.currentPlaces.type = typeOfPlace;
+          state.currentPlaces.type = type;
           state.currentPlaces.data = state.currentPlaces.data.concat(places);
           state.currentPlaces.skip += places.length;
         }
       }
     );
 
-    builder.addCase(
-      placesThunks.getPlaceDetailsByIdAsync.fulfilled,
-      (state, action) => {
-        let [placeId, placeDetails] = action.payload;
+    // builder.addCase(
+    //   placesThunks.getPlaceDetailsByIdAsync.fulfilled,
+    //   (state, action) => {
+    //     let [placeId, placeDetails] = action.payload;
 
-        state.detailsOfPlaces.set(placeId, placeDetails);
-      }
-    );
+    //     state.detailsOfPlaces.set(placeId, placeDetails);
+    //   }
+    // );
   },
 });
 

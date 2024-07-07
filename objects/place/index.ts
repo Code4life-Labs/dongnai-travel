@@ -6,7 +6,7 @@ import { PlaceStorage } from "./storage";
 import type { Place } from "./type";
 
 export class PlaceManager {
-  static Api = new PlaceAPI();
+  static Api = new PlaceAPI("https://dong-nai-travel-api.onrender.com");
   static Validator = new PlaceValidator();
   static Storage = new PlaceStorage();
 

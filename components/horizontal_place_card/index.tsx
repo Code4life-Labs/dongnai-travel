@@ -1,33 +1,33 @@
 import React from "react";
-import { View, Text, ImageBackground, Alert } from "react-native";
+import { View, ImageBackground, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useSelector } from "react-redux";
 
-import { useTheme } from "hooks/useTheme";
-import { selectCurrentLanguage } from "states/redux/language/LanguageSlice";
-
-import NumberUtility from "utilities/number";
-import StringUtility from "utilities/string";
-
-import { withPlaceCard } from "hocs/withPlaceCard";
-import AppText from "../app_text/AppText";
+// Import from components
+import AppText from "../app_text";
 import RectangleButton from "../buttons/RectangleButton";
 import CircleButton from "../buttons/CircleButton";
 
-import styles from "./HorizontalPlaceCardStyles";
-import { app_sp, app_shdw } from "globals/styles";
+// Import from hocs
+import { withPlaceActions } from "@/hocs/with_place_actions";
 
-import {
-  PlaceDataProps,
-  WithPlaceCardWrappedComponentProps,
-} from "types/index.d.ts";
-/**
- * @typedef HorizontalPlaceCardProps
- * @property {PlaceDataProps} place Thông tin về một địa điểm của một nơi nào đó.
- * @property {string} typeOfBriefPlace Type của brief places.
- * @property {number} placeIndex Index của place trong data của briefPlace. Cái này dùng để tìm place cho nhanh, khỏi dùng vòng lặp.
- */
+// Import from hooks
+import { useTheme } from "@/hooks/useTheme";
+
+// Import from styles
+import { Styles } from "@/styles";
+
+// Import from utils
+import { StringUtils } from "@/utils/string";
+import { NumberUtils } from "@/utils/number";
+
+// Import from local
+// Import styles
+import { styles } from "./styles";
+
+// Import types
+import type { HorizontalPlaceCardProps } from "./type";
+import type { WithPlaceActions_WrappedComponentProps } from "@/hocs/with_place_actions/type";
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -35,28 +35,22 @@ import {
  * Đây là card nằm ngang, hiển thị một số thông tin cơ bản của một địa điểm nào đó. Có thể ấn vào để xem chi tiết
  * một địa điểm nào đó. Một card sẽ chứa 3 cột. Cột đâu tiên là dành cho ảnh, cột thứ 2 là giành cho nội dung chính
  * và cột cuói cùng là giành cho nút share.
- * @param {WithPlaceCardWrappedComponentProps} props Props của component.
+ * @param props Props của component.
  * @returns Thẻ ngang chứa các thông tin cơ bản của một địa điểm.
  */
 function HorizontalPlaceCard({
-  place,
+  data,
   placeIndex,
-  typeOfBriefPlace,
-  extendedPlaceInfo,
-  addPlaceDetails,
-  updateBriefPlace,
+  type,
   getTextContentInHTMLTag,
-  handlePressImageButton,
-  handleLikeButton,
-  handleShareToSocial,
+  actions
   ...props
-}) {
+}: HorizontalPlaceCardProps & WithPlaceActions_WrappedComponentProps) {
   const navigation = useNavigation();
   // const langCode = useSelector(selectCurrentLanguage).languageCode
   // const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
-  const { theme, themeMode } = useTheme();
+  const { theme } = useTheme();
 
-  let [city, province] = getTextContentInHTMLTag(place.adr_address);
   let presentationImage =
     place && place.place_photos ? { uri: place.place_photos[0] } : {};
 
@@ -66,7 +60,7 @@ function HorizontalPlaceCard({
         {/* Cột đâu tiên - Image Container */}
         <RectangleButton
           isOnlyContent
-          typeOfButton="none"
+          type="none"
           overrideShape="rounded_4"
           onPress={handlePressImageButton}
           style={app_sp.me_12}
@@ -130,7 +124,7 @@ function HorizontalPlaceCard({
               defaultColor="type_5"
               activeColor="type_1"
               style={app_sp.me_8}
-              typeOfButton="highlight"
+              type="highlight"
               onPress={handleLikeButton}
               setIcon={
                 <Ionicons
@@ -144,7 +138,7 @@ function HorizontalPlaceCard({
               defaultColor="type_5"
               activeColor="type_1"
               style={app_sp.me_8}
-              typeOfButton="highlight"
+              type="highlight"
               onPress={() => Alert.alert("Navigate to map")}
               setIcon={<Ionicons name="map" size={14} />}
             />
@@ -171,4 +165,4 @@ function HorizontalPlaceCard({
   );
 }
 
-export default withPlaceCard(HorizontalPlaceCard);
+export default withPlaceActions(HorizontalPlaceCard);

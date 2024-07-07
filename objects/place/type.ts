@@ -72,4 +72,6 @@ export type BasePlace = {
 export type Place = {
   content: PlaceContent;
   photos: Array<string>;
+  isLiked: boolean;
+  isVisited: boolean;
 } & $Extendable;

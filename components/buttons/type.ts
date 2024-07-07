@@ -19,11 +19,11 @@ export type $ExtendableButtonProps = {
   defaultColor?: UButtonColorTypes;
   activeColor?: UButtonColorTypes;
   boxShadowType?: UBoxShadowTypes;
-} & TouchableHighlightProps &
-  TouchableOpacityProps;
+} & Omit<TouchableHighlightProps, "children"> &
+  Omit<TouchableOpacityProps, "children">;
 
 export type CircleButtonProps = {
-  setIcon:
+  setIcon?:
     | JSX.Element
     | ((
         isActive: boolean,

@@ -85,9 +85,9 @@ export default function BottomTabBar(props: BottomTabBarProps) {
           };
 
           return (TabButtonsData as any)[route.name].isHighlight ? (
-            <HighlightTabButton {...tabBottomProps} />
+            <HighlightTabButton key={route.name} {...tabBottomProps} />
           ) : (
-            <TabButton {...tabBottomProps} />
+            <TabButton key={route.name} {...tabBottomProps} />
           );
         })}
       </View>

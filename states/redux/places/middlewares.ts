@@ -1,5 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+// Import from objects
+import { PlaceManager } from "@/objects/place";
+
 // Import types
 import type { AppState } from "../type";
 import type { Place } from "@/objects/place/type";
@@ -14,31 +17,30 @@ const getPlacesByTypeAsync = createAsyncThunk(
         type = payload,
         places = state.places.currentPlaces,
         limit = places ? places.limit : 5,
-        skip = places ? places.skip : 0,
-        query = `limit=${limit}&skip=${skip}&filter=quality:${type}`;
-      const data = await getPlacesAPI(query);
-      return [type, data];
+        skip = places ? places.skip : 0;
+      const data = await PlaceManager.Api.getPlacesAsync(limit, skip, type);
+      return [type, data] as const;
     } catch (error: any) {
       console.error(error.message);
     }
   }
 );
 
-const getPlaceDetailsByIdAsync = createAsyncThunk(
-  "places/getPlaceDetailsByIdAsync",
-  async (payload: { placeId: string; lang: string }, thunkAPI) => {
-    try {
-      const { placeId, lang } = payload,
-        query = `placeId=${placeId}&lang=${lang}`;
-      const data = await getPlaceDetailsWithPipelineAPI(query);
-      return [placeId, data];
-    } catch (error: any) {
-      console.error(error.message);
-    }
-  }
-);
+// const getPlaceDetailsByIdAsync = createAsyncThunk(
+//   "places/getPlaceDetailsByIdAsync",
+//   async (payload: { placeId: string; lang: string }, thunkAPI) => {
+//     try {
+//       const { placeId, lang } = payload,
+//         query = `placeId=${placeId}&lang=${lang}`;
+//       const data = await getPlaceDetailsWithPipelineAPI(query);
+//       return [placeId, data];
+//     } catch (error: any) {
+//       console.error(error.message);
+//     }
+//   }
+// );
 
 export const placesThunks = {
   getPlacesByTypeAsync,
-  getPlaceDetailsByIdAsync,
+  // getPlaceDetailsByIdAsync,
 };
