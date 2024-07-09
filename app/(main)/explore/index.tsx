@@ -48,11 +48,13 @@ export default function ExploreScreen() {
     },
   });
 
+  const _languageData = (language.data as any)["exploreScreen"] as any;
+
   React.useEffect(() => {
     if (!places || places.length === 0) {
       placesDispatchers.get(state.currentType);
     }
-  }, [state.currentType]);
+  }, [state.currentType, places]);
 
   return (
     <View style={{ backgroundColor: theme.background }}>
@@ -71,16 +73,18 @@ export default function ExploreScreen() {
             type="highlight"
             activeColor="type_1"
             defaultColor="type_5"
-            style={Styles.spacings.mt_12}
+            style={[{ justifyContent: "space-between" }, Styles.spacings.mt_12]}
           >
             {(isActive, currentLabelStyle) => (
               <>
+                <FC.AppText size="h2" style={{ width: 140 }}>
+                  {_languageData["banner_button"][language.code]}
+                </FC.AppText>
                 <Ionicons
                   name="chevron-forward-outline"
                   style={currentLabelStyle}
                   size={25}
                 />
-                {/* {(language.data as any).banner_button[language.code]} */}
               </>
             )}
           </FC.RectangleButton>
@@ -115,7 +119,7 @@ export default function ExploreScreen() {
         ListEmptyComponent={
           <View style={[Styles.spacings.mh_18, Styles.spacings.mb_12]}>
             {[1, 2, 3].map((value, index) => (
-              <FC.Seletons.HorizontalPlaceCard key={value + index} />
+              <FC.Skeletons.HorizontalPlaceCard key={value + index} />
             ))}
           </View>
         }
@@ -124,7 +128,7 @@ export default function ExploreScreen() {
             buttonContents={(PlaceQualitiesData as any)[language.code]}
             buttonType="capsule"
             onButtonPress={(content) => stateFns.setCurrentType(content.value)}
-            scrollStyle={[Styles.spacings.ms_18, Styles.spacings.pv_12]}
+            scrollStyle={[Styles.spacings.ps_18, Styles.spacings.pv_12]}
             containerStyle={[
               Styles.spacings.pv_10,
               { backgroundColor: theme.background },
@@ -133,12 +137,11 @@ export default function ExploreScreen() {
         }
         renderItem={(item) => (
           <View style={Styles.spacings.ph_18}>
-            {/* <HorizontalPlaceCard
-              typeOfBriefPlace={type}
-              place={item.item}
+            <FC.HorizontalPlaceCard
+              data={item.item}
+              type={state.currentType}
               placeIndex={item.index}
-            /> */}
-            <FC.AppText>{item.item.name}</FC.AppText>
+            />
           </View>
         )}
         keyExtractor={(item) => item._id as string}

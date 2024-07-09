@@ -7,7 +7,9 @@ import ButtonsScrollBar from "./buttons_scroll_bar";
 import { AppListItem, AppOrderedList, AppUnorderedList } from "./app_list";
 import TabBarIcon from "./navigation/TabBarIcon";
 import Loading from "./loading";
+import HorizontalPlaceCard from "./horizontal_place_card";
 import HorizontalPlaceCardSkeleton from "./horizontal_place_card/seleton";
+import Input from "./input";
 
 export const FC = {
   AppText,
@@ -22,7 +24,9 @@ export const FC = {
   ButtonsScrollBar,
   BottomTabBar,
   SimpleBarChart,
-  Seletons: {
+  HorizontalPlaceCard,
+  Skeletons: {
     HorizontalPlaceCard: HorizontalPlaceCardSkeleton,
   },
+  Input,
 };

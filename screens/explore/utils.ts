@@ -57,7 +57,7 @@ export class ExploreScreenUtils {
     getPlaces: () => void
   ) {
     if (localData.status.isEndReach) {
-      if (places) {
+      if (places && places.length > 0) {
         getPlaces();
       }
     }

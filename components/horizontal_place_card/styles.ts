@@ -64,17 +64,20 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
+  card_information_cell: { alignItems: "center", flexDirection: "row" },
+
   card_buttons_container: {
     width: "100%",
     alignItems: "center",
     flexDirection: "row",
   },
 
-  card_share_container: {},
+  card_share_container: {
+    ...Styles.spacings.ms_6,
+  },
 
-  car_skeleton_rectangle: {
+  card_skeleton_rectangle: {
     width: "100%",
     height: 19,
-    ...Styles.shapes.rounded_4,
   },
 });

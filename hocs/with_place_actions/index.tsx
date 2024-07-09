@@ -58,11 +58,11 @@ export function withPlaceActions<T extends object>(
   return function (props: T) {
     const { data } = props as any;
 
-    const placeDispatchers = usePlaceDetailsActions();
+    const placeDetailsDispatchers = usePlaceDetailsActions();
 
     const actions: WithPlaceActions_Actions = {
       navigate() {
-        placeDispatchers.add(data);
+        placeDetailsDispatchers.add(data);
         router.navigate(`/${data._id}`);
       },
 
@@ -71,7 +71,7 @@ export function withPlaceActions<T extends object>(
         // Call API
 
         // Update state if call api successfully
-        placeDispatchers.update(data);
+        placeDetailsDispatchers.update(data);
       },
 
       visit() {
@@ -79,7 +79,7 @@ export function withPlaceActions<T extends object>(
         // Call API
 
         // Update state if call api successfully
-        placeDispatchers.update(data);
+        placeDetailsDispatchers.update(data);
       },
 
       share() {
@@ -89,11 +89,11 @@ export function withPlaceActions<T extends object>(
       },
 
       saveInformation(placeDetails: Place) {
-        placeDispatchers.add(placeDetails);
+        placeDetailsDispatchers.add(placeDetails);
       },
 
       updateInformation(placeDetails: Place) {
-        placeDispatchers.update(placeDetails);
+        placeDetailsDispatchers.update(placeDetails);
       },
     };
 

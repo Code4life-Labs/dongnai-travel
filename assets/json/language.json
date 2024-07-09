@@ -1,26 +1,26 @@
 {
   "form": {
-    "EMAIL_RULE_MESSAGE": {
+    "email_rule_message": {
       "vi": "Email is invalid.",
       "en": "Email không đúng."
     },
-    "PASSWORD_RULE_MESSAGE": {
+    "password_rule_message": {
       "vi": "Cần tối thiểu 1 từ, 1 chữ số và tối thiểu 8 ký tự.",
       "en": "At least 1 letter, a number, at least 8 characters."
     },
-    "AT_LEAST2_RULE_MESSAGE": {
+    "at_least2chars_rule_message": {
       "vi": "Trường này cần tối thiểu 2 ký tự.",
       "en": "This field must be at least 2 characters."
     },
-    "BIRTHDAY_RULE_MESSAGE": {
+    "birthday_rule_message": {
       "vi": "Định dạng không đúng dd/mm/yyyy.",
       "en": "Incorrect format dd/mm/yyyy."
     },
-    "FIELD_REQUIRED_MESSAGE": {
+    "field_required_message": {
       "vi": "Trường này thì cần thiết.",
       "en": "This field is required."
     },
-    "FIELD_MIN_LENGTH_MESSAGE": {
+    "field_min_length_message": {
       "vi": "Trường này cần tối thiểu 8 ký tự",
       "en": "This field must be at least 8 characters"
     }

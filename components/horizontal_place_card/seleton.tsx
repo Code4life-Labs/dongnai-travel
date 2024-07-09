@@ -15,8 +15,6 @@ import { Styles } from "@/styles";
 import { styles } from "./styles";
 
 const HorizontalPlaceCardSkeleton = () => {
-  console.log("Horizontal Card Skeleton Render");
-  //theme
   const { theme } = useTheme();
 
   return (
@@ -39,7 +37,7 @@ const HorizontalPlaceCardSkeleton = () => {
         <View style={styles.card_content_container}>
           <View
             style={{
-              ...styles.car_skeleton_rectangle,
+              ...styles.card_skeleton_rectangle,
               ...Styles.spacings.mb_12,
               backgroundColor: theme.subOutline,
               height: 7,
@@ -48,7 +46,7 @@ const HorizontalPlaceCardSkeleton = () => {
           <View>
             <View
               style={{
-                ...styles.car_skeleton_rectangle,
+                ...styles.card_skeleton_rectangle,
                 height: 18,
                 ...Styles.spacings.mb_6,
                 backgroundColor: theme.subOutline,
@@ -56,7 +54,7 @@ const HorizontalPlaceCardSkeleton = () => {
             ></View>
             <View
               style={{
-                ...styles.car_skeleton_rectangle,
+                ...styles.card_skeleton_rectangle,
                 height: 12,
                 ...Styles.spacings.mb_6,
                 backgroundColor: theme.subOutline,
@@ -72,7 +70,7 @@ const HorizontalPlaceCardSkeleton = () => {
             >
               <View
                 style={{
-                  ...styles.car_skeleton_rectangle,
+                  ...styles.card_skeleton_rectangle,
                   height: 12,
                   ...Styles.spacings.mb_6,
                   backgroundColor: theme.subOutline,
@@ -80,7 +78,7 @@ const HorizontalPlaceCardSkeleton = () => {
               ></View>
               <View
                 style={{
-                  ...styles.car_skeleton_rectangle,
+                  ...styles.card_skeleton_rectangle,
                   height: 12,
                   ...Styles.spacings.mb_6,
                   backgroundColor: theme.subOutline,
@@ -90,7 +88,7 @@ const HorizontalPlaceCardSkeleton = () => {
             <View style={styles.card_information_col}>
               <View
                 style={{
-                  ...styles.car_skeleton_rectangle,
+                  ...styles.card_skeleton_rectangle,
                   height: 12,
                   ...Styles.spacings.mb_6,
                   backgroundColor: theme.subOutline,

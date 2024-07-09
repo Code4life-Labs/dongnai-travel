@@ -13,6 +13,10 @@ import { withPlaceActions } from "@/hocs/with_place_actions";
 
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
+import { useLanguage } from "@/hooks/useLanguage";
+
+// Import from objects
+import { PlaceManager } from "@/objects/place";
 
 // Import from styles
 import { Styles } from "@/styles";
@@ -30,29 +34,25 @@ import type { HorizontalPlaceCardProps } from "./type";
 import type { WithPlaceActions_WrappedComponentProps } from "@/hocs/with_place_actions/type";
 
 /**
- * __Creator__: @NguyenAnhTuan1912
- *
  * Đây là card nằm ngang, hiển thị một số thông tin cơ bản của một địa điểm nào đó. Có thể ấn vào để xem chi tiết
  * một địa điểm nào đó. Một card sẽ chứa 3 cột. Cột đâu tiên là dành cho ảnh, cột thứ 2 là giành cho nội dung chính
  * và cột cuói cùng là giành cho nút share.
  * @param props Props của component.
  * @returns Thẻ ngang chứa các thông tin cơ bản của một địa điểm.
+ * @NguyenAnhTuan1912
  */
-function HorizontalPlaceCard({
+function _HorizontalPlaceCard({
   data,
   placeIndex,
   type,
   getTextContentInHTMLTag,
-  actions
+  actions,
   ...props
 }: HorizontalPlaceCardProps & WithPlaceActions_WrappedComponentProps) {
-  const navigation = useNavigation();
-  // const langCode = useSelector(selectCurrentLanguage).languageCode
-  // const langData = useSelector(selectCurrentLanguage).data?.exploreScreen
-  const { theme } = useTheme();
+  const { theme, currentScheme } = useTheme();
+  const { language } = useLanguage();
 
-  let presentationImage =
-    place && place.place_photos ? { uri: place.place_photos[0] } : {};
+  let presentationImage = data && data.photos ? { uri: data.photos[0] } : {};
 
   return React.useMemo(
     () => (
@@ -61,18 +61,19 @@ function HorizontalPlaceCard({
         <RectangleButton
           isOnlyContent
           type="none"
-          overrideShape="rounded_4"
-          onPress={handlePressImageButton}
-          style={app_sp.me_12}
+          shape="rounded_4"
+          onPress={actions.navigate}
+          style={Styles.spacings.me_12}
         >
           <ImageBackground
             style={styles.card_image_container}
             source={presentationImage}
           >
-            {place.isRecommended && (
+            {data.isRecommended && (
               <View style={styles.card_recommended_mark_container}>
-                <AppText font="body2" color="ext_second">
-                  {langData.place_card_recommended[langCode]}
+                <AppText size="body2" color="secondary">
+                  {language.data.place_card_recommended[language.code] ||
+                    "Recommended"}
                 </AppText>
               </View>
             )}
@@ -83,52 +84,60 @@ function HorizontalPlaceCard({
         <View style={styles.card_main_container}>
           <View style={styles.card_content_container}>
             <View style={styles.card_tag_container}>
-              <AppText font="body2" numberOfLines={1}>
-                {place.types
-                  .map((type, index) => StringUtility.toTitleCase(type))
+              <AppText size="body2" numberOfLines={1}>
+                {data
+                  .types!.map((type, index) => StringUtils.toTitleCase(type))
                   .join(", ")}
               </AppText>
             </View>
             <View>
-              <AppText numberOfLines={1} font="h3" style={styles.card_title}>
-                {place.name}
+              <AppText numberOfLines={1} size="h3" style={styles.card_title}>
+                {data.name}
               </AppText>
-              <AppText font="body2">
-                {StringUtility.toTitleCase(city)}
-                {province && " - "}
-                {StringUtility.toTitleCase(province)}
+              <AppText size="body2" numberOfLines={2}>
+                {PlaceManager.getAddress(data)}
               </AppText>
             </View>
             <View style={styles.card_information_container}>
               <View style={styles.card_information_col}>
-                <AppText font="body2">
-                  <Ionicons name="star-outline" /> {place.rating}
-                </AppText>
-                <AppText font="body2">
-                  <Ionicons name="chatbubble-outline" />{" "}
-                  {NumberUtility.toMetricNumber(place.user_ratings_total)}
-                </AppText>
+                <View style={styles.card_information_cell}>
+                  <Ionicons name="star-outline" style={Styles.spacings.me_6} />
+                  <AppText size="body2">
+                    {NumberUtils.toMetricNumber(data.userRatingsTotal!)}
+                  </AppText>
+                </View>
+                <View style={styles.card_information_cell}>
+                  <Ionicons
+                    name="chatbubble-outline"
+                    style={Styles.spacings.me_6}
+                  />
+                  <AppText size="body2">
+                    {NumberUtils.toMetricNumber(data.userRatingsTotal!)}
+                  </AppText>
+                </View>
               </View>
               <View style={styles.card_information_col}>
-                <AppText font="body2">
-                  <Ionicons name="heart-outline" />{" "}
-                  {NumberUtility.toMetricNumber(place.user_favorites_total)}
-                </AppText>
+                <View style={styles.card_information_cell}>
+                  <Ionicons name="heart-outline" style={Styles.spacings.me_6} />
+                  <AppText size="body2">
+                    {NumberUtils.toMetricNumber(data.userFavoritesTotal!)}
+                  </AppText>
+                </View>
               </View>
             </View>
           </View>
           <View style={styles.card_buttons_container}>
             <CircleButton
-              isActive={extendedPlaceInfo.isLiked}
+              isActive={data.isLiked}
               border={1}
               defaultColor="type_5"
               activeColor="type_1"
-              style={app_sp.me_8}
+              style={Styles.spacings.me_8}
               type="highlight"
-              onPress={handleLikeButton}
+              onPress={actions.like}
               setIcon={
                 <Ionicons
-                  name={extendedPlaceInfo.isLiked ? "heart" : "heart-outline"}
+                  name={data.isLiked ? "heart" : "heart-outline"}
                   size={14}
                 />
               }
@@ -137,7 +146,7 @@ function HorizontalPlaceCard({
               border={1}
               defaultColor="type_5"
               activeColor="type_1"
-              style={app_sp.me_8}
+              style={Styles.spacings.me_8}
               type="highlight"
               onPress={() => Alert.alert("Navigate to map")}
               setIcon={<Ionicons name="map" size={14} />}
@@ -149,20 +158,23 @@ function HorizontalPlaceCard({
         <View style={styles.card_share_container}>
           <CircleButton
             isOnlyContent={true}
-            setIcon={<Ionicons name="share-outline" size={20} />}
-            onPress={handleShareToSocial}
+            setIcon={
+              <Ionicons color={theme.primary} name="share-outline" size={20} />
+            }
+            onPress={actions.share}
           />
         </View>
       </View>
     ),
     [
-      extendedPlaceInfo.isLiked,
-      place.rating,
-      place.user_favorites_total,
-      place.user_ratings_total,
-      themeMode,
+      data.isLiked,
+      data.rating,
+      data.userFavoritesTotal,
+      data.userRatingsTotal,
+      currentScheme,
     ]
   );
 }
 
-export default withPlaceActions(HorizontalPlaceCard);
+const HorizontalPlaceCard = withPlaceActions(_HorizontalPlaceCard);
+export default HorizontalPlaceCard;
