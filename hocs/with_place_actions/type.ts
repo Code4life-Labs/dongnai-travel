@@ -1,20 +1,16 @@
 import type { ViewProps } from "react-native";
+import type { Place } from "@/objects/place/type";
 
-export type WrappedComponentProps = {
-  extendedPlaceInfo: ExtendedPlaceInfoInPlaceCard;
-  addPlaceDetails: (placeDetails: ContentDataProps) => {
-    payload: ContentDataProps;
-    type: string;
-  };
-  updateBriefPlace: (
-    placeId: any,
-    placeIndex: any,
-    updateData: any
-  ) => {
-    payload: { placeId: any; placeIndex: any; updateData: any };
-    type: string;
-  };
+export type WithPlaceActions_Actions = {
+  navigate: () => void;
+  like: () => void;
+  visit: () => void;
+  share: () => void;
+  saveInformation: (placeDetails: Place) => void;
+  updateInformation: (placeDetails: Place) => void;
+};
+
+export type WithPlaceActions_WrappedComponentProps = {
   getTextContentInHTMLTag: (fullHtmlTag: string) => string[];
-  handlePressImageButton: () => void;
-  handleLikeButton: () => void;
+  actions: WithPlaceActions_Actions;
 } & ViewProps;

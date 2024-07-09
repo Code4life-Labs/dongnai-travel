@@ -38,13 +38,11 @@ export default function UnderlineButton(props: UnderlineButtonProps) {
           );
         }}
       >
-        {
-          ((isActive: boolean, currentLabelStyle: any) => (
-            <AppText weight="lighter" size="h5">
-              {props.content.label}
-            </AppText>
-          )) as any
-        }
+        {(isActive: boolean, currentLabelStyle: any) => (
+          <AppText style={currentLabelStyle} weight="lighter" size="h5">
+            {props.content.label}
+          </AppText>
+        )}
       </RectangleButton>
       <Animated.View
         key={props.content.value + "line"}

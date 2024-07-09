@@ -1,18 +1,18 @@
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 
 // Import from hooks
-import {
-  usePlaceDetailsActions,
-  useBriefPlacesActions,
-  usePlaceInteractionActions,
-} from "hooks/usePlace";
+import { usePlaceDetailsActions } from "@/hooks/usePlace";
 
 // Import from utils
 import { StringUtils } from "@/utils/string";
 
 // Import types
-import type { WrappedComponentProps } from "./type";
+import type {
+  WithPlaceActions_WrappedComponentProps,
+  WithPlaceActions_Actions,
+} from "./type";
+import type { Place } from "@/objects/place/type";
 
 /**
  * Dùng để tạo ra một component có các hàm xử lý logic như là:
@@ -35,8 +35,10 @@ import type { WrappedComponentProps } from "./type";
  * export default createPlaceCard(VerticalPlaceCard)
  * ...
  */
-export function withPlaceActions<T extends any>(
-  WrappedComponent: (props: T & WrappedComponentProps) => JSX.Element
+export function withPlaceActions<T extends object>(
+  WrappedComponent: (
+    props: T & WithPlaceActions_WrappedComponentProps
+  ) => JSX.Element
 ) {
   /**
    * Hàm này dùng để lấy text content trong `adr_address`. Mặc định là 2 thẻ
@@ -54,51 +56,52 @@ export function withPlaceActions<T extends any>(
    * @param props Props của component.
    */
   return function (props: T) {
-    const navigation = useNavigation();
-    const { addPlaceDetails } = usePlaceDetailsActions();
-    const { updateBriefPlace } = useBriefPlacesActions(typeOfBriefPlace);
-    const { extendedPlaceInfo, likePlace } = usePlaceInteractionActions(place);
+    const { data } = props as any;
 
-    /**
-     * Hàm này dùng để mở một place details.
-     */
-    const handlePressImageButton = () => {
-      addPlaceDetails(place);
-      navigation.push("PlaceDetailScreen", {
-        placeId: place.place_id,
-        typeOfBriefPlace: typeOfBriefPlace,
-        handleShareToSocial: handleShareToSocial,
-      });
-    };
+    const placeDetailsDispatchers = usePlaceDetailsActions();
 
-    /**
-     * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
-     */
-    const handleLikeButton = () =>
-      likePlace(
-        (_, state: boolean) =>
-          updateBriefPlace(place.place_id, placeIndex, { isLiked: state }),
-        (state: boolean) =>
-          updateBriefPlace(place.place_id, placeIndex, { isLiked: state })
-      );
+    const actions: WithPlaceActions_Actions = {
+      navigate() {
+        placeDetailsDispatchers.add(data);
+        router.navigate(`/${data._id}`);
+      },
 
-    // Hàm này dùng để cho việc share ảnh
-    const handleShareToSocial = () => {
-      const title = "DongNaiTravelApp";
-      const url = place.place_photos[0];
-      const message = `Hãy cùng khám phá ${place.name} với mình nhé!`;
+      like() {
+        data.isLiked = !data.isLiked;
+        // Call API
+
+        // Update state if call api successfully
+        placeDetailsDispatchers.update(data);
+      },
+
+      visit() {
+        data.isVisited = !data.isVisited;
+        // Call API
+
+        // Update state if call api successfully
+        placeDetailsDispatchers.update(data);
+      },
+
+      share() {
+        const title = "DongNaiTravelApp";
+        const url = data.photos[0];
+        const message = `Hãy cùng khám phá ${data.name} với mình nhé!`;
+      },
+
+      saveInformation(placeDetails: Place) {
+        placeDetailsDispatchers.add(placeDetails);
+      },
+
+      updateInformation(placeDetails: Place) {
+        placeDetailsDispatchers.update(placeDetails);
+      },
     };
 
     return (
       <WrappedComponent
         {...props}
-        extendedPlaceInfo={extendedPlaceInfo}
-        addPlaceDetails={addPlaceDetails}
-        updateBriefPlace={updateBriefPlace}
         getTextContentInHTMLTag={getTextContentInHTMLTag}
-        handlePressImageButton={handlePressImageButton}
-        handleLikeButton={handleLikeButton}
-        handleShareToSocial={handleShareToSocial}
+        actions={actions}
       />
     );
   };

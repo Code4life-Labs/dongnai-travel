@@ -55,21 +55,22 @@ export default function ButtonsScrollBar(props: ButtonsScrollBarProps) {
   );
 
   const scrollRef = React.useRef<ScrollView>(null);
-  const data = React.useRef<ButtonsScrollBarLocalData>({
+  const localData = React.useRef<ButtonsScrollBarLocalData>({
     scrollToXList: [],
     previousIndex: 0,
     buttonScrollContainerWidth: 0,
     isButtonPress: false,
   });
 
-  const direction = state.currentIndex > data.current.previousIndex ? 1 : -1;
+  const direction =
+    state.currentIndex > localData.current.previousIndex ? 1 : -1;
   const lineTranslateAmination = new Animated.Value(
     (props.lineIndexTranslateXStart || 0) * direction * -1
   );
 
   ButtonsScrollBarUtils.scrollViewToRightPosition(
     scrollRef.current,
-    data.current,
+    localData.current,
     state,
     lineTranslateAmination
   );
@@ -84,7 +85,7 @@ export default function ButtonsScrollBar(props: ButtonsScrollBarProps) {
         style={props.scrollStyle}
         onLayout={(e) => {
           const { width } = e.nativeEvent.layout;
-          data.current.buttonScrollContainerWidth = width;
+          localData.current.buttonScrollContainerWidth = width;
           stateFns.setIsViewLayouted(true);
         }}
       >
@@ -93,9 +94,9 @@ export default function ButtonsScrollBar(props: ButtonsScrollBarProps) {
             key={content.value + "container"}
             onLayout={(e) => {
               const { x, width } = e.nativeEvent.layout;
-              data.current.scrollToXList[index] =
+              localData.current.scrollToXList[index] =
                 ButtonsScrollBarUtils.calculateScrollToCenterValue(
-                  data.current.buttonScrollContainerWidth,
+                  localData.current.buttonScrollContainerWidth,
                   x,
                   width,
                   props.buttonType
@@ -113,20 +114,18 @@ export default function ButtonsScrollBar(props: ButtonsScrollBarProps) {
                   ButtonsScrollBarUtils.handleButtonPress(
                     index,
                     content,
-                    data.current,
+                    localData.current,
                     stateFns.setCurrentIndex,
                     props.onButtonPress
                   );
                 }}
                 style={Styles.spacings.me_12}
               >
-                {
-                  ((isActive: boolean, currentLabelStyle: any) => (
-                    <AppText size="body1" style={currentLabelStyle}>
-                      {content.label}
-                    </AppText>
-                  )) as any
-                }
+                {(isActive: boolean, currentLabelStyle: any) => (
+                  <AppText size="body1" style={currentLabelStyle}>
+                    {content.label}
+                  </AppText>
+                )}
               </RectangleButton>
             ) : (
               <UnderlineButton
@@ -134,7 +133,7 @@ export default function ButtonsScrollBar(props: ButtonsScrollBarProps) {
                 currentIndex={state.currentIndex}
                 content={content}
                 animation={lineTranslateAmination}
-                buttonsScrollBarData={data.current}
+                buttonsScrollBarData={localData.current}
                 theme={theme}
                 onButtonPress={props.onButtonPress}
                 setCurrentIndex={stateFns.setCurrentIndex}

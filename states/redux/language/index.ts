@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// Import from assets
+import LanguageData from "@/assets/json/language.json";
+
 export const languageSlice = createSlice({
   name: "language",
   initialState: {
-    code: {} as any,
-    data: {} as any,
+    code: "en",
+    data: LanguageData as any,
   },
   reducers: {
     updateCode: (state, action) => {

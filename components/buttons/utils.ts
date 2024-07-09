@@ -109,10 +109,6 @@ export class ButtonUtils {
       };
     }
 
-    props.activeColor = props.activeColor
-      ? props.activeColor
-      : props.defaultColor;
-
     contentContainerStyle = ComponentUtils.mergeStyle(
       contentContainerStyle,
       props.style,

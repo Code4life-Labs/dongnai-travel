@@ -63,10 +63,10 @@ export default function RectangleButton(props: RectangleButtonProps) {
     );
 
   const ButtonChildren =
-    typeof props.children === "function" ? (
-      (rest.children as any)(props.isActive, currentLabelStyle)
+    typeof rest.children === "function" ? (
+      rest.children(isActive, currentLabelStyle)
     ) : (
-      <AppText style={currentLabelStyle}>{props.children}</AppText>
+      <AppText style={currentLabelStyle}>{rest.children}</AppText>
     );
 
   return (

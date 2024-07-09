@@ -1,7 +1,7 @@
 import { View, Text, ViewProps } from 'react-native'
 import React from 'react'
 
-import { 
+import {
   createTTSAsync
 } from 'apis/axios/others/post'
 
@@ -100,18 +100,18 @@ const Speech = ({
     setBase64Audio,
     addBase64Audio,
     setPreparingStatus
-  } = React.useMemo(function() {
+  } = React.useMemo(function () {
     return {
       /**
        * Set giới tính cho giọng đọc. Nữ thì `false`, nam thì ngược lại.
        * @param {boolean} gender 
        */
-      setVoice: function(gender) {
+      setVoice: function (gender) {
         nrSpeechInfo.current.previousSoundRef = null;
         setSpeechInfo(prevState => {
           nrSpeechInfo.current.previousGender = prevState.gender;
           let newState = { ...prevState, gender };
-          if(Boolean(text)) newState.isPreparingVoice = true;
+          if (Boolean(text)) newState.isPreparingVoice = true;
           return newState;
         });
       },
@@ -120,10 +120,10 @@ const Speech = ({
        * @param {string} base64Audio Giọng đọc đã được chuyển thành base64.
        * @param {"f" | "m"} gender Giới tính của giọng đọc.
        */
-      setBase64Audio: function(base64Audio, gender = "f") {
+      setBase64Audio: function (base64Audio, gender = "f") {
         setSpeechInfo(prevState => {
           let { base64Audios } = prevState;
-          base64Audios = {...base64Audios, [gender]: base64Audio};
+          base64Audios = { ...base64Audios, [gender]: base64Audio };
           return { ...prevState, base64Audios }
         });
       },
@@ -133,11 +133,11 @@ const Speech = ({
        * @param {string} base64Audio Giọng đọc đã được chuyển thành base64.
        * @param {"f" | "m"} gender Giới tính của giọng đọc.
        */
-      addBase64Audio: function(base64Audio, gender = "f") {
+      addBase64Audio: function (base64Audio, gender = "f") {
         setSpeechInfo(prevState => {
           let { base64Audios } = prevState;
           let newBase64Audio = base64Audios[gender] + base64Audio;
-          base64Audios = {...base64Audios, [gender]: newBase64Audio};
+          base64Audios = { ...base64Audios, [gender]: newBase64Audio };
           return { ...prevState, base64Audios }
         });
       },
@@ -146,8 +146,8 @@ const Speech = ({
        * Dùng để set lại trạng thái chuẩn bị của voice
        * @param {boolean} preparingStatus 
        */
-      setPreparingStatus: function(preparingStatus) {
-        if(Boolean(text)) setSpeechInfo(prevState => ({...prevState, isPreparingVoice: preparingStatus}));
+      setPreparingStatus: function (preparingStatus) {
+        if (Boolean(text)) setSpeechInfo(prevState => ({ ...prevState, isPreparingVoice: preparingStatus }));
       }
     }
   }, []);
@@ -157,48 +157,48 @@ const Speech = ({
   React.useEffect(() => {
     let { audioVoicePrefix } = nrSpeechInfo.current;
     // Trường hợp có URI.
-    if(Boolean(speechMP3UriObj)) {
+    if (Boolean(speechMP3UriObj)) {
       let uri = speechInfo.gender ? speechMP3UriObj[`${audioVoicePrefix}_MALE_1`] : speechMP3UriObj[`${audioVoicePrefix}_FEMALE_1`];
       prepareMP3Async(uri)
-      .then(() => setPreparingStatus(false));
+        .then(() => setPreparingStatus(false));
     }
 
     // Trường hợp có text.
-    if(Boolean(text)) {
-      if(nrSpeechInfo.current.textParts.length < 1) {
+    if (Boolean(text)) {
+      if (nrSpeechInfo.current.textParts.length < 1) {
         nrSpeechInfo.current.textParts = StringUtility.getTextParts(text);
       }
       let gender = speechInfo.gender ? "m" : "f";
       let isVoiceGenderChange = speechInfo.gender !== nrSpeechInfo.current.previousGender;
-      if(!speechInfo.base64Audios[gender]) {
+      if (!speechInfo.base64Audios[gender]) {
         let data = {
           text: nrSpeechInfo.current.textParts[nrSpeechInfo.current.currentPart[gender]],
           lang: speechInfo.gender ? `${audioVoicePrefix}_MALE_1` : `${audioVoicePrefix}_FEMALE_1`
         }
         createTTSAsync(data)
-        .then(response => {
-          let base64Audio = response.data;
-          console.log("[Init] Create TTS Done!");
-          console.log("[Init] Voice Gender: ", gender);
-          setBase64Audio(base64Audio, gender);
-        });
+          .then(response => {
+            let base64Audio = response.data;
+            console.log("[Init] Create TTS Done!");
+            console.log("[Init] Voice Gender: ", gender);
+            setBase64Audio(base64Audio, gender);
+          });
       } else {
-        if(!sound || isVoiceGenderChange) {
+        if (!sound || isVoiceGenderChange) {
           console.log("Preparing audio...");
           console.log("Gender change: ", isVoiceGenderChange);
           console.log("Sound doesn't init: ", !sound);
           prepareTTSAsync(speechInfo.base64Audios[gender])
-          .then(() => {
-            console.log("Prepare audio done!");
-            setPreparingStatus(false);
-          });
+            .then(() => {
+              console.log("Prepare audio done!");
+              setPreparingStatus(false);
+            });
         }
         else {
           console.log("Loading audio...");
           loadTTSAsync(speechInfo.base64Audios[gender])
-          .then(() => {
-            console.log("Load audio done!");
-          });
+            .then(() => {
+              console.log("Load audio done!");
+            });
         };
       };
     }
@@ -225,17 +225,17 @@ const Speech = ({
      * Cho nên bây giờ phải phải thêm một biến nữa để lưu lại ref của sound. Khi gender đổi thì clear cái ref trong biến đó đi,
      * và check cái biến đó còn giữ ref không, nếu không thì không thực thi code trong if (set callBack), ngược lại thì có
     */
-   if(canSetOnPlaybackStatusUpdateCallBack) {
-     let isRequesting = false;
-     let gender = speechInfo.gender ? "m" : "f";
-     console.log("Set New OnPlaybackStatusUpdate CallBack");
-     if(nrSpeechInfo.current.previousGender !== speechInfo.gender) nrSpeechInfo.current.previousGender = speechInfo.gender;
+    if (canSetOnPlaybackStatusUpdateCallBack) {
+      let isRequesting = false;
+      let gender = speechInfo.gender ? "m" : "f";
+      console.log("Set New OnPlaybackStatusUpdate CallBack");
+      if (nrSpeechInfo.current.previousGender !== speechInfo.gender) nrSpeechInfo.current.previousGender = speechInfo.gender;
       sound.setOnPlaybackStatusUpdate((status) => {
         const { durationMillis, positionMillis } = status;
         const percentagePlayed = (positionMillis / durationMillis) * 100;
 
         // Nếu thoả được 3 ĐK bên dưới thì request thêm Base64 Audio
-        if(
+        if (
           // ĐK 1: Phải phát được hơn 80% audio.
           percentagePlayed > 80
           // ĐK 2: Vẫn còn Part Of Text để request.
@@ -253,13 +253,13 @@ const Speech = ({
           // Bắt đầu request thì cho thằng này là true, lúc đó thì không phải chạy lại code trong if nữa.
           isRequesting = true;
           createTTSAsync(data)
-          .then(response => {
-            let base64Audio = response.data;
-            console.log("[Load more] Create TTS Done!");
-            console.log("[Load more] Voice Gender: ", gender);
-            addBase64Audio(base64Audio, gender);
-            isRequesting = false;
-          });
+            .then(response => {
+              let base64Audio = response.data;
+              console.log("[Load more] Create TTS Done!");
+              console.log("[Load more] Voice Gender: ", gender);
+              addBase64Audio(base64Audio, gender);
+              isRequesting = false;
+            });
         }
       });
     };
@@ -271,11 +271,11 @@ const Speech = ({
   return (
     <View
       {...props}
-      style={[{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}, props.style]}
+      style={[{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, props.style]}
     >
       <View>
         <AppText font="h3" style={app_sp.mb_6}>Đọc/Dừng</AppText>
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
           <RectangleButton
             isActive
             disabled={isButtonDisable}
@@ -287,7 +287,7 @@ const Speech = ({
           >
             {
               (isActive, currentLabelStyle) => (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Ionicons style={currentLabelStyle} name="play-outline" />
                   <AppText style={currentLabelStyle}> / </AppText>
                   <Ionicons style={currentLabelStyle} name="pause-outline" />
@@ -313,7 +313,7 @@ const Speech = ({
 
       <View>
         <AppText font="h3" style={app_sp.mb_6}>Giọng Đọc</AppText>
-        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
           <RectangleButton
             isActive={!speechInfo.gender}
             disabled={isButtonDisable}

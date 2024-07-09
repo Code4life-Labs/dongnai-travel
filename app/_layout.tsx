@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import React from "react";
 import { SafeAreaView } from "react-native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+import { Stack, SplashScreen } from "expo-router";
+// import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
 
@@ -28,7 +28,7 @@ export default function RootLayout() {
     "Roboto-ThinItalic": require("../assets/fonts/Roboto-ThinItalic.ttf"),
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
@@ -41,8 +41,9 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <SafeAreaView style={{ flex: 1 }}>
-        <Stack>
-          <Stack.Screen name="(main)" options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(main)" />
           <Stack.Screen name="+not-found" />
         </Stack>
       </SafeAreaView>

@@ -55,7 +55,7 @@ type $Extendable = {
   website: string;
   userRatingsTotal: number;
   isRecommended: boolean;
-  favoritesTotal: number;
+  userFavoritesTotal: number;
   visitsTotal: number;
   updatedAt: number;
   createdAt: number;
@@ -72,4 +72,6 @@ export type BasePlace = {
 export type Place = {
   content: PlaceContent;
   photos: Array<string>;
+  isLiked: boolean;
+  isVisited: boolean;
 } & $Extendable;

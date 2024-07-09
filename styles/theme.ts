@@ -31,6 +31,7 @@ const data = {
     onOutline: "#455466",
     subOutline: "#C1C7CF",
     onSubOutline: "#6A798B",
+    error: "#F32424",
   },
   dark: {
     primary: "#4F8BCF",
@@ -47,6 +48,7 @@ const data = {
     onOutline: "#D4DDE7",
     subOutline: "#6F8197",
     onSubOutline: "#D4DDE7",
+    error: "#F32424",
   },
 };
 

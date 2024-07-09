@@ -1,6 +1,6 @@
 // Import types
 import type { Animated } from "react-native";
-import type { ViewStyleProps } from "@/types/screen";
+import type { ViewStyleProps } from "@/types/style";
 import type { UShapes } from "@/styles/shapes";
 import type { ThemeData, UThemeSchemes } from "@/styles/theme";
 
