@@ -1,18 +1,20 @@
-import { Link, Stack } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { View, StyleSheet } from "react-native";
 
 // Import components
 import { FC } from "@/components";
 
 export default function NotFoundScreen() {
+  const router = useRouter();
+
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />
       <View style={styles.container}>
         <FC.AppText>This screen doesn't exist.</FC.AppText>
-        <Link href="/" style={styles.link}>
-          <FC.AppText>Go to home screen!</FC.AppText>
-        </Link>
+        <FC.RectangleButton onPress={() => router.back()} style={styles.link}>
+          Go back
+        </FC.RectangleButton>
       </View>
     </>
   );

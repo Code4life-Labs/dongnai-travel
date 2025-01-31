@@ -229,6 +229,14 @@ export class StringUtils {
     return textParts;
   }
 
+  /**
+   * Dùng để lấy ra một chuỗi ngẫu nhiên nào đó để làm ID
+   * có prefix là `dntrvel`
+   * @param prefix
+   * @param numParts
+   * @param numCharsInPart
+   * @returns
+   */
   static getRandomID(prefix = "dntrvel", numParts = 3, numCharsInPart = 7) {
     const alphabetN = StringUtils.Alphabet.length;
     let id = prefix + "-";
@@ -242,5 +250,27 @@ export class StringUtils {
     }
 
     return id.substring(0, id.length - 1);
+  }
+
+  /**
+   * Dùng để tạo thành một Path hợp lệ, nhận vào các chuỗi như:
+   * `/path`, `path` hoặc là `///path`.
+   * @param strs
+   * @returns
+   */
+  static getPath(...strs: Array<string>) {
+    let result = "";
+
+    for (let i = 0; i < strs.length; i++) {
+      let str = strs[i];
+      if (str[0] !== "/") str = "/" + str;
+      result += str;
+    }
+
+    result = result.replaceAll(/\/+/g, "/");
+
+    if (result[0] !== "/") return "/" + result;
+
+    return result;
   }
 }

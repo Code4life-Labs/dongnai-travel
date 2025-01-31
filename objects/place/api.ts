@@ -1,5 +1,5 @@
 // Import from bases
-import { API } from "@/bases/API";
+import { API } from "@/classes/API";
 
 // Import from utils
 import { RouteUtils } from "@/utils/route";
@@ -7,12 +7,16 @@ import { RouteUtils } from "@/utils/route";
 // Import types
 import type { Place } from "./type";
 
-export class PlaceAPI extends API {
+const api = new API();
+
+export class PlaceAPI {
   static Fields =
     "placeId;name;addressComponents;types;userRatingsTotal;rating;isRecommended;favoritesTotal;place_photos";
 
-  constructor(root: string) {
-    super(root + RouteUtils.getPath("v1", "map"));
+  baseURL!: string;
+
+  constructor(baseURL: string) {
+    this.baseURL = baseURL;
   }
 
   async getPlaceAsync(id: string) {}
@@ -30,17 +34,17 @@ export class PlaceAPI extends API {
   ) {
     try {
       const [limit, skip, type = "all", requesterId] = args,
-        url = this.base + RouteUtils.getPath("places");
+        url = this.baseURL + RouteUtils.getPath("places");
       let query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${PlaceAPI.Fields}`;
 
       if (requesterId) query += `&userId=${requesterId}`;
 
-      const response = await fetch(RouteUtils.mergeQuery(url, query));
+      const response = await api.get(RouteUtils.mergeQuery(url, query));
 
-      return response.json() as Promise<Array<Place>>;
+      return response.data as Promise<Array<Place>>;
     } catch (error: any) {
       console.warn(error.message);
-      return;
+      throw error;
     }
   }
   async updatePlaceAynsc() {}

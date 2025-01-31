@@ -62,12 +62,17 @@ export default function RectangleButton(props: RectangleButtonProps) {
       buttonColors
     );
 
-  const ButtonChildren =
-    typeof rest.children === "function" ? (
-      rest.children(isActive, currentLabelStyle)
-    ) : (
+  let ButtonChildren: any = rest.children;
+
+  if (typeof rest.children === "function") {
+    ButtonChildren = (rest.children as any)(isActive, currentLabelStyle);
+  }
+
+  if (typeof rest.children === "string") {
+    ButtonChildren = (
       <AppText style={currentLabelStyle}>{rest.children}</AppText>
     );
+  }
 
   return (
     <Button {...rest} style={type === "none" ? {} : contentContainerStyle}>

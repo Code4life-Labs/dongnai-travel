@@ -1,5 +1,4 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
 import { useFonts } from "expo-font";
 import { Stack, SplashScreen } from "expo-router";
 // import * as SplashScreen from "expo-splash-screen";
@@ -40,13 +39,11 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="(main)" />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </SafeAreaView>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(main)" />
+        <Stack.Screen name="+not-found" />
+      </Stack>
     </Provider>
   );
 }

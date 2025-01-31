@@ -1,8 +1,8 @@
 {
   "form": {
     "email_rule_message": {
-      "vi": "Email is invalid.",
-      "en": "Email không đúng."
+      "vi": "Email không đúng.",
+      "en": "Email is invalid."
     },
     "password_rule_message": {
       "vi": "Cần tối thiểu 1 từ, 1 chữ số và tối thiểu 8 ký tự.",
@@ -193,6 +193,16 @@
     "go_back": {
       "vi": "Quay lại đăng nhập",
       "en": "Go back sign in"
+    }
+  },
+  "otpScreen": {
+    "text_header": {
+      "vi": "Xác thực mã OTP",
+      "en": "Verify OTP"
+    },
+    "desc": {
+      "vi": "Nhập mã OTP đã được gửi đến email của bạn vào trong các ô bên dưới để xác thực.",
+      "en": "Please enter OTP code that has been sent to your email in the fields below to verify."
     }
   },
   "homeScreen": {

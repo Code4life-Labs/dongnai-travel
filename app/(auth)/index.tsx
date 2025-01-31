@@ -79,7 +79,7 @@ export default function SignInScreen() {
             </FC.AppText>
             <Image
               style={styles.image}
-              source={require("../../assets/images/illutration1.png")}
+              source={require("@/assets/images/illutration1.png")}
             />
             <Controller
               control={control}
@@ -207,21 +207,21 @@ export default function SignInScreen() {
           <FC.RectangleButton isOnlyContent>
             <Image
               style={styles.imageSocial}
-              source={require("../../assets/images/facebook.png")}
+              source={require("@/assets/images/facebook.png")}
             />
           </FC.RectangleButton>
 
           <FC.RectangleButton isOnlyContent style={Styles.spacings.mh_16}>
             <Image
               style={styles.imageSocial}
-              source={require("../../assets/images/google.png")}
+              source={require("@/assets/images/google.png")}
             />
           </FC.RectangleButton>
 
           <FC.RectangleButton isOnlyContent>
             <Image
               style={styles.imageSocial}
-              source={require("../../assets/images/twitter.png")}
+              source={require("@/assets/images/twitter.png")}
             />
           </FC.RectangleButton>
         </View>
