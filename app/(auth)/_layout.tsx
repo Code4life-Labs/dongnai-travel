@@ -13,6 +13,8 @@ export default function AuthLayout() {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="sign-up" />
+        <Stack.Screen name="reset-password" />
         <Stack.Screen name="forgot-password" />
         <Stack.Screen name="otp" />
       </Stack>

@@ -2,8 +2,9 @@ import React from "react";
 import { useFonts } from "expo-font";
 import { Stack, SplashScreen } from "expo-router";
 // import * as SplashScreen from "expo-splash-screen";
-import "react-native-reanimated";
 import { Provider } from "react-redux";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import "react-native-reanimated";
 
 // Import redux configurations
 import { store } from "@/states/redux";
@@ -39,11 +40,13 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(main)" />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <GestureHandlerRootView>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(main)" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </GestureHandlerRootView>
     </Provider>
   );
 }

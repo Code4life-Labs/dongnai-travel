@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Link, router } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useForm, Controller } from "react-hook-form";
 
@@ -32,6 +32,7 @@ import { styles } from "@/screens/signin/styles";
 export default function SignInScreen() {
   const { theme } = useTheme();
   const { language } = useLanguage();
+  const router = useRouter();
 
   const {
     control,
@@ -229,7 +230,12 @@ export default function SignInScreen() {
           <FC.AppText style={styles.labelNoAccount}>
             {_languageData.no_account[language.code]}
           </FC.AppText>
-          <FC.AppText color="secondary" size="h5" style={styles.labelSignup}>
+          <FC.AppText
+            onPress={() => router.navigate("/sign-up")}
+            color="secondary"
+            size="h5"
+            style={styles.labelSignup}
+          >
             {_languageData.sign_up[language.code]}
           </FC.AppText>
         </View>
