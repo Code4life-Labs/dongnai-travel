@@ -2,12 +2,12 @@ import { LayoutAnimation } from "react-native";
 
 // Import types
 import type { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
-import type { ExploreScreenStateType } from "./state";
+import type { BlogsScreenStateType } from "./state";
 
 /**
  * @NguyenAnhTuan1912
  */
-export class ExploreScreenUtils {
+export class BlogsScreenUtils {
   /**
    * Use this function to set visibility of banner
    * @param isVisible
@@ -33,9 +33,9 @@ export class ExploreScreenUtils {
     const { contentOffset } = e.nativeEvent;
     let val = contentOffset.y;
     if (val <= 0) {
-      ExploreScreenUtils.setBannerVisibility(true, setIsOnTop);
+      BlogsScreenUtils.setBannerVisibility(true, setIsOnTop);
     } else {
-      ExploreScreenUtils.setBannerVisibility(false, setIsOnTop);
+      BlogsScreenUtils.setBannerVisibility(false, setIsOnTop);
     }
   }
 
@@ -43,7 +43,7 @@ export class ExploreScreenUtils {
    * This function handles `end reached` event of list.
    * @param localData
    */
-  static handleOnEndReached(localData: ExploreScreenStateType) {
+  static handleOnEndReached(localData: BlogsScreenStateType) {
     localData.status.isEndReach = true;
   }
 
@@ -52,7 +52,7 @@ export class ExploreScreenUtils {
    * @param localData
    */
   static handleOnMomentumScrollEnd(
-    localData: ExploreScreenStateType,
+    localData: BlogsScreenStateType,
     places: any[] | undefined,
     getPlaces: () => void
   ) {

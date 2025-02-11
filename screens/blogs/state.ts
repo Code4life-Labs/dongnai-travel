@@ -1,7 +1,7 @@
 // Import types
 import type { ChangeStateFn } from "@/hooks/useStateManager";
 
-export type ExploreScreenStateType = ReturnType<typeof getInitialState>;
+export type BlogsScreenStateType = ReturnType<typeof getInitialState>;
 
 function getInitialState() {
   return {
@@ -15,7 +15,7 @@ function getInitialState() {
   };
 }
 
-function getStateFns(changeState: ChangeStateFn<ExploreScreenStateType>) {
+function getStateFns(changeState: ChangeStateFn<BlogsScreenStateType>) {
   return {
     setCurrentType(type: string) {
       changeState("currentType", function () {

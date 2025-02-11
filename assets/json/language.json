@@ -297,8 +297,8 @@
   },
   "blogsScreen": {
     "banner_button": {
-      "vi": "Xem vị trí của bạn trên bản đồ",
-      "en": "Your blogs"
+      "vi": "Đăng bài viết của bạn",
+      "en": "Publish your own blog"
     }
   },
   "blogScreenSetting": {

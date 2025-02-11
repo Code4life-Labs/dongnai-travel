@@ -11,7 +11,7 @@ import type { AppDispatch } from "@/states/redux/type";
 
 export const { useLanguage, useLanguageActions, useLanguageState } =
   (function () {
-    const createDispatchers = function (dispatch: AppDispatch) {
+    const createActions = function (dispatch: AppDispatch) {
       return {
         updateCode(code: string) {
           dispatch(languageActions.updateCode(code));
@@ -37,7 +37,7 @@ export const { useLanguage, useLanguageActions, useLanguageState } =
     return {
       useLanguage() {
         const dispatch = useDispatch();
-        const languageDispatchers = createDispatchers(dispatch);
+        const languageDispatchers = createActions(dispatch);
         const language = select(useSelector);
 
         return {
@@ -48,7 +48,7 @@ export const { useLanguage, useLanguageActions, useLanguageState } =
 
       useLanguageActions() {
         const dispatch = useDispatch();
-        return createDispatchers(dispatch);
+        return createActions(dispatch);
       },
 
       useLanguageState() {

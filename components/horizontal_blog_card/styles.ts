@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
 
-// Import from styles
+// Import styles
 import { Styles } from "@/styles";
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   card: {
     flex: 1,
     flexDirection: "row",
@@ -41,11 +41,10 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  card_tag_container: {
-    width: "100%",
+  card_user_container: {
     alignItems: "center",
     flexDirection: "row",
-    ...Styles.spacings.mb_10,
+    ...Styles.spacings.mb_12,
   },
 
   card_title: {
@@ -53,6 +52,8 @@ export const styles = StyleSheet.create({
     flexWrap: "wrap",
     fontWeight: "bold",
   },
+
+  car_subtitle: {},
 
   card_information_container: {
     flexDirection: "row",
@@ -64,21 +65,24 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  card_information_cell: { alignItems: "center", flexDirection: "row" },
-
   card_buttons_container: {
     width: "100%",
     alignItems: "center",
     flexDirection: "row",
   },
 
-  card_share_container: {
-    ...Styles.spacings.ms_6,
-  },
+  card_share_container: {},
 
   card_skeleton_rectangle: {
     width: "100%",
     height: 19,
     ...Styles.shapes.rounded_4,
   },
+
+  card_user_avatar: {
+    width: 18,
+    ...Styles.shapes.circle,
+  },
 });
+
+export default styles;

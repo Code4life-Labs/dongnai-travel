@@ -1,27 +1,26 @@
 import React from "react";
 import { View, ImageBackground, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 
-// Import from components
+// Import components
 import AppText from "../app_text";
 import RectangleButton from "../buttons/RectangleButton";
 import CircleButton from "../buttons/CircleButton";
 
-// Import from hocs
-import { withPlaceActions } from "@/hocs/with_place_actions";
+// Import hocs
+import { withPlaceActions } from "@/hocs/with-place-actions";
 
-// Import from hooks
+// Import hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
 
-// Import from objects
+// Import objects
 import { PlaceManager } from "@/objects/place";
 
-// Import from styles
+// Import styles
 import { Styles } from "@/styles";
 
-// Import from utils
+// Import utils
 import { StringUtils } from "@/utils/string";
 import { NumberUtils } from "@/utils/number";
 
@@ -31,7 +30,7 @@ import { styles } from "./styles";
 
 // Import types
 import type { HorizontalPlaceCardProps } from "./type";
-import type { WithPlaceActions_WrappedComponentProps } from "@/hocs/with_place_actions/type";
+import type { WithPlaceActions_WrappedComponentProps } from "@/hocs/with-place-actions/type";
 
 /**
  * Đây là card nằm ngang, hiển thị một số thông tin cơ bản của một địa điểm nào đó. Có thể ấn vào để xem chi tiết

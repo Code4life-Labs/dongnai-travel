@@ -9,9 +9,16 @@ import type { Place } from "./type";
 
 const api = new API();
 
+type GetPlacesAsyncOptions = {
+  limit?: number | string;
+  skip?: number | string;
+  type?: string;
+  userId?: string;
+};
+
 export class PlaceAPI {
   static Fields =
-    "placeId;name;addressComponents;types;userRatingsTotal;rating;isRecommended;favoritesTotal;place_photos";
+    "placeId;name;addressComponents;types;userRatingsTotal;rating;isRecommended;userFavoritesTotal;photos";
 
   baseURL!: string;
 
@@ -19,7 +26,6 @@ export class PlaceAPI {
     this.baseURL = baseURL;
   }
 
-  async getPlaceAsync(id: string) {}
   /**
    * Get places' information from server. Receive various number of args:
    *   - __args0__: is `limit`
@@ -29,23 +35,23 @@ export class PlaceAPI {
    * @param args
    * @returns
    */
-  async getPlacesAsync(
-    ...args: [string | number, string | number, string?, string?]
-  ) {
+  async getPlacesAsync(options: GetPlacesAsyncOptions) {
     try {
-      const [limit, skip, type = "all", requesterId] = args,
+      const { limit = 10, skip = 0, type = "all", userId } = options,
         url = this.baseURL + RouteUtils.getPath("places");
       let query = `limit=${limit}&skip=${skip}&filter=quality:${type}&fields=${PlaceAPI.Fields}`;
 
-      if (requesterId) query += `&userId=${requesterId}`;
+      if (userId) query += `&userId=${userId}`;
 
       const response = await api.get(RouteUtils.mergeQuery(url, query));
 
       return response.data as Promise<Array<Place>>;
     } catch (error: any) {
       console.warn(error.message);
-      throw error;
+      return [];
     }
   }
+
+  async getPlaceAsync(id: string) {}
   async updatePlaceAynsc() {}
 }

@@ -10,7 +10,9 @@ import CheckBoxText from "./checkbox_text";
 import TabBarIcon from "./navigation/TabBarIcon";
 import Loading from "./loading";
 import HorizontalPlaceCard from "./horizontal_place_card";
-import HorizontalPlaceCardSkeleton from "./horizontal_place_card/seleton";
+import HorizontalPlaceCardSkeleton from "./horizontal_place_card/skeleton";
+import HorizontalBlogCard from "./horizontal_blog_card";
+import HorizontalBlogCardSkeleton from "./horizontal_blog_card/skeleton";
 import Input from "./input";
 
 export const FC = {
@@ -29,8 +31,10 @@ export const FC = {
   CheckBoxText,
   SimpleBarChart,
   HorizontalPlaceCard,
+  HorizontalBlogCard,
   Skeletons: {
     HorizontalPlaceCard: HorizontalPlaceCardSkeleton,
+    HorizontalBlogCard: HorizontalBlogCardSkeleton,
   },
   Input,
 };

@@ -3,7 +3,7 @@ import { View, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 // Import from assets
-import PlaceQualitiesData from "@/assets/json/place_qualities.json";
+import PlaceQualitiesData from "@/assets/json/place-qualities.json";
 
 // Import from components
 import { FC } from "@/components";
@@ -27,11 +27,8 @@ import { styles } from "@/screens/explore/styles";
 // Import utils
 import { ExploreScreenUtils } from "@/screens/explore/utils";
 
-// Import types
-import type { ExploreLocalData } from "@/screens/explore/type";
-
 export default function ExploreScreen() {
-  const { places, placesDispatchers } = usePlaces();
+  const { places, placesActions } = usePlaces();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -40,19 +37,11 @@ export default function ExploreScreen() {
     StateManager.getStateFns
   );
 
-  const localData = React.useRef<ExploreLocalData>({
-    status: {
-      isFirstFetch: true,
-      isEndReach: false,
-      isReload: false,
-    },
-  });
-
   const _languageData = (language.data as any)["exploreScreen"] as any;
 
   React.useEffect(() => {
     if (!places || places.length === 0) {
-      placesDispatchers.get(state.currentType);
+      placesActions.get(state.currentType);
     }
   }, [state.currentType, places]);
 
@@ -102,14 +91,12 @@ export default function ExploreScreen() {
         }}
         onMomentumScrollEnd={() =>
           ExploreScreenUtils.handleOnMomentumScrollEnd(
-            localData.current,
+            state,
             places,
-            placesDispatchers.get
+            placesActions.get
           )
         }
-        onEndReached={(e) =>
-          ExploreScreenUtils.handleOnEndReached(localData.current)
-        }
+        onEndReached={(e) => ExploreScreenUtils.handleOnEndReached(state)}
         onScroll={(e) =>
           ExploreScreenUtils.handleOnScroll(e, stateFns.setIsOnTop)
         }
@@ -118,7 +105,7 @@ export default function ExploreScreen() {
         stickyHeaderIndices={[0]}
         ListEmptyComponent={
           <View style={[Styles.spacings.mh_18, Styles.spacings.mb_12]}>
-            {[1, 2, 3].map((value, index) => (
+            {[1, 2, 3, 4, 5].map((value, index) => (
               <FC.Skeletons.HorizontalPlaceCard key={value + index} />
             ))}
           </View>
@@ -146,7 +133,7 @@ export default function ExploreScreen() {
         )}
         keyExtractor={(item) => item._id as string}
         onRefresh={() => {
-          placesDispatchers.clear();
+          placesActions.clear();
         }}
         refreshing={false}
       />
