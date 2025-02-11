@@ -178,19 +178,17 @@ export default function SignInScreen() {
             <FC.RectangleButton
               type="opacity"
               shape="rounded_8"
-              style={{ ...Styles.spacings.mt_12, ...Styles.spacings.pv_16 }}
+              style={[Styles.spacings.mt_12, Styles.spacings.pv_16]}
               // onPress={handleSubmit(onSubmit)}
             >
               {_languageData.text_header[language.code]}
             </FC.RectangleButton>
           </View>
-
-          <View style={{ flex: 1 }}></View>
         </View>
       </TouchableWithoutFeedback>
       <View style={styles.footer}>
         <Link
-          href={"/"}
+          href={"/home"}
           style={[
             Styles.spacings.mt_6,
             Styles.spacings.mb_12,

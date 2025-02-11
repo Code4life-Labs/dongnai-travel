@@ -59,8 +59,6 @@ export default function BottomTabBar(props: BottomTabBarProps) {
     centerDotDistance
   );
 
-  props.state.routes;
-
   return (
     <View
       style={[
