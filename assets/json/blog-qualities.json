@@ -1,0 +1,12 @@
+{
+  "vi": [
+    { "value": "all", "label": "Tất cả" },
+    { "value": "most_favorites", "label": "Được yêu thích nhất" },
+    { "value": "most_comments", "label": "Được bình luận nhiều nhất" }
+  ],
+  "en": [
+    { "value": "all", "label": "All" },
+    { "value": "most_favorites", "label": "Most favorites" },
+    { "value": "most_comments", "label": "Most comments" }
+  ]
+}

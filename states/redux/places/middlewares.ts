@@ -18,7 +18,7 @@ const getPlacesByTypeAsync = createAsyncThunk(
         places = state.places.currentPlaces,
         limit = places ? places.limit : 5,
         skip = places ? places.skip : 0;
-      const data = await PlaceManager.Api.getPlacesAsync(limit, skip, type);
+      const data = await PlaceManager.Api.getPlacesAsync({ limit, skip, type });
       return [type, data] as const;
     } catch (error: any) {
       console.error(error.message);

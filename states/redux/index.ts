@@ -10,7 +10,7 @@ import { placesSlice } from "./places";
 import { mapSlice } from "./map";
 // import { profileSlice } from "./profile";
 // import { settingSlice } from "./setting";
-// import { userSlice } from "./user";
+import { userSlice } from "./user";
 import { manifoldSlice } from "./manifold";
 // import { warehouseSlice } from "./warehouse";
 // import { filterSlice } from "./filter";
@@ -26,7 +26,7 @@ const reducers = combineReducers({
   [mapSlice.name]: mapSlice.reducer,
   // [profileSlice.name]: profileSlice.reducer,
   // [settingSlice.name]: settingSlice.reducer,
-  // [userSlice.name]: userSlice.reducer,
+  [userSlice.name]: userSlice.reducer,
   [manifoldSlice.name]: manifoldSlice.reducer,
   // [warehouseSlice.name]: warehouseSlice.reducer,
   // [filterSlice.name]: filterSlice.reducer,

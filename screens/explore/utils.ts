@@ -2,7 +2,7 @@ import { LayoutAnimation } from "react-native";
 
 // Import types
 import type { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
-import type { ExploreLocalData } from "./type";
+import type { ExploreScreenStateType } from "./state";
 
 /**
  * @NguyenAnhTuan1912
@@ -43,7 +43,7 @@ export class ExploreScreenUtils {
    * This function handles `end reached` event of list.
    * @param localData
    */
-  static handleOnEndReached(localData: ExploreLocalData) {
+  static handleOnEndReached(localData: ExploreScreenStateType) {
     localData.status.isEndReach = true;
   }
 
@@ -52,7 +52,7 @@ export class ExploreScreenUtils {
    * @param localData
    */
   static handleOnMomentumScrollEnd(
-    localData: ExploreLocalData,
+    localData: ExploreScreenStateType,
     places: any[] | undefined,
     getPlaces: () => void
   ) {

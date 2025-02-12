@@ -1,24 +1,28 @@
 // Import API
 import { API } from "@/classes/API";
 
-const url = process.env.EXPO_DONGNAITRAVEL_API_URL!;
-const api = new API({
-  baseURL: url,
-});
+// Import types
+import type { NewUser, UserDataForAuthentication } from "./type";
 
 export class UserAPI {
-  async signUp(data: any) {
+  api!: API;
+
+  constructor(baseURL: string) {
+    this.api = new API({ baseURL });
+  }
+
+  async signUp(data: NewUser) {
     try {
-      const response = await api.post("/auth/sign-up", {});
+      const response = await this.api.post("/auth/sign-up", data);
       return response.data;
     } catch (error) {
       throw error;
     }
   }
 
-  async signIn(data: any) {
+  async signIn(data: UserDataForAuthentication) {
     try {
-      const response = await api.post("/auth/sign-in", {});
+      const response = await this.api.post("/auth/sign-in", data);
       return response.data;
     } catch (error) {
       throw error;

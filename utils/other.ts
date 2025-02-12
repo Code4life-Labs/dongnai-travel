@@ -144,7 +144,7 @@ export class OtherUtils {
    * @param options
    * @NguyenAnhTuan1912
    */
-  static autoBind(obj: any, options: { protoProps: string[] }) {
+  static autoBind(obj: any, options?: { protoProps: string[] }) {
     let propNames = options?.protoProps
       ? options?.protoProps
       : Object.getOwnPropertyNames(obj);

@@ -15,7 +15,7 @@ import type { AppState, AppDispatch } from "@/states/redux/type";
 import type { Place } from "@/objects/place/type";
 
 export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
-  const createDispatchers = function (dispatch: AppDispatch) {
+  const createActions = function (dispatch: AppDispatch) {
     return {
       update(id: string, briefPlace: Partial<Place>) {
         dispatch(placesActions.updateBriefPlace({ id, briefPlace }));
@@ -51,12 +51,12 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
      */
     usePlaces() {
       const dispatch = useDispatch();
-      const placesDispatchers = createDispatchers(dispatch);
+      const placesActions = createActions(dispatch);
       const places = select(useSelector);
 
       return {
         places,
-        placesDispatchers,
+        placesActions,
       };
     },
 
@@ -67,7 +67,7 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
      */
     usePlacesActions() {
       const dispatch = useDispatch();
-      return createDispatchers(dispatch);
+      return createActions(dispatch);
     },
 
     /**
@@ -82,7 +82,7 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
 
 export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
   (function () {
-    const createDispatchers = function (dispatch: AppDispatch) {
+    const createActions = function (dispatch: AppDispatch) {
       return {
         add(placeDetails: Place) {
           dispatch(placesActions.addPlaceDetails(placeDetails));
@@ -117,12 +117,12 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
        */
       usePlaceDetails(id: string) {
         const dispatch = useDispatch();
-        const placeDetailsDispatchers = createDispatchers(dispatch);
+        const placeDetailsActions = createActions(dispatch);
         const place = select(useSelector, id);
 
         return {
           place,
-          placeDetailsDispatchers,
+          placeDetailsActions,
         };
       },
 
@@ -133,7 +133,7 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
        */
       usePlaceDetailsActions() {
         const dispatch = useDispatch();
-        return createDispatchers(dispatch);
+        return createActions(dispatch);
       },
 
       /**

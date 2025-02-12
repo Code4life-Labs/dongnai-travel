@@ -21,18 +21,18 @@ import type { Place } from "@/objects/place/type";
  * @param Component Component này sẽ dùng các logic trong `withPlaceCard`.
  * @example
  * ...
- * import { createPlaceCard } from 'hocs/createPlaceCard'
+ * import { withPlaceActions } from 'hocs/with-place-actions'
  *
  * function HorizontalPlaceCard({...}) {...}
  *
- * export default createPlaceCard(HorizontalPlaceCard)
+ * export default withPlaceActions(HorizontalPlaceCard)
  *
  * // OR
- * import { createPlaceCard } from 'hocs/createPlaceCard'
+ * import { withPlaceActions } from 'hocs/with-place-actions'
  *
  * function VerticalPlaceCard({...}) {...}
  *
- * export default createPlaceCard(VerticalPlaceCard)
+ * export default withPlaceActions(VerticalPlaceCard)
  * ...
  */
 export function withPlaceActions<T extends object>(
@@ -58,12 +58,12 @@ export function withPlaceActions<T extends object>(
   return function (props: T) {
     const { data } = props as any;
 
-    const placeDetailsDispatchers = usePlaceDetailsActions();
+    const placeDetailsActions = usePlaceDetailsActions();
 
     const actions: WithPlaceActions_Actions = {
       navigate() {
-        placeDetailsDispatchers.add(data);
-        router.navigate(`/${data._id}`);
+        placeDetailsActions.add(data);
+        router.navigate(`/explore/details`);
       },
 
       like() {
@@ -71,7 +71,7 @@ export function withPlaceActions<T extends object>(
         // Call API
 
         // Update state if call api successfully
-        placeDetailsDispatchers.update(data);
+        placeDetailsActions.update(data);
       },
 
       visit() {
@@ -79,7 +79,7 @@ export function withPlaceActions<T extends object>(
         // Call API
 
         // Update state if call api successfully
-        placeDetailsDispatchers.update(data);
+        placeDetailsActions.update(data);
       },
 
       share() {
@@ -89,11 +89,11 @@ export function withPlaceActions<T extends object>(
       },
 
       saveInformation(placeDetails: Place) {
-        placeDetailsDispatchers.add(placeDetails);
+        placeDetailsActions.add(placeDetails);
       },
 
       updateInformation(placeDetails: Place) {
-        placeDetailsDispatchers.update(placeDetails);
+        placeDetailsActions.update(placeDetails);
       },
     };
 

@@ -1,30 +1,36 @@
+import { SafeAreaView } from "react-native";
 import { Stack } from "expo-router";
 import React from "react";
 
-// Import from components
+// Import components
 import { FC } from "@/components";
 
-// Import local
+// Import from hooks
+import { useTheme } from "@/hooks/useTheme";
 
 export default function ExploreStack() {
+  const { theme } = useTheme();
+
   return (
-    <Stack
-      screenOptions={{
-        header: (props) => <FC.AppHeader {...props} />,
-      }}
-    >
-      <Stack.Screen
-        name="index"
-        options={{
-          title: "Explore",
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      <Stack
+        screenOptions={{
+          header: (props) => <FC.AppHeader {...props} />,
         }}
-      />
-      <Stack.Screen
-        name="details"
-        options={{
-          title: "Place",
-        }}
-      />
-    </Stack>
+      >
+        <Stack.Screen
+          name="index"
+          options={{
+            title: "Explore",
+          }}
+        />
+        <Stack.Screen
+          name="places/[id]"
+          options={{
+            title: "Place",
+          }}
+        />
+      </Stack>
+    </SafeAreaView>
   );
 }

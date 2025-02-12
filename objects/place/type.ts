@@ -74,4 +74,5 @@ export type Place = {
   photos: Array<string>;
   isLiked: boolean;
   isVisited: boolean;
+  reviews: Array<any>;
 } & $Extendable;

@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { useNavigationState } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
 // Import from components
@@ -22,7 +22,9 @@ import type { AppStackHeaderProps, AppTabHeaderProps } from "./type";
  * @returns
  */
 function StackLeftPart(props: AppStackHeaderProps) {
-  let child = props.navigation.canGoBack() && (
+  const navigationIndex = useNavigationState((state) => state.index);
+
+  let child = props.navigation.canGoBack() && navigationIndex && (
     <CircleButton
       defaultColor="type_5"
       boxShadowType="type_1"
