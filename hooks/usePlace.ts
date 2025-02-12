@@ -117,12 +117,12 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
        */
       usePlaceDetails(id: string) {
         const dispatch = useDispatch();
-        const placeDetailsDispatchers = createActions(dispatch);
+        const placeDetailsActions = createActions(dispatch);
         const place = select(useSelector, id);
 
         return {
           place,
-          placeDetailsDispatchers,
+          placeDetailsActions,
         };
       },
 

@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     height: 145,
     overflow: "hidden",
     ...Styles.shapes.rounded_4,
-    ...Styles.spacings.p_10,
   },
 
   card_recommended_mark_container: {

@@ -13,7 +13,7 @@ export const FIELD_REQUIRED_MESSAGE = "This field is required.";
 export const FIELD_MIN_LENGTH_MESSAGE =
   "This field must be at least 8 characters";
 
-export class ValidateUtils {
+export class ValidatorUtils {
   static singleFileValidator(file: any) {
     if (!file || !file.name || !file.size || !file.type) {
       return "File cannot be blank.";
@@ -25,5 +25,13 @@ export class ValidateUtils {
       return "File type is invalid.";
     }
     return null;
+  }
+
+  static isValidFileURL(fileURL: string) {
+    return REGEXES.URL.test(fileURL);
+  }
+
+  static isValidEmail(email: string) {
+    return REGEXES.USER.EMAIL.test(email);
   }
 }

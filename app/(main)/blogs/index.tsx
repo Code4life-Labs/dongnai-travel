@@ -1,5 +1,6 @@
 import React from "react";
 import { View, FlatList } from "react-native";
+import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 // Import from assets
@@ -44,6 +45,11 @@ export default function BlogsScreen() {
       placesActions.get(state.currentType);
     }
   }, [state.currentType, places]);
+
+  router.navigate({
+    pathname: "/blogs/[id]",
+    params: { id: "test" },
+  });
 
   return (
     <View style={{ backgroundColor: theme.background }}>

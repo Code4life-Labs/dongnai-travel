@@ -24,6 +24,20 @@ export default function BlogsLayout() {
             title: "Blogs",
           }}
         />
+
+        <Stack.Screen
+          name="[id]/index"
+          options={{
+            title: "Blogs",
+          }}
+        />
+
+        <Stack.Screen
+          name="[id]/comments"
+          options={{
+            title: "Blogs",
+          }}
+        />
       </Stack>
     </SafeAreaView>
   );

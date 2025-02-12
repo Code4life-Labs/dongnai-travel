@@ -25,7 +25,7 @@ export default function ExploreStack() {
           }}
         />
         <Stack.Screen
-          name="details"
+          name="places/[id]"
           options={{
             title: "Place",
           }}

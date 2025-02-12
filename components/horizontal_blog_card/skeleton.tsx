@@ -2,7 +2,7 @@ import { View } from "react-native";
 import React from "react";
 
 // Import components
-import CircleButton from "../buttons/CircleButton";
+import Skeleton from "../skeleton";
 
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
@@ -16,44 +16,54 @@ const HorizontalBlogCardSkeleton = () => {
 
   return (
     <View style={[styles.card, { backgroundColor: theme.subBackground }]}>
-      {/* Cột đâu tiên - Image Container */}
+      {/* First Column - Image Container */}
       <View
         style={{
           ...styles.card_image_container,
           ...Styles.spacings.me_12,
-          backgroundColor: theme.subOutline,
         }}
-      ></View>
+      >
+        <Skeleton
+          width="100%"
+          height="100%"
+          style={{ backgroundColor: theme.subOutline }}
+        />
+      </View>
 
-      {/* Cột thứ 2 - Main Container */}
+      {/* Second Column - Main Container */}
       <View style={styles.card_main_container}>
         <View style={styles.card_content_container}>
-          <View
+          {/* Skeleton for the first line */}
+          <Skeleton
+            width="100%"
+            height={7}
             style={{
-              ...styles.card_skeleton_rectangle,
               ...Styles.spacings.mb_12,
-              height: 7,
               backgroundColor: theme.subOutline,
             }}
-          ></View>
+          />
+
+          {/* Skeleton for the title */}
           <View>
-            <View
+            <Skeleton
+              width="100%"
+              height={18}
               style={{
-                ...styles.card_skeleton_rectangle,
-                height: 18,
                 ...Styles.spacings.mb_6,
                 backgroundColor: theme.subOutline,
               }}
-            ></View>
-            <View
+            />
+            <Skeleton
+              width="100%"
+              height={18}
               style={{
-                ...styles.card_skeleton_rectangle,
-                height: 18,
                 ...Styles.spacings.mb_6,
                 backgroundColor: theme.subOutline,
               }}
-            ></View>
+            />
           </View>
+
+          {/* Skeleton for the information row */}
           <View style={styles.card_information_container}>
             <View
               style={{
@@ -61,46 +71,56 @@ const HorizontalBlogCardSkeleton = () => {
                 ...Styles.spacings.me_12,
               }}
             >
-              <View
+              <Skeleton
+                width="100%"
+                height={12}
                 style={{
-                  ...styles.card_skeleton_rectangle,
-                  height: 12,
                   ...Styles.spacings.mb_6,
                   backgroundColor: theme.subOutline,
                 }}
-              ></View>
+              />
             </View>
             <View style={styles.card_information_col}>
-              <View
+              <Skeleton
+                width="100%"
+                height={12}
                 style={{
-                  ...styles.card_skeleton_rectangle,
-                  height: 12,
                   ...Styles.spacings.mb_6,
                   backgroundColor: theme.subOutline,
                 }}
-              ></View>
+              />
             </View>
           </View>
         </View>
+
+        {/* Skeleton for the buttons */}
         <View style={styles.card_buttons_container}>
-          <CircleButton
+          <Skeleton
             style={[
               Styles.spacings.me_8,
-              { backgroundColor: theme.subOutline },
+              {
+                backgroundColor: theme.subOutline,
+                width: 30,
+                height: 30,
+                borderRadius: 20,
+              },
             ]}
-            disabled={true}
           />
-          <CircleButton
+          <Skeleton
             style={[
               Styles.spacings.me_8,
-              { backgroundColor: theme.subOutline },
+              {
+                backgroundColor: theme.subOutline,
+                width: 30,
+                height: 30,
+                borderRadius: 20,
+              },
             ]}
-            disabled={true}
           />
         </View>
       </View>
 
-      {/* Cột thứ 3 - Share Container */}
+      {/* Third Column - Share Container */}
       <View style={styles.card_share_container}></View>
     </View>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 // Import from assets
 import PlaceQualitiesData from "@/assets/json/place-qualities.json";
@@ -38,6 +39,9 @@ export default function ExploreScreen() {
   );
 
   const _languageData = (language.data as any)["exploreScreen"] as any;
+
+  // Example of navigate to place details
+  // router.navigate({ pathname: "/explore/place/[id]", params: { id: "test" } });
 
   React.useEffect(() => {
     if (!places || places.length === 0) {

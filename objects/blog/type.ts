@@ -41,4 +41,6 @@ export type Blog = {
   content: BlogContent;
   mentionedPlaces: Array<Place>;
   isLiked: boolean;
+  userFavoritesTotal?: number;
+  userCommentsTotal?: number;
 } & $Extendable;
