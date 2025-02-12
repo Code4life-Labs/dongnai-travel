@@ -1,0 +1,85 @@
+{
+  "_id": "642bd476b64f3e8ad215c315",
+  "geometry": {
+    "location": {
+      "lat": 11.2309993,
+      "lng": 107.4401813
+    },
+    "viewport": {
+      "northeast": {
+        "lat": 11.2325342302915,
+        "lng": 107.4410102802915
+      },
+      "southwest": {
+        "lat": 11.2298362697085,
+        "lng": 107.4383123197085
+      }
+    }
+  },
+  "name": "Công viên Suối Mơ",
+  "url": "https://maps.google.com/?cid=2437631735449436984",
+  "website": "http://suoimopark.com/",
+  "isRecommended": true,
+  "phoneNumber": "0251 6270 777",
+  "photos": [
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594035/place_photos/s5bvmqf9pzwrjcghdxmb.png",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594033/place_photos/pe2bbcgyfwywkvd5rmht.jpg",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594034/place_photos/nq0oumm3lwiq7jjx9asx.jpg",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594034/place_photos/wcorybpi5jx7ypornjpq.jpg",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594034/place_photos/xudphwc6hto4yqfd2z36.jpg",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594036/place_photos/hwk2jqxlwpdmphw5xxof.png",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594033/place_photos/ptcowq7g2gmuh4b2j5qc.jpg",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594034/place_photos/civbz0zfbavfunhaj3wu.jpg",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594033/place_photos/r5jld9d1zobnm5qsspyi.jpg",
+    "http://res.cloudinary.com/dbtb0sjby/image/upload/v1680594034/place_photos/lmnv52qeqqjj4vu43hsp.jpg"
+  ],
+  "placeId": "ChIJPUHe5ahndDEROMOu9CU11CE",
+  "plusCode": {
+    "compoundCode": "6CJR+93 Tân Phú, Đồng Nai, Việt Nam",
+    "globalCode": "7P396CJR+93"
+  },
+  "addressComponents": [
+    {
+      "longName": "9",
+      "shortName": "9",
+      "types": ["street_number"]
+    },
+    {
+      "longName": "Trà Cổ",
+      "shortName": "Trà Cổ",
+      "types": ["route"]
+    },
+    {
+      "longName": "Tân Phú",
+      "shortName": "Tân Phú",
+      "types": ["administrative_area_level_2", "political"]
+    },
+    {
+      "longName": "Đồng Nai",
+      "shortName": "Đồng Nai",
+      "types": ["administrative_area_level_1", "political"]
+    },
+    {
+      "longName": "Việt Nam",
+      "shortName": "VN",
+      "types": ["country", "political"]
+    }
+  ],
+  "content": "",
+  "types": [
+    {
+      "_id": "jahsdkjfc",
+      "value": "amusement_park",
+      "name": "Amusement Park"
+    }
+  ],
+  "businessStatus": {
+    "_id": "dfjahskdnvbaksndbfkasdfajd",
+    "name": "Closed temporarily",
+    "value": "closed_temporarily",
+    "updatedAt": 1735664400000,
+    "createdAt": 1735664400000
+  },
+  "updatedAt": 1735664400000,
+  "createdAt": 1735664400000
+}

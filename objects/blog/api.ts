@@ -43,12 +43,34 @@ export class BlogAPI {
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
 
-      return response.data as Promise<Array<Blog>>;
+      return response.data as Array<Blog>;
     } catch (error: any) {
       console.warn(error.message);
-      return [];
+      return null;
     }
   }
-  async getBlogAsync() {}
+
+  /**
+   * Get blog by id
+   * @param options
+   * @returns
+   */
+  async getBlogAsync(options: GetBlogAsyncOptions) {
+    try {
+      const { id, userId } = options;
+      const url = RouteUtils.getPath("blogs", id);
+      let params = new URLSearchParams();
+
+      if (userId) params.append("userId", userId);
+
+      // const response = await this.api.get(url, { params });
+      const data = await import("@/assets/mock-data/blog/blog.json");
+
+      return data as Blog;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
   async updateBlogAsync() {}
 }

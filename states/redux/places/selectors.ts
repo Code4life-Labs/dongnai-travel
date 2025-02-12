@@ -9,7 +9,7 @@ export const placesSelectors = {
    * @returns
    */
   selectCurrentPlaces(state: AppState) {
-    return state.places.currentPlaces.data;
+    return state.places.briefPlaceListInformation.data;
   },
 
   /**
@@ -18,6 +18,6 @@ export const placesSelectors = {
    * @returns
    */
   selectPlaceDetails(state: AppState, placeId: string) {
-    return state.places.detailsOfPlaces.get(placeId);
+    return state.places.placeDict[placeId];
   },
 };

@@ -10,7 +10,7 @@ import { mapSelectors } from "@/states/redux/map/selectors";
 import type { AppDispatch } from "@/states/redux/type";
 
 export const { useMap, useMapActions, useMapState } = (function () {
-  const createActions = function (dispatch: AppDispatch) {
+  const createDispatchers = function (dispatch: AppDispatch) {
     return {
       updateCurrent(map: any) {
         dispatch(mapActions.updateCurrentMap(map));
@@ -51,7 +51,7 @@ export const { useMap, useMapActions, useMapState } = (function () {
   return {
     useMap() {
       const dispatch = useDispatch();
-      const mapDispatchers = createActions(dispatch);
+      const mapDispatchers = createDispatchers(dispatch);
       const map = select(useSelector);
 
       return {
@@ -62,7 +62,7 @@ export const { useMap, useMapActions, useMapState } = (function () {
 
     useMapActions() {
       const dispatch = useDispatch();
-      return createActions(dispatch);
+      return createDispatchers(dispatch);
     },
 
     useMapState() {

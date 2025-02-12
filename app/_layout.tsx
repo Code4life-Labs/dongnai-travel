@@ -4,6 +4,7 @@ import { Stack, SplashScreen } from "expo-router";
 // import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "react-native-reanimated";
 
 // Import redux configurations
@@ -40,13 +41,15 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <GestureHandlerRootView>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="(main)" />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </GestureHandlerRootView>
+      <SafeAreaProvider>
+        <GestureHandlerRootView>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="(main)" />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
     </Provider>
   );
 }

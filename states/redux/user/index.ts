@@ -28,9 +28,13 @@ export const userSlice = createSlice({
       state.ipv4 = data.ipv4;
       state.tempId = data.tempId;
     },
-    updateUser(state, action) {
+    setUser(state, action) {
       const user = action.payload;
       state.user = user;
+    },
+    updateUser(state, action) {
+      const user = action.payload;
+      state.user = Object.assign({}, state.user, user);
     },
     updateTemporaryId(state, action) {
       const userId = action.payload;
@@ -52,13 +56,7 @@ export const userSlice = createSlice({
 // Phương: Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo tự động theo tên của reducer nhé.
 
 // Phương:
-export const {
-  update,
-  updateUser,
-  updateTemporaryId,
-  updateCanRemember,
-  updateIpv4,
-} = userSlice.actions;
+export const userActions = userSlice.actions;
 
 // Phương: Export default cái userReducer của chúng ta để combineReducers trong store
 export const userReducer = userSlice.reducer;

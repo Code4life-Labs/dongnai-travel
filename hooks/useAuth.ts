@@ -6,7 +6,7 @@ import moment from "moment";
 import { UserManager } from "@/objects/user";
 
 // Import states
-import { updateUser, updateCanRemember } from "@/states/redux/user";
+import { userActions } from "@/states/redux/user";
 import { UserSelectors } from "@/states/redux/user/selector";
 
 // Import utils
@@ -33,7 +33,7 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
        */
       rememberAccount(status?: boolean) {
         // Save token to store
-        dispatch(updateCanRemember(Boolean(status)));
+        dispatch(userActions.updateCanRemember(Boolean(status)));
       },
       /**
        * Hàm này dùng để đăng nhập.
@@ -62,7 +62,7 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
               const { user, token } = data;
               if (data) {
                 // Phuong: Update user in persistent store
-                dispatch(updateUser(user));
+                dispatch(userActions.updateUser(user));
 
                 // Check remember
               }
@@ -81,13 +81,15 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
         try {
           const newUser = UserManager.createNewUser(data);
           // Phuong: call Api
-          UserManager.Api.signUp(newUser).then((res) => {
-            if (res) {
+          UserManager.Api.signUp(newUser).then((data) => {
+            if (data) {
               console.log(
                 "🚀 ~ file: SignupScreen.js:80 ~ signUpUserAPI ~ userData",
-                res
+                data
               );
             }
+
+            userActions.setUser(data);
           });
         } catch (error: any) {
           console.error(error.message);
@@ -114,7 +116,7 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
 
       return {
         ...all,
-        ...actions,
+        authDispatchers: actions,
       };
     },
 

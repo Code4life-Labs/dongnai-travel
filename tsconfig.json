@@ -4,7 +4,8 @@
     "strict": true,
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "module": "ES2022"
   },
   "include": [
     "**/*.ts",

@@ -1,0 +1,26 @@
+{
+  "_id": "haskljdhkfjasdf",
+  "author": {
+    "firstName": "Tuan",
+    "lastName": "Nguyen Anh",
+    "displayName": "Nguyen Anh Tuan",
+    "avatar": ""
+  },
+  "type": {
+    "_id": "kjlasdfasdfk",
+    "name": "Review",
+    "value": "review"
+  },
+  "mentionedPlaces": [
+    {
+      "_id": "dlfjhaksdjhfkajbsdf"
+    }
+  ],
+  "name": "Ta Lai Longhouse, trải nghiệm đáng nhớ với thiên nhiên, văn hoá, con người",
+  "contentUrl": "",
+  "coverImage": "http://res.cloudinary.com/dbtb0sjby/image/upload/v1687161128/blog_photos/ee94b1vx4vr4vwddu2rt.jpg",
+  "readTime": 108,
+  "isApproved": true,
+  "updatedAt": 1735837200000,
+  "createdAt": 1735837200000
+}

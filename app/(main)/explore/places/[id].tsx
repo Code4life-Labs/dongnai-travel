@@ -1,7 +1,8 @@
-import { View, Animated, Image } from "react-native";
+import { View, Animated, Image, useWindowDimensions } from "react-native";
 import React from "react";
 import { router, useNavigation } from "expo-router";
 import { useRoute } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -33,13 +34,17 @@ import { styles } from "@/screens/place-detail/styles";
 export default function PlaceDetailsScreen() {
   const route = useRoute();
   const navigation = useNavigation();
+  const dimension = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const { id } = route.params as any;
   const { language } = useLanguage();
   const { theme } = useTheme();
-  const { place, placeDetailsActions } = usePlaceDetails(id);
+  const { place, placeDetailsDispatchers } = usePlaceDetails(id);
 
+  const screenHeight =
+    Styles.dimension.screenHeight - insets.bottom - insets.top;
   const snapPoints = React.useMemo(
-    () => ["60%", `${100 - (30 / Styles.dimension.screenHeight) * 100}%`],
+    () => ["60%", `${(screenHeight / Styles.dimension.screenHeight) * 100}%`],
     []
   );
 
@@ -66,17 +71,14 @@ export default function PlaceDetailsScreen() {
   };
 
   React.useEffect(() => {
-    if (place) {
-      navigation.setOptions({ title: place.name });
-      // placesActions.fetchPlaceDetails(id, {
-      //   canGetComplete: fromSearch,
-      //   lang: language.code,
-      // });
+    if (place) navigation.setOptions({ title: place.name });
+    if (!place || (place && place._id !== id)) {
+      placeDetailsDispatchers.fetchPlaceDetail(id);
       return () => {
-        placeDetailsActions.remove(id);
+        placeDetailsDispatchers.remove(id);
       };
     }
-  }, [place, language.code]);
+  }, [id, language.code]);
 
   if (!place) return <PlaceDetailsSkeletonScreen />;
 
@@ -200,7 +202,7 @@ export default function PlaceDetailsScreen() {
               {place.types &&
                 place.types.map((type) => (
                   <FC.RectangleButton
-                    key={type}
+                    key={type._id}
                     type="highlight"
                     defaultColor="type_5"
                     shape="rounded_4"
@@ -214,21 +216,35 @@ export default function PlaceDetailsScreen() {
                     {/* {(isActive, currentLabelStyle) => (
                         <FC.AppText style={currentLabelStyle} size="body3">{StringUtility.toTitleCase(type)}</FC.AppText>
                       )} */}
-                    {StringUtils.toTitleCase(type)}
+                    {StringUtils.toTitleCase(type.name)}
                   </FC.RectangleButton>
                 ))}
             </View>
           </View>
 
           {/* Tabs */}
-          <FC.AppTabSlider>
-            <FC.AppTabSlider.Child
-              component={() => <AboutSlide placeId={id} />}
-            />
-            <FC.AppTabSlider.Child
-              component={() => <ReviewsSlide placeId={id} />}
-            />
-          </FC.AppTabSlider>
+          <FC.AppTabSlider
+            slides={[
+              {
+                label: "About",
+                value: "about",
+                element: (
+                  <FC.AppTabSlider.Child
+                    component={() => <AboutSlide placeId={id} />}
+                  />
+                ),
+              },
+              {
+                label: "Reviews",
+                value: "reviews",
+                element: (
+                  <FC.AppTabSlider.Child
+                    component={() => <ReviewsSlide placeId={id} />}
+                  />
+                ),
+              },
+            ]}
+          />
 
           <View style={{ height: 125 }}></View>
         </BottomSheetScrollView>

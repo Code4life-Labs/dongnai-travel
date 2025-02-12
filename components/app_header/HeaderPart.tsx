@@ -1,5 +1,8 @@
 import { View } from "react-native";
 
+// Import components
+import AppText from "../app_text";
+
 // Import styles
 import { styles } from "./styles";
 
@@ -12,5 +15,13 @@ export default function HeaderPart({
   children?: React.ReactElement | boolean;
   style: StyleProp<ViewStyle>;
 }) {
+  if (typeof children === "string") {
+    return (
+      <View style={[styles.header_col, style]}>
+        <AppText>{children}</AppText>
+      </View>
+    );
+  }
+
   return <View style={[styles.header_col, style]}>{children}</View>;
 }
