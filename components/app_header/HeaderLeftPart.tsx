@@ -40,8 +40,8 @@ function StackLeftPart(props: AppStackHeaderProps) {
     />
   );
 
-  if (!BooleanUtils.isEmpty(props.setRightPart)) {
-    child = props.setRightPart();
+  if (props.setLeftPart) {
+    child = props.setLeftPart();
   }
 
   return (

@@ -29,7 +29,7 @@ import { styles } from "@/screens/explore/styles";
 import { ExploreScreenUtils } from "@/screens/explore/utils";
 
 export default function ExploreScreen() {
-  const { places, placesActions } = usePlaces();
+  const { places, placesDispatchers } = usePlaces();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -40,14 +40,20 @@ export default function ExploreScreen() {
 
   const _languageData = (language.data as any)["exploreScreen"] as any;
 
-  // Example of navigate to place details
-  // router.navigate({ pathname: "/explore/place/[id]", params: { id: "test" } });
-
   React.useEffect(() => {
     if (!places || places.length === 0) {
-      placesActions.get(state.currentType);
+      placesDispatchers.fetchPlaces(state.currentType);
     }
   }, [state.currentType, places]);
+
+  // Test
+  React.useEffect(() => {
+    // Example of navigate to place details
+    router.navigate({
+      pathname: "/explore/places/[id]",
+      params: { id: "test" },
+    });
+  }, []);
 
   return (
     <View style={{ backgroundColor: theme.background }}>
@@ -94,10 +100,8 @@ export default function ExploreScreen() {
           backgroundColor: theme.background,
         }}
         onMomentumScrollEnd={() =>
-          ExploreScreenUtils.handleOnMomentumScrollEnd(
-            state,
-            places,
-            placesActions.get
+          ExploreScreenUtils.handleOnMomentumScrollEnd(state, places, () =>
+            placesDispatchers.fetchPlaces(state.currentType)
           )
         }
         onEndReached={(e) => ExploreScreenUtils.handleOnEndReached(state)}
@@ -137,7 +141,7 @@ export default function ExploreScreen() {
         )}
         keyExtractor={(item) => item._id as string}
         onRefresh={() => {
-          placesActions.clear();
+          placesDispatchers.clear();
         }}
         refreshing={false}
       />

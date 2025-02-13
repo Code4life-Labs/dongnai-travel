@@ -10,7 +10,7 @@ import { manifoldSelectors } from "@/states/redux/manifold/selectors";
 import type { AppDispatch } from "@/states/redux/type";
 
 export const { useStatus, useStatusActions, useStatusState } = (function () {
-  const createActions = function (dispatch: AppDispatch) {
+  const createDispatchers = function (dispatch: AppDispatch) {
     return {
       updateIsLoading(status: boolean) {
         dispatch(manifoldActions.updateIsLoading(status));
@@ -32,7 +32,7 @@ export const { useStatus, useStatusActions, useStatusState } = (function () {
   return {
     useStatus() {
       const dispatch = useDispatch();
-      const statusDispatchers = createActions(dispatch);
+      const statusDispatchers = createDispatchers(dispatch);
       const status = select(useSelector);
 
       return {
@@ -43,7 +43,7 @@ export const { useStatus, useStatusActions, useStatusState } = (function () {
 
     useStatusActions() {
       const dispatch = useDispatch();
-      return createActions(dispatch);
+      return createDispatchers(dispatch);
     },
 
     useStatusState() {

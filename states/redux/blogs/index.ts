@@ -10,6 +10,16 @@ import type { Blog } from "@/objects/blog/type";
 
 import { blogsThunks } from "./middlewares";
 
+type InitialState = {
+  blogDict: Record<string, Blog>;
+  briefBlogListInformation: {
+    type: string;
+    limit: number;
+    skip: number;
+    data: Array<Partial<Blog>>;
+  };
+};
+
 /**
  * Use to create a brieft blog object to manage current blogs
  * @param limit
@@ -25,22 +35,23 @@ function _createDefaultBriefBlog(limit = 5, skip = 0) {
   };
 }
 
+const initialState: InitialState = {
+  blogDict: Object(),
+  briefBlogListInformation: _createDefaultBriefBlog(),
+};
+
 export const blogsSlice = createSlice({
   name: "blogs",
-  initialState: {
-    detailsOfBlogs: new Map<string, Partial<Blog>>(),
-    currentBlogs: _createDefaultBriefBlog(),
-  },
+  initialState: { ...initialState },
   reducers: {
     /**
      * Use to add a blogs details to Map (for caching)
      * @param state
      * @param action
      */
-    addBlogDetails(state, action) {
-      const blogDetails = action.payload as Blog;
-      if (!state.detailsOfBlogs.get(blogDetails._id))
-        state.detailsOfBlogs.set(blogDetails._id, blogDetails);
+    addBlog(state, action) {
+      const blog = action.payload as Blog;
+      if (!state.blogDict[blog._id]) state.blogDict[blog._id] = blog;
     },
 
     /**
@@ -48,13 +59,13 @@ export const blogsSlice = createSlice({
      * @param state
      * @param action
      */
-    updateBlogDetails(state, action) {
-      const { id, blogDetails } = action.payload as {
+    updateBlog(state, action) {
+      const { id, blog } = action.payload as {
         id: string;
-        blogDetails: Blog;
+        blog: Blog;
       };
 
-      state.detailsOfBlogs.set(id, blogDetails);
+      state.blogDict[id] = blog;
     },
 
     /**
@@ -62,9 +73,9 @@ export const blogsSlice = createSlice({
      * @param state
      * @param action
      */
-    clearBlogDetails(state, action) {
+    clearBlog(state, action) {
       let blogId = action.payload;
-      if (state.detailsOfBlogs.get(blogId)) state.detailsOfBlogs.delete(blogId);
+      if (state.blogDict[blogId]) delete state.blogDict[blogId];
     },
 
     /**
@@ -76,10 +87,10 @@ export const blogsSlice = createSlice({
       let { blogIndex, updateData } = action.payload;
       if (BooleanUtils.isEmpty(blogIndex)) return;
 
-      let blog = state.currentBlogs.data![blogIndex];
+      let blog = state.briefBlogListInformation.data![blogIndex];
       if (blog) {
-        state.currentBlogs.data = ArrayUtils.updateAt(
-          state.currentBlogs.data!,
+        state.briefBlogListInformation.data = ArrayUtils.updateAt(
+          state.briefBlogListInformation.data!,
           blogIndex,
           Object.assign(blog, updateData)
         );
@@ -91,8 +102,9 @@ export const blogsSlice = createSlice({
      * @param state
      * @param action
      */
-    increaseSkipBriefBlogsAmount(state) {
-      state.currentBlogs.skip += state.currentBlogs.skip;
+    increaseSkipInBriefBlogListInformation(state) {
+      state.briefBlogListInformation.skip +=
+        state.briefBlogListInformation.skip;
     },
 
     /**
@@ -100,10 +112,10 @@ export const blogsSlice = createSlice({
      * @param state
      * @param action
      */
-    decreaseSkipBriefBlogsAmount(state) {
-      state.currentBlogs.skip = NumberUtils.decreaseByAmount(
-        state.currentBlogs.skip,
-        state.currentBlogs.limit
+    decreaseSkipInBriefBlogListInformation(state) {
+      state.briefBlogListInformation.skip = NumberUtils.decreaseByAmount(
+        state.briefBlogListInformation.skip,
+        state.briefBlogListInformation.limit
       );
     },
 
@@ -112,30 +124,35 @@ export const blogsSlice = createSlice({
      * @param state
      * @param action
      */
-    clearCurrentBlogs(state) {
-      state.currentBlogs = _createDefaultBriefBlog();
+    clearBriefBlogInformation(state) {
+      state.briefBlogListInformation = _createDefaultBriefBlog();
     },
   },
   extraReducers(builder) {
-    builder.addCase(
-      blogsThunks.getBlogsByTypeAsync.fulfilled,
-      (state, action) => {
-        let [typeOfBlog, blogs] = action.payload;
+    builder.addCase(blogsThunks.getBlogsAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
 
-        if (blogs.length !== 0) {
-          state.currentBlogs.type = typeOfBlog;
-          state.currentBlogs.data = state.currentBlogs.data.concat(blogs);
-          state.currentBlogs.skip += blogs.length;
-        }
+      let [typeOfBlog, blogs] = action.payload;
+
+      if (blogs.length !== 0) {
+        state.briefBlogListInformation.type = typeOfBlog;
+        state.briefBlogListInformation.data =
+          state.briefBlogListInformation.data.concat(blogs);
+        state.briefBlogListInformation.skip += blogs.length;
       }
-    );
+    });
 
     builder.addCase(
-      blogsThunks.getBlogDetailsByIdAsync.fulfilled,
+      blogsThunks.getBlogDetailAsync.fulfilled,
       (state, action) => {
-        let [blogId, blogDetails] = action.payload;
+        if (!action.payload) return;
 
-        state.detailsOfBlogs.set(blogId, blogDetails);
+        let [blogId, blog] = action.payload;
+
+        console.log("BlogID:", blogId);
+        console.log("Blog Metadata:", blog);
+
+        state.blogDict[blogId] = blog;
       }
     );
   },

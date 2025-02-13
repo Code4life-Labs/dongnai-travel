@@ -288,7 +288,11 @@
     },
     "relatedPlacesDataMessage": {
       "vi": "Không có địa điểm nào giống với địa điểm này.",
-      "en": "There aren't any related places with this place."
+      "en": "There isn't any related places with this place."
+    },
+    "reviewsDataMessage": {
+      "vi": "Địa địa này chưa có đánh giá.",
+      "en": "There aren't reviews of this place."
     },
     "descriptionMessage": {
       "vi": "Mô tả của địa điểm này hiện tại vẫn chưa có. Mô tả sẽ được thêm vào sau.",

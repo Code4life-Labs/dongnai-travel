@@ -26,21 +26,27 @@ export default function AboutSlide({ placeId }: { placeId: string }) {
   const [relatedPlaces, setRelatedPlaces] = React.useState<Array<any>>([]);
 
   React.useEffect(() => {
-    if (relatedPlaces.length === 0) {
-      PlaceManager.Api.getPlacesAsync({ limit: 5, skip: 0, type })
+    if (placeDetails && relatedPlaces.length === 0) {
+      PlaceManager.Api.getPlacesAsync({
+        limit: 5,
+        skip: 0,
+        type: placeDetails.types[0].value!,
+      })
         .then((data) => {
           setRelatedPlaces(data);
         })
         .catch((error) => console.error(error));
     }
-  }, []);
+  }, [placeDetails]);
 
-  if (!placeDetails) return;
+  if (!placeDetails) {
+    return <FC.NoData />;
+  }
 
   const imageUrls = placeDetails.photos ? placeDetails?.photos : [];
   const type = placeDetails.types ? placeDetails.types[0] : "";
   const speech = placeDetails.content
-    ? (placeDetails.content.formattedText as any)[language.code]
+    ? (placeDetails.content as any)[language.code]
     : "";
   const _languageData = (language.data as any)["placeDetailScreen"] as any;
 
@@ -58,9 +64,7 @@ export default function AboutSlide({ placeId }: { placeId: string }) {
           {_languageData.description[language.code]}
         </FC.AppText>
         {placeDetails.content ? (
-          <Markdown>
-            {(placeDetails.content.formattedText as any)[language.code]}
-          </Markdown>
+          <Markdown>{(placeDetails.content as any)[language.code]}</Markdown>
         ) : (
           <FC.AppText>
             {_languageData.descriptionMessage[language.code]}
@@ -129,24 +133,9 @@ export default function AboutSlide({ placeId }: { placeId: string }) {
       </View>
       <View style={[Styles.spacings.ph_18]}>
         {relatedPlaces.length === 0 ? (
-          <View
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <FC.AppText>
-              {_languageData.relatedPlacesDataMessage[language.code]}
-            </FC.AppText>
-            <Image
-              source={require("@/assets/images/no-data.png")}
-              style={{
-                height: 300,
-                width: 300,
-                alignSelf: "center",
-              }}
-            />
-          </View>
+          <FC.NoData
+            title={_languageData.relatedPlacesDataMessage[language.code]}
+          />
         ) : (
           relatedPlaces.map((relatedPlace, index) => (
             <FC.HorizontalPlaceCard

@@ -15,26 +15,25 @@ import type { AppState, AppDispatch } from "@/states/redux/type";
 import type { Place } from "@/objects/place/type";
 
 export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
-  const createActions = function (dispatch: AppDispatch) {
+  const createDispatchers = function (dispatch: AppDispatch) {
     return {
+      fetchPlaces(type: string = "all") {
+        dispatch(placesThunks.getPlacesAsync(type));
+      },
       update(id: string, briefPlace: Partial<Place>) {
         dispatch(placesActions.updateBriefPlace({ id, briefPlace }));
       },
 
       increaseSkipAmount() {
-        dispatch(placesActions.increaseSkipBriefPlacesAmount());
+        dispatch(placesActions.increaseSkipInBriefPlaceListInformation());
       },
 
       decreaseSkipAmount() {
-        dispatch(placesActions.decreaseSkipBriefPlacesAmount());
+        dispatch(placesActions.decreaseSkipInBriefPlaceListInformation());
       },
 
       clear() {
         dispatch(placesActions.clearCurrentPlaces());
-      },
-
-      get(type: string = "all") {
-        dispatch(placesThunks.getPlacesByTypeAsync(type));
       },
     };
   };
@@ -51,12 +50,12 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
      */
     usePlaces() {
       const dispatch = useDispatch();
-      const placesActions = createActions(dispatch);
+      const placesDispatchers = createDispatchers(dispatch);
       const places = select(useSelector);
 
       return {
         places,
-        placesActions,
+        placesDispatchers,
       };
     },
 
@@ -67,7 +66,7 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
      */
     usePlacesActions() {
       const dispatch = useDispatch();
-      return createActions(dispatch);
+      return createDispatchers(dispatch);
     },
 
     /**
@@ -82,15 +81,19 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
 
 export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
   (function () {
-    const createActions = function (dispatch: AppDispatch) {
+    const createDispatchers = function (dispatch: AppDispatch) {
       return {
+        fetchPlaceDetail(id: string) {
+          dispatch(placesThunks.getPlaceDetailAsync(id));
+        },
+
         add(placeDetails: Place) {
-          dispatch(placesActions.addPlaceDetails(placeDetails));
+          dispatch(placesActions.addPlace(placeDetails));
         },
 
         update(placeDetails: Place) {
           dispatch(
-            placesActions.updatePlaceDetails({
+            placesActions.updatePlace({
               id: placeDetails._id,
               placeDetails,
             })
@@ -98,7 +101,7 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
         },
 
         remove(id: string) {
-          dispatch(placesActions.clearPlaceDetails(id));
+          dispatch(placesActions.clearPlace(id));
         },
       };
     };
@@ -117,12 +120,12 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
        */
       usePlaceDetails(id: string) {
         const dispatch = useDispatch();
-        const placeDetailsActions = createActions(dispatch);
+        const placeDetailsDispatchers = createDispatchers(dispatch);
         const place = select(useSelector, id);
 
         return {
           place,
-          placeDetailsActions,
+          placeDetailsDispatchers,
         };
       },
 
@@ -133,7 +136,7 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
        */
       usePlaceDetailsActions() {
         const dispatch = useDispatch();
-        return createActions(dispatch);
+        return createDispatchers(dispatch);
       },
 
       /**

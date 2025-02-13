@@ -5,13 +5,11 @@ import { styles } from "./styles";
 import type { TabSliderProps } from "./type";
 
 const AppTabSlider = ({
-  children,
+  slides,
   lineIndexTranslateXStart = 20,
   slideTranslateXStart = 100,
   selectTabIndex,
 }: TabSliderProps) => {
-  if (!children || !children.length) return children || null;
-
   const [currentSlideIndex, setSlideIndex] = React.useState(0);
   const sliderInfoRef = React.useRef({
     prevSlideIndex: 0,
@@ -25,11 +23,13 @@ const AppTabSlider = ({
 
   const listSlideName = React.useMemo(
     () =>
-      children.map((child) => ({
-        value: child.props.name || null,
-        label: child.props.name || null,
-      })),
-    [children]
+      slides.map((slide) => {
+        return {
+          value: slide.value,
+          label: slide.label,
+        };
+      }),
+    [slides]
   );
 
   const direction =
@@ -69,8 +69,12 @@ const AppTabSlider = ({
 
   if (!renderedSlideRefs.current.renderedSlides[currentSlideIndex]) {
     renderedSlideRefs.current.renderedSlides[currentSlideIndex] =
-      children[currentSlideIndex];
+      slides[currentSlideIndex].element;
   }
+
+  React.useEffect(() => {
+    animateSlide();
+  }, []);
 
   return (
     <View style={styles.slider_container}>
@@ -115,11 +119,13 @@ const Slide = ({
 }: {
   isOnTop: boolean;
   children: React.ReactNode;
-}) => (
-  <View {...props} style={isOnTop ? styles.slide_show : styles.slide}>
-    {children}
-  </View>
-);
+}) => {
+  return (
+    <View {...props} style={isOnTop ? styles.slide_show : styles.slide}>
+      {children}
+    </View>
+  );
+};
 
 const Child = ({ component }: { component: () => JSX.Element }) => component();
 

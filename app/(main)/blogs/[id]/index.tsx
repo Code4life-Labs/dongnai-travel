@@ -32,13 +32,14 @@ import type { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 export default function BlogDetailScreen() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { blogId } = route.params as any;
+  const { id } = route.params as any;
 
   const { user } = useAuthState();
   const { theme } = useTheme();
-  const { blog, blogDispatchers } = useBlogDetails(blogId);
+  const { blog, blogDispatchers } = useBlogDetails(id);
 
   const [relatedBlogs, setRelatedBlogs] = React.useState<Array<Blog>>([]);
+  const [content, setContent] = React.useState("");
 
   // Dành để tranform thằng Float Buttons
   const floatButtonTranslateYAnim = React.useRef(new Animated.Value(0)).current;
@@ -66,37 +67,37 @@ export default function BlogDetailScreen() {
 
   React.useEffect(() => {
     if (blog) navigation.setOptions({ title: blog.name });
-    if (!blog || (blog && blog._id !== blogId)) {
-      // fetchBlogDetailsById(blogId, {
-      //   canGetFull: true,
-      // });
+    if (!blog || (blog && blog._id !== id)) {
+      console.log("Go here?");
+      blogDispatchers.fetchBlogDetail(id);
+      import("@/assets/mock-data/blog/content.json").then((data) => {
+        setContent(data.data);
+      });
 
       if (relatedBlogs.length === 0) {
-        BlogManager.Api.getBlogsAsync({
-          limit: 5,
-          skip: 0,
-          type,
-          userId: user ? user._id : undefined,
-        })
-          .then((data) => {
-            setRelatedBlogs(data);
-          })
-          .catch(console.error);
+        // BlogManager.Api.getBlogsAsync({
+        //   limit: 5,
+        //   skip: 0,
+        //   type,
+        //   userId: user ? user._id : undefined,
+        // })
+        //   .then((data) => {
+        //     setRelatedBlogs(data);
+        //   })
+        //   .catch(console.error);
       }
     }
 
     return function () {
-      // clearBlogDetails(blogId);
+      // clearBlogDetails(id);
     };
-  }, []);
-
-  console.log("Blog ID:", blogId);
+  }, [id]);
 
   if (!blog) {
     return <BlogDetailSkeleton />;
   }
 
-  const type = blog.type ? blog.type : "";
+  const type = blog.type.name ? blog.type.name : "";
   const displayAuthorName =
     blog.author.lastName && blog.author.firstName
       ? blog.author.lastName + " " + blog.author.firstName
@@ -198,7 +199,7 @@ export default function BlogDetailScreen() {
                 Styles.spacings.me_6,
               ]}
             >
-              {blog.type}
+              {type}
               {/* {
                 (isActive, currentLabelStyle) => (<FC.AppText size="body3" style={currentLabelStyle}>{blog.type}</FC.AppText>)
               } */}
@@ -207,7 +208,7 @@ export default function BlogDetailScreen() {
 
           {/* Speech, tạm thời vẫn chưa có, cho nên là chờ ở đây thôi */}
           <FC.Speech
-            text={blog.content?.plainText.vi}
+            text={blog.plainContent}
             // content={blog.content?.speech}
             langCode="vi"
             style={Styles.spacings.mt_12}
@@ -216,10 +217,7 @@ export default function BlogDetailScreen() {
 
         {/* Blog Content */}
         <View style={styles.bd_content_container}>
-          {/* Dùng MarkFormat ở đây */}
-          {blog.content && (
-            <Markdown>{blog.content.formattedText.vi!}</Markdown>
-          )}
+          {content && <Markdown>{content}</Markdown>}
         </View>
 
         <View
@@ -243,18 +241,7 @@ export default function BlogDetailScreen() {
         </View>
         <View>
           {relatedBlogs.length === 0 ? (
-            <View
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              {/* <FC.AppText>{langData.relatedPlacesDataMessage[langCode]}</FC.AppText> */}
-              <Image
-                source={require("@/assets/images/no-data.png")}
-                style={styles.imageNoData}
-              />
-            </View>
+            <FC.NoData />
           ) : (
             relatedBlogs.map((relatedBlog: any, index) => (
               <FC.HorizontalBlogCard

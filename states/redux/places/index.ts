@@ -10,6 +10,16 @@ import type { Place } from "@/objects/place/type";
 
 import { placesThunks } from "./middlewares";
 
+type InitialState = {
+  placeDict: Record<string, Place>;
+  briefPlaceListInformation: {
+    type: string;
+    limit: number;
+    skip: number;
+    data: Array<Partial<Place>>;
+  };
+};
+
 /**
  * Use to create brief places to manage current places
  * @param limit
@@ -25,22 +35,23 @@ function _createDefaultBriefPlace(limit = 5, skip = 0) {
   };
 }
 
+const initialState: InitialState = {
+  placeDict: Object(),
+  briefPlaceListInformation: _createDefaultBriefPlace(),
+};
+
 export const placesSlice = createSlice({
   name: "places",
-  initialState: {
-    detailsOfPlaces: new Map<string, Partial<Place>>(),
-    currentPlaces: _createDefaultBriefPlace(),
-  },
+  initialState: { ...initialState },
   reducers: {
     /**
      * Use to add a places details to Map (for caching)
      * @param state
      * @param action
      */
-    addPlaceDetails(state, action) {
-      const placeDetails = action.payload as Place;
-      if (!state.detailsOfPlaces.get(placeDetails._id))
-        state.detailsOfPlaces.set(placeDetails._id, placeDetails);
+    addPlace(state, action) {
+      const place = action.payload as Place;
+      if (!state.placeDict[place._id]) state.placeDict[place._id] = place;
     },
 
     /**
@@ -48,13 +59,13 @@ export const placesSlice = createSlice({
      * @param state
      * @param action
      */
-    updatePlaceDetails(state, action) {
-      const { id, placeDetails } = action.payload as {
+    updatePlace(state, action) {
+      const { id, place } = action.payload as {
         id: string;
-        placeDetails: Place;
+        place: Place;
       };
 
-      state.detailsOfPlaces.set(id, placeDetails);
+      state.placeDict[id] = place;
     },
 
     /**
@@ -62,10 +73,9 @@ export const placesSlice = createSlice({
      * @param state
      * @param action
      */
-    clearPlaceDetails(state, action) {
+    clearPlace(state, action) {
       let placeId = action.payload;
-      if (state.detailsOfPlaces.get(placeId))
-        state.detailsOfPlaces.delete(placeId);
+      if (state.placeDict[placeId]) delete state.placeDict[placeId];
     },
 
     /**
@@ -77,10 +87,10 @@ export const placesSlice = createSlice({
       let { placeIndex, updateData } = action.payload;
       if (BooleanUtils.isEmpty(placeIndex)) return;
 
-      let place = state.currentPlaces.data![placeIndex];
+      let place = state.briefPlaceListInformation.data![placeIndex];
       if (place) {
-        state.currentPlaces.data = ArrayUtils.updateAt(
-          state.currentPlaces.data!,
+        state.briefPlaceListInformation.data = ArrayUtils.updateAt(
+          state.briefPlaceListInformation.data!,
           placeIndex,
           Object.assign(place, updateData)
         );
@@ -92,8 +102,9 @@ export const placesSlice = createSlice({
      * @param state
      * @param action
      */
-    increaseSkipBriefPlacesAmount(state) {
-      state.currentPlaces.skip += state.currentPlaces.skip;
+    increaseSkipInBriefPlaceListInformation(state) {
+      state.briefPlaceListInformation.skip +=
+        state.briefPlaceListInformation.skip;
     },
 
     /**
@@ -101,10 +112,10 @@ export const placesSlice = createSlice({
      * @param state
      * @param action
      */
-    decreaseSkipBriefPlacesAmount(state) {
-      state.currentPlaces.skip = NumberUtils.decreaseByAmount(
-        state.currentPlaces.skip,
-        state.currentPlaces.limit
+    decreaseSkipInBriefPlaceListInformation(state) {
+      state.briefPlaceListInformation.skip = NumberUtils.decreaseByAmount(
+        state.briefPlaceListInformation.skip,
+        state.briefPlaceListInformation.limit
       );
     },
 
@@ -114,35 +125,35 @@ export const placesSlice = createSlice({
      * @param action
      */
     clearCurrentPlaces(state) {
-      state.currentPlaces = _createDefaultBriefPlace();
+      state.briefPlaceListInformation = _createDefaultBriefPlace();
     },
   },
   extraReducers(builder) {
+    builder.addCase(placesThunks.getPlacesAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      const [type, places] = action.payload;
+
+      if (!places) return;
+
+      if (places.length !== 0) {
+        state.briefPlaceListInformation.type = type;
+        state.briefPlaceListInformation.data =
+          state.briefPlaceListInformation.data.concat(places);
+        state.briefPlaceListInformation.skip += places.length;
+      }
+    });
+
     builder.addCase(
-      placesThunks.getPlacesByTypeAsync.fulfilled,
+      placesThunks.getPlaceDetailAsync.fulfilled,
       (state, action) => {
         if (!action.payload) return;
 
-        const [type, places] = action.payload;
+        let [placeId, place] = action.payload;
 
-        if (!places) return;
-
-        if (places.length !== 0) {
-          state.currentPlaces.type = type;
-          state.currentPlaces.data = state.currentPlaces.data.concat(places);
-          state.currentPlaces.skip += places.length;
-        }
+        state.placeDict[placeId] = place;
       }
     );
-
-    // builder.addCase(
-    //   placesThunks.getPlaceDetailsByIdAsync.fulfilled,
-    //   (state, action) => {
-    //     let [placeId, placeDetails] = action.payload;
-
-    //     state.detailsOfPlaces.set(placeId, placeDetails);
-    //   }
-    // );
   },
 });
 

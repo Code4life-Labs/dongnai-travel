@@ -22,25 +22,27 @@ type BlogContent = {
 export type $Extendable = {
   _id: string;
   name: string;
-  avatar: string;
-  type: string;
+  coverImage: string;
+  contentUrl: string;
   isApproved: boolean;
   readTime: number;
   createdAt: number;
   updatedAt: number;
 };
 
-export type BaseBlog = {
+export type BlogModel = {
   authorId: string;
-  contentId: string;
+  typeId: string;
   mentionedPlaces: Array<string>;
 } & $Extendable;
 
 export type Blog = {
   author: any;
-  content: BlogContent;
-  mentionedPlaces: Array<Place>;
-  isLiked: boolean;
+  type: any;
+  mentionedPlaces: Array<Partial<Place>>;
+  isLiked?: boolean;
   userFavoritesTotal?: number;
   userCommentsTotal?: number;
+  content?: string;
+  plainContent?: string;
 } & $Extendable;

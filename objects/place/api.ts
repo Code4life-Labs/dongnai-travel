@@ -44,7 +44,7 @@ export class PlaceAPI {
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
 
-      return response.data as Promise<Array<Place>>;
+      return response.data as Array<Place>;
     } catch (error: any) {
       console.warn(error.message);
       return [];
@@ -59,9 +59,10 @@ export class PlaceAPI {
 
       if (userId) query += `&userId=${userId}`;
 
-      const response = await this.api.get(RouteUtils.mergeQuery(url, query));
+      // const response = await this.api.get(RouteUtils.mergeQuery(url, query));
+      const data = await import("@/assets/mock-data/place/place.json");
 
-      return response.data as Promise<Array<Place>>;
+      return data as Place;
     } catch (error: any) {
       console.warn(error.message);
       return [];
