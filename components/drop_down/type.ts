@@ -1,4 +1,4 @@
-import { app_c, app_sh, app_sp, app_typo } from "globals/styles";
+import { Styles } from "@/styles";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -9,15 +9,15 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent:'space-between',
     alignItems:'center',
-    ...app_sp.ph_12,
+    ...Styles.spacings.ph_12,
     borderRadius:6
   },
   dropdown_label:{
-    color:app_c.HEX.fourth,
-    ...app_typo.size.sz_16,
+    color:Styles.theme.colorNames.onTertiary,
+    ...Styles.typography.size.sz_16,
   },
   dropdown_label_mode:{
-    ...app_typo.fonts.normal.bolder.h5,
+    ...Styles.typography.fonts.normal.bolder.h5,
     paddingHorizontal:8
   },
   dropdown_content:{
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     width: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: app_c.HEX.fourth,
+    borderColor: Styles.theme.colorNames.onTertiary,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 10,
@@ -40,11 +40,10 @@ const styles = StyleSheet.create({
     height: 10,
     width: 10,
     borderRadius: 5,
-    backgroundColor: app_c.HEX.fourth,
+    backgroundColor: Styles.theme.colorNames.onTertiary,
   },
   option_name:{
-    color:app_c.HEX.fourth,
-    ...app_typo.size.sz_16
+    ...Styles.typography.size.sz_16
   },  
 })
 export default styles

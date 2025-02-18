@@ -1,5 +1,5 @@
-import { AppText } from "components"
-import React, { useState, useRef, memo } from "react"
+import { FC } from "@/components"
+import React, { useState, memo, useEffect }  from "react"
 import {
   View,
   Text,
@@ -8,19 +8,56 @@ import {
   Platform,
   UIManager,
 } from "react-native"
-import { Entypo, AntDesign } from "react-native-vector-icons"
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { useDispatch } from "react-redux"
 
-import { app_c, app_typo } from "globals/styles"
-import styles from "./DropDownStyle"
-import { selectCurrentSetting, updateDarkMode, updateNotification } from "redux/setting/SettingSlice"
-import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react"
-import { selectCurrentLanguage } from "../../redux/language/LanguageSlice"
-import { toggleTheme } from "redux/theme/ThemeSlice"
-import useTheme from "customHooks/useTheme"
-import { withTheme } from "hocs/withTheme"
 
-const DropDown = withTheme( ({
+// Import styles
+import { Styles } from "@/styles";
+import styles from "./type"
+
+// Import hooks
+import { useStateManager } from "@/hooks/useStateManager";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useTheme } from "@/hooks/useTheme";
+
+import { themeActions } from "@/states/redux/theme";
+import { settingActions } from "@/states/redux/settings"
+
+// Import states
+import { StateManager } from "@/screens/settings/state";
+
+
+interface NotificationSettings {
+  updateFromFollowing: boolean;
+  comments: boolean;
+  events: boolean;
+}
+
+interface Theme {
+  subBackground: string;
+  onSubBackground: string;
+  tertiary: string;
+  outline: string;
+  background: string;
+}
+
+interface DropDownProps {
+  name: string;
+  isMode?: boolean;
+  isParagraph?: boolean;
+  children?: React.ReactNode;
+  icon?: React.ReactNode;
+  isDrop?: boolean;
+  handlePressButton?: () => void;
+  paragraphTitle?: string;
+  idOption?: 'UPDATE_FROM_FOLLOWING' | 'COMMENTS' | 'EVENTS' | 'DARK_MODE';
+  isFromFollowing?: boolean;
+  isComment?: boolean;
+  isEvent?: boolean;
+}
+
+const DropDown = ({
   name,
   isMode = false,
   isParagraph = false,
@@ -30,76 +67,67 @@ const DropDown = withTheme( ({
   handlePressButton = () => {},
   paragraphTitle,
   idOption,
-  isFromFollowing=false,
-  isComment,
-  isEvent,
-  toggleTheme,
-  theme
-}) => {
-  const langCode = useSelector(selectCurrentLanguage).languageCode
-  //current setting
-  const currentSetting = useSelector(selectCurrentSetting)
-  const dispatch = useDispatch()
-  
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(null)
-  const [btnBgColor, setBtnBgColor] = useState(theme.tertiary)
- 
+}: DropDownProps) => {
+  const dispatch = useDispatch();
+  const { theme, toggleTheme } = useTheme();
+  const { language } = useLanguage();
+  const [state, stateFns] = useStateManager(
+    StateManager.getInitialState(),
+    StateManager.getStateFns
+  );
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [selectedOption, setSelectedOption] = useState<boolean | null>(null)
+  const [btnBgColor, setBtnBgColor] = useState<string>(theme.onTertiary)
+
+  const _languageData = (language.data as any)["settingScreen"] as any;
 
   useEffect(() => {
     if (idOption ==='UPDATE_FROM_FOLLOWING' ) {
-      setSelectedOption(currentSetting.notification.updateFromFollowing)
+      setSelectedOption(state.notification.updateFromFollowing)
     }
     if (idOption === 'COMMENTS') {
-      setSelectedOption(currentSetting.notification.comments)
+      setSelectedOption(state.notification.comments)
     }
     if (idOption === 'EVENTS') {
-      setSelectedOption(currentSetting.notification.events)
+      setSelectedOption(state.notification.events)
     }
     if (idOption === 'DARK_MODE') {
-      setSelectedOption(currentSetting?.darkMode)
+      setSelectedOption(state?.darkMode)
     }
-  }, [currentSetting]) //theme Color rang` buoc khi mau theme bi thay doi se re-render lai giao dien
+  }, [state])
+
 
   const handleOptionChange = () => {
-    let data 
-    // cat nhat state
+    let data: boolean | NotificationSettings
+    
     if (idOption === 'DARK_MODE') {
       data = !selectedOption
-      dispatch(updateDarkMode(data))
-      // dispatch(toggleTheme()) //button thay doi theme- nay dung cho useTheme cu
+      setSelectedOption(data);
       toggleTheme();
+      dispatch(settingActions.updateDarkMode(data))
     } else {
-      if (idOption ==='UPDATE_FROM_FOLLOWING')
-      {
-        console.log( `FromFollowing`)
+      if (idOption ==='UPDATE_FROM_FOLLOWING') {
         data = {
-          ...currentSetting.notification,
+          ...state.notification,
           updateFromFollowing: !selectedOption
         }
-      }
-      if (idOption ==='COMMENTS')
-      {
-        console.log( `Comment`)
+      } else if (idOption ==='COMMENTS') {
         data = {
-          ...currentSetting.notification,
+          ...state.notification,
           comments: !selectedOption
         }
-      }
-      if (idOption ==='EVENTS')
-      {
-        console.log( `Event`)
+      } else if (idOption ==='EVENTS') {
         data = {
-          ...currentSetting.notification,
+          ...state.notification,
           events: !selectedOption
         }
+      } else {
+        return;
       }
-      console.log("🚀 ~ file: DropDown.jsx:85 ~ handleOptionChange ~ data:", data)
-      dispatch(updateNotification(data))
+      dispatch(settingActions.updateNotification(data as NotificationSettings))
     }
   }
 
-  // Thêm dòng này để cho phép LayoutAnimation hoạt động trên Android
   if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental &&
       UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -107,17 +135,9 @@ const DropDown = withTheme( ({
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
-    // set background color for dropdown when onPress
-    if (!isOpen) {
-      // setBtnBgColor(theme.background)
-    } else {
-            // setBtnBgColor(theme.background)
-    }
     if (!isDrop) {
       handlePressButton()
-            // setBtnBgColor(theme.background)
     }
-    // Sử dụng hàm `LayoutAnimation.configureNext` để thiết lập kiểu animation cho dropdown
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
   }
 
@@ -157,9 +177,13 @@ const DropDown = withTheme( ({
               }}
             >
               {selectedOption ? (
-                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode, color: theme.onSubBackground}}>{langCode === 'vi' ? 'Bật' : 'On'}</AppText>
+                <FC.AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode, color: theme.onSubBackground}}>
+                  {_languageData["open_dropdown"][language.code]}
+                </FC.AppText>
               ) : (
-                <AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode, color: theme.onSubBackground}}>{langCode === 'vi' ? 'Tắt' : 'Off'}</AppText>
+                <FC.AppText style={{...styles.dropdown_label,...styles.dropdown_label_mode, color: theme.onSubBackground}}>
+                  {_languageData["close_dropdown"][language.code]}
+                  </FC.AppText>
               )}
             </View>
           )}
@@ -184,7 +208,7 @@ const DropDown = withTheme( ({
                   <View style={[styles.circle_outline, { borderColor: theme.onSubBackground }]}>
                     {selectedOption && <View style={[styles.circle, { backgroundColor: theme.onSubBackground }]}></View> }
                   </View>
-                  <Text style={[styles.option_name,{color: theme.onSubBackground}]}>{langCode === 'vi' ? 'Bật' : 'On'}</Text>
+                  <Text style={[styles.option_name,{color: theme.onSubBackground}]}>{_languageData["open_dropdown"][language.code]}</Text>
                 </View>
               </TouchableOpacity>
 
@@ -198,7 +222,7 @@ const DropDown = withTheme( ({
                   <View style={[styles.circle_outline,{borderColor: theme.onSubBackground}]}>
                     {!selectedOption && <View style={[styles.circle, {backgroundColor: theme.onSubBackground}]}></View> }
                   </View>
-                  <Text style={[styles.option_name,{color:theme.onSubBackground}]}>{langCode === 'vi' ? 'Tắt' : 'Off'}</Text>
+                  <Text style={[styles.option_name,{color:theme.onSubBackground}]}>{_languageData["close_dropdown"][language.code]}</Text>
                 </View>
               </TouchableOpacity>
             </>
@@ -208,7 +232,7 @@ const DropDown = withTheme( ({
               <Text
                 numberOfLines={2}
                 style={{
-                  ...app_typo.fonts.normal.bolder.h5,
+                  ...Styles.typography.fonts.normal.bolder.h5,
                   color: theme.onSubBackground,
                   paddingBottom: 4,
                 }}
@@ -217,7 +241,7 @@ const DropDown = withTheme( ({
               </Text>
               <Text
                 style={{
-                  ...app_typo.fonts.normal.normal.sub0,
+                  ...Styles.typography.fonts.normal.normal.sub0,
                   color: theme.onSubBackground
                 }}
               >
@@ -236,6 +260,6 @@ const DropDown = withTheme( ({
       )}
     </View>
   )
-})
+}
 
-export default memo(DropDown) 
+export default DropDown
