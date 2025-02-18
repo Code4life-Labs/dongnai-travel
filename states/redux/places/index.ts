@@ -41,6 +41,10 @@ const _DefaultTypes = [
     value: "all",
     name: "All",
   },
+  {
+    value: "recommended",
+    name: "Recommended",
+  },
 ] as Array<PlaceType>;
 
 const initialState: InitialState = {
@@ -170,6 +174,79 @@ export const placesSlice = createSlice({
         if (!action.payload) return;
 
         state.types = state.types.concat(_DefaultTypes, action.payload);
+      }
+    );
+
+    builder.addCase(
+      placesThunks.favoritePlaceAsync.fulfilled,
+      (state, action) => {
+        if (!action.payload) return;
+
+        // Update in list
+        for (const place of state.briefPlaceListInformation.data) {
+          if (place._id === action.payload) {
+            place.isLiked = true;
+          }
+        }
+
+        // Update in detail (if has)
+        if (state.placeDict[action.payload]) {
+          state.placeDict[action.payload].isLiked = true;
+        }
+      }
+    );
+
+    builder.addCase(
+      placesThunks.unfavoritePlaceAsync.fulfilled,
+      (state, action) => {
+        if (!action.payload) return;
+
+        // Update in list
+        for (const place of state.briefPlaceListInformation.data) {
+          if (place._id === action.payload) {
+            place.isLiked = false;
+          }
+        }
+
+        // Update in detail (if has)
+        if (state.placeDict[action.payload]) {
+          state.placeDict[action.payload].isLiked = false;
+        }
+      }
+    );
+
+    builder.addCase(placesThunks.visitPlaceAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      // Update in list
+      for (const place of state.briefPlaceListInformation.data) {
+        if (place._id === action.payload) {
+          place.isVisited = true;
+        }
+      }
+
+      // Update in detail (if has)
+      if (state.placeDict[action.payload]) {
+        state.placeDict[action.payload].isVisited = true;
+      }
+    });
+
+    builder.addCase(
+      placesThunks.unvisitPlaceAsync.fulfilled,
+      (state, action) => {
+        if (!action.payload) return;
+
+        // Update in list
+        for (const place of state.briefPlaceListInformation.data) {
+          if (place._id === action.payload) {
+            place.isVisited = false;
+          }
+        }
+
+        // Update in detail (if has)
+        if (state.placeDict[action.payload]) {
+          state.placeDict[action.payload].isVisited = false;
+        }
       }
     );
   },

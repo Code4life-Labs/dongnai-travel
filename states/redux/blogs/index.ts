@@ -173,6 +173,38 @@ export const blogsSlice = createSlice({
         state.types = state.types.concat(_DefaultTypes, action.payload);
       }
     );
+
+    builder.addCase(blogsThunks.likeBlogAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      // Update in list
+      for (const place of state.briefBlogListInformation.data) {
+        if (place._id === action.payload) {
+          place.isLiked = true;
+        }
+      }
+
+      // Update in detail (if has)
+      if (state.blogDict[action.payload]) {
+        state.blogDict[action.payload].isLiked = true;
+      }
+    });
+
+    builder.addCase(blogsThunks.unlikeBlogAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      // Update in list
+      for (const place of state.briefBlogListInformation.data) {
+        if (place._id === action.payload) {
+          place.isLiked = false;
+        }
+      }
+
+      // Update in detail (if has)
+      if (state.blogDict[action.payload]) {
+        state.blogDict[action.payload].isLiked = false;
+      }
+    });
   },
 });
 

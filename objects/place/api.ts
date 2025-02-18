@@ -90,4 +90,100 @@ export class PlaceAPI {
       return [];
     }
   }
+
+  /**
+   * Mark `favorite` on a place
+   * @param userId
+   * @param placeId
+   * @returns
+   */
+  async postFavoritedPlaceAsync(userId: string, placeId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "favorites/places",
+        `${placeId}`
+      );
+
+      await this.api.post(url, null);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * Unmark `favorite` on a place
+   * @param userId
+   * @param placeId
+   * @returns
+   */
+  async deleteFavoritedPlaceAsync(userId: string, placeId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "favorites/places",
+        `${placeId}`
+      );
+
+      await this.api.delete(url);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * Mark `visit` on a place
+   * @param userId
+   * @param placeId
+   * @returns
+   */
+  async postVisitedPlaceAsync(userId: string, placeId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "visits/places",
+        `${placeId}`
+      );
+
+      await this.api.post(url, null);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * Unmark `visit` on a place
+   * @param userId
+   * @param placeId
+   * @returns
+   */
+  async deleteVisitedPlaceAsync(userId: string, placeId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "favorites/places",
+        `${placeId}`
+      );
+
+      await this.api.delete(url);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
 }

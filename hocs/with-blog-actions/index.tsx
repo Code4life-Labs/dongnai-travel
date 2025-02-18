@@ -1,4 +1,5 @@
 import React from "react";
+import { debounce } from "lodash";
 import { router } from "expo-router";
 
 // Import hooks
@@ -49,6 +50,18 @@ export function withBlogActions<T extends object>(
     props: T & WithBlogActions_WrappedComponentProps
   ) => JSX.Element
 ) {
+  const _toggleLike = debounce(function (
+    blog: any,
+    likePlace: any,
+    unlikePlace: any
+  ) {
+    if (blog.isLiked) {
+      likePlace(blog._id);
+    } else {
+      unlikePlace(blog._id);
+    }
+  }, 100);
+
   /**
    * Component này sẽ nhận một component khác và bọc nó lại, đồng thời function này sẽ truyền logic lại cho
    * component được bọc đó (WrappedComponent).
@@ -67,12 +80,12 @@ export function withBlogActions<T extends object>(
         blogDetailsActions.add(data);
         router.push("/blogs");
       },
-      like() {
-        data.isLiked = !data.isLiked;
-        // Call API
-
-        // Update state if call api successfully
-        blogDetailsActions.update(data);
+      toggleLike() {
+        _toggleLike(
+          data,
+          blogDetailsActions.likeBlog,
+          blogDetailsActions.unlikeBlog
+        );
       },
 
       share() {

@@ -140,11 +140,7 @@ export default function ExploreScreen() {
         }
         renderItem={(item) => (
           <View style={Styles.spacings.ph_18}>
-            <FC.HorizontalPlaceCard
-              data={item.item}
-              type={state.currentType}
-              placeIndex={item.index}
-            />
+            <FC.HorizontalPlaceCard data={item.item} type={state.currentType} />
           </View>
         )}
         keyExtractor={(item) => item._id as string}

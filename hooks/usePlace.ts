@@ -25,6 +25,22 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
         dispatch(placesThunks.getPlaceTypesAsync());
       },
 
+      favoritePlace(placeId: string) {
+        dispatch(placesThunks.favoritePlaceAsync(placeId));
+      },
+
+      unfavoritePlace(placeId: string) {
+        dispatch(placesThunks.unfavoritePlaceAsync(placeId));
+      },
+
+      visitPlace(placeId: string) {
+        dispatch(placesThunks.visitPlaceAsync(placeId));
+      },
+
+      unvisitPlace(placeId: string) {
+        dispatch(placesThunks.unvisitPlaceAsync(placeId));
+      },
+
       update(id: string, briefPlace: Partial<Place>) {
         dispatch(placesActions.updateBriefPlace({ id, briefPlace }));
       },
@@ -99,6 +115,22 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
       return {
         fetchPlaceDetail(id: string) {
           dispatch(placesThunks.getPlaceDetailAsync(id));
+        },
+
+        favoritePlace(placeId: string) {
+          dispatch(placesThunks.favoritePlaceAsync(placeId));
+        },
+
+        unfavoritePlace(placeId: string) {
+          dispatch(placesThunks.unfavoritePlaceAsync(placeId));
+        },
+
+        visitPlace(placeId: string) {
+          dispatch(placesThunks.visitPlaceAsync(placeId));
+        },
+
+        unvisitPlace(placeId: string) {
+          dispatch(placesThunks.unvisitPlaceAsync(placeId));
         },
 
         add(placeDetails: Place) {

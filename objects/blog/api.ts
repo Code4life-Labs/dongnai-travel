@@ -77,7 +77,7 @@ export class BlogAPI {
    * Get types of blogs
    * @returns
    */
-  async getPlaceTypes() {
+  async getBlogTypes() {
     try {
       const url = RouteUtils.getPath("blogs", "types");
 
@@ -87,6 +87,54 @@ export class BlogAPI {
     } catch (error: any) {
       console.warn(error.message);
       return [];
+    }
+  }
+
+  /**
+   * Mark `like` on a blog
+   * @param userId
+   * @param blogId
+   * @returns
+   */
+  async postLikedBlogAsync(userId: string, blogId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "likes/blogs",
+        `${blogId}`
+      );
+
+      await this.api.post(url, null);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * Unmark `like` on a blog
+   * @param userId
+   * @param blogId
+   * @returns
+   */
+  async deleteLikedBlogAsync(userId: string, blogId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "likes/blogs",
+        `${blogId}`
+      );
+
+      await this.api.delete(url);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
     }
   }
 }

@@ -247,7 +247,6 @@ export default function BlogDetailScreen() {
               <FC.HorizontalBlogCard
                 key={relatedBlog._id}
                 type={relatedBlog.type}
-                blogIndex={index}
                 data={relatedBlog}
               />
             ))
@@ -296,7 +295,7 @@ export default function BlogDetailScreen() {
             onPress={handleLikeButton}
           />
           <FC.AppText size="body2">
-            {NumberUtils.toMetricNumber(blog.userFavoritesTotal!)}
+            {NumberUtils.toMetricNumber(blog.totalFavorites!)}
           </FC.AppText>
         </View>
         <View style={styles.seperate} />
@@ -316,7 +315,7 @@ export default function BlogDetailScreen() {
             setIcon={<Ionicons name="chatbox-outline" size={14} />}
           />
           <FC.AppText size="body2">
-            {NumberUtils.toMetricNumber(blog.userCommentsTotal!)}
+            {NumberUtils.toMetricNumber(blog.totalComments!)}
           </FC.AppText>
         </View>
       </Animated.View>

@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // Import from objects
 import { PlaceManager } from "@/objects/place";
+import { UserManager } from "@/objects/user";
 
 // Import types
 import type { AppState } from "../type";
@@ -18,8 +19,11 @@ const getPlacesAsync = createAsyncThunk(
         places = state.places.briefPlaceListInformation,
         limit = places ? places.limit : 5,
         skip = places ? places.skip : 0;
-      const userId = state.user.user?._id;
 
+      const userInStorage = await UserManager.Storage.get();
+      const userId = userInStorage
+        ? userInStorage.user.userId
+        : state.user.user?._id;
       const data = await PlaceManager.Api.getPlacesAsync({
         limit,
         skip,
@@ -39,13 +43,15 @@ const getPlaceDetailAsync = createAsyncThunk(
   async (payload: string, thunkAPI) => {
     try {
       const state = thunkAPI.getState() as AppState;
-      const userId = state.user.user?._id;
+      const userInStorage = await UserManager.Storage.get();
+      const userId = userInStorage
+        ? userInStorage.user.userId
+        : state.user.user?._id;
 
       const data = await PlaceManager.Api.getPlaceAsync({
         id: payload,
         userId,
       });
-
       return [payload, data] as [string, Place];
     } catch (error: any) {
       console.error(error.message);
@@ -65,8 +71,84 @@ const getPlaceTypesAsync = createAsyncThunk(
   }
 );
 
+const favoritePlaceAsync = createAsyncThunk(
+  "places/favoritePlaceAsync",
+  async (placeId: string, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState() as AppState;
+      const userInStorage = await UserManager.Storage.get();
+      const userId = userInStorage
+        ? userInStorage.user.userId
+        : state.user.user?._id;
+
+      await PlaceManager.Api.postFavoritedPlaceAsync(userId, placeId);
+      return placeId;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
+const unfavoritePlaceAsync = createAsyncThunk(
+  "places/unfavoritePlaceAsync",
+  async (placeId: string, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState() as AppState;
+      const userInStorage = await UserManager.Storage.get();
+      const userId = userInStorage
+        ? userInStorage.user.userId
+        : state.user.user?._id;
+
+      await PlaceManager.Api.deleteFavoritedPlaceAsync(userId, placeId);
+      return placeId;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
+const visitPlaceAsync = createAsyncThunk(
+  "places/visitPlaceAsync",
+  async (placeId: string, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState() as AppState;
+      const userInStorage = await UserManager.Storage.get();
+      const userId = userInStorage
+        ? userInStorage.user.userId
+        : state.user.user?._id;
+
+      await PlaceManager.Api.postVisitedPlaceAsync(userId, placeId);
+      return placeId;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
+const unvisitPlaceAsync = createAsyncThunk(
+  "places/unvisitPlaceAsync",
+  async (placeId: string, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState() as AppState;
+      const userInStorage = await UserManager.Storage.get();
+      const userId = userInStorage
+        ? userInStorage.user.userId
+        : state.user.user?._id;
+
+      await PlaceManager.Api.deleteVisitedPlaceAsync(userId, placeId);
+      return placeId;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
 export const placesThunks = {
   getPlacesAsync,
   getPlaceDetailAsync,
   getPlaceTypesAsync,
+  favoritePlaceAsync,
+  unfavoritePlaceAsync,
+  visitPlaceAsync,
+  unvisitPlaceAsync,
 };

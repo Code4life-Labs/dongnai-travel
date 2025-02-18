@@ -35,7 +35,6 @@ import type { WithBlogActions_WrappedComponentProps } from "@/hocs/with-blog-act
  */
 function _HorizontalBlogCard({
   data,
-  blogIndex,
   type,
   actions,
   ...props

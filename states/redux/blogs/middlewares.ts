@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // Import objects
 import { BlogManager } from "@/objects/blog";
+import { UserManager } from "@/objects/user";
 
 // Import types
 import type { AppState } from "../type";
@@ -55,7 +56,7 @@ const getBlogTypesAsync = createAsyncThunk(
   "blogs/getBlogTypesAsync",
   async () => {
     try {
-      const data = await BlogManager.Api.getPlaceTypes();
+      const data = await BlogManager.Api.getBlogTypes();
       return data;
     } catch (error: any) {
       console.error(error.message);
@@ -64,8 +65,46 @@ const getBlogTypesAsync = createAsyncThunk(
   }
 );
 
+const likeBlogAsync = createAsyncThunk(
+  "places/likeBlogAsync",
+  async (placeId: string, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState() as AppState;
+      const userInStorage = await UserManager.Storage.get();
+      const userId = userInStorage
+        ? userInStorage.user.userId
+        : state.user.user?._id;
+
+      await BlogManager.Api.postLikedBlogAsync(userId, placeId);
+      return placeId;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
+const unlikeBlogAsync = createAsyncThunk(
+  "places/unlikeBlogAsync",
+  async (placeId: string, thunkAPI) => {
+    try {
+      const state = thunkAPI.getState() as AppState;
+      const userInStorage = await UserManager.Storage.get();
+      const userId = userInStorage
+        ? userInStorage.user.userId
+        : state.user.user?._id;
+
+      await BlogManager.Api.deleteLikedBlogAsync(userId, placeId);
+      return placeId;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
 export const blogsThunks = {
   getBlogsAsync,
   getBlogDetailAsync,
   getBlogTypesAsync,
+  likeBlogAsync,
+  unlikeBlogAsync,
 };

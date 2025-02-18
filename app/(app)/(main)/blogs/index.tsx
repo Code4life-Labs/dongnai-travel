@@ -141,11 +141,7 @@ export default function BlogsScreen() {
         }
         renderItem={(item) => (
           <View style={Styles.spacings.ph_18}>
-            <FC.HorizontalBlogCard
-              data={item.item}
-              type={state.currentType}
-              blogIndex={item.index}
-            />
+            <FC.HorizontalBlogCard data={item.item} type={state.currentType} />
           </View>
         )}
         keyExtractor={(item) => item._id as string}
