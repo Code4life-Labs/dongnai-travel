@@ -417,6 +417,14 @@
     "logout": {
       "vi": "Đăng xuất",
       "en": "Log out"
+    },
+    "open_dropdown": {
+      "vi": "Mở",
+      "en": "On"
+    },
+    "close_dropdown": {
+      "vi": "Đóng",
+      "en": "Off"
     }
   },
   "settingNotification": {
