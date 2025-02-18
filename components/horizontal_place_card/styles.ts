@@ -27,6 +27,7 @@ export const styles = StyleSheet.create({
     ...Styles.shapes.capsule,
     ...Styles.spacings.ph_12,
     ...Styles.spacings.pv_6,
+    ...Styles.spacings.mb_8,
   },
 
   card_main_container: {

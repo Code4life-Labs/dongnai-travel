@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// Import utils
+import { StorageUtils } from "@/utils/storage";
+
 // Import types
 import { User } from "@/objects/user/type";
 
 type InitialState = {
   user: User | null;
+  token: string | null;
   tempId: string | null;
   canRemember: boolean;
   ipv4: string | null;
@@ -13,6 +17,7 @@ type InitialState = {
 // Phương: Khởi tạo giá trị một giá trị của Slice trong Redux
 const initialState: InitialState = {
   user: null,
+  token: null,
   tempId: null,
   canRemember: false,
   ipv4: null,
@@ -36,17 +41,35 @@ export const userSlice = createSlice({
       const user = action.payload;
       state.user = Object.assign({}, state.user, user);
     },
-    updateTemporaryId(state, action) {
+    setTemporaryId(state, action) {
       const userId = action.payload;
       state.tempId = userId;
     },
-    updateCanRemember(state, action) {
+    setCanRemember(state, action) {
       const status = action.payload;
       state.canRemember = status;
     },
-    updateIpv4(state, action) {
+    setRememberedUserData(state, action) {
+      if (state.canRemember)
+        StorageUtils.setItemAsync("REMEMBERED_USER", {
+          user: action.payload.user,
+          token: action.payload.token,
+        });
+
+      state.token = action.payload.token;
+    },
+    setIpv4(state, action) {
       const ipv4 = action.payload;
       state.ipv4 = ipv4;
+    },
+    setToken(state, action) {
+      state.token = action.payload;
+    },
+    resetToken(state) {
+      state.token = null;
+    },
+    reset(state) {
+      state = { ...initialState };
     },
   },
 });

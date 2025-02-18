@@ -63,7 +63,7 @@ function _HorizontalBlogCard({
               styles.card_image_container,
               { backgroundColor: theme.subBackground },
             ]}
-            source={data.avatar !== "" ? { uri: data.avatar } : {}}
+            source={data.coverImage !== "" ? { uri: data.coverImage } : {}}
           >
             {/*
             blog.isRecommended &&

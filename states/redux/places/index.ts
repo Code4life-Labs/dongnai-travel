@@ -6,11 +6,12 @@ import { BooleanUtils } from "@/utils/boolean";
 import { NumberUtils } from "@/utils/number";
 
 // Import types
-import type { Place } from "@/objects/place/type";
+import type { Place, PlaceType } from "@/objects/place/type";
 
 import { placesThunks } from "./middlewares";
 
 type InitialState = {
+  types: Array<PlaceType>;
   placeDict: Record<string, Place>;
   briefPlaceListInformation: {
     type: string;
@@ -35,7 +36,15 @@ function _createDefaultBriefPlace(limit = 5, skip = 0) {
   };
 }
 
+const _DefaultTypes = [
+  {
+    value: "all",
+    name: "All",
+  },
+] as Array<PlaceType>;
+
 const initialState: InitialState = {
+  types: [],
   placeDict: Object(),
   briefPlaceListInformation: _createDefaultBriefPlace(),
 };
@@ -152,6 +161,15 @@ export const placesSlice = createSlice({
         let [placeId, place] = action.payload;
 
         state.placeDict[placeId] = place;
+      }
+    );
+
+    builder.addCase(
+      placesThunks.getPlaceTypesAsync.fulfilled,
+      (state, action) => {
+        if (!action.payload) return;
+
+        state.types = state.types.concat(_DefaultTypes, action.payload);
       }
     );
   },

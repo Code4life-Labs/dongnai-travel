@@ -258,18 +258,18 @@ export class StringUtils {
    * @param strs
    * @returns
    */
-  static getPath(...strs: Array<string>) {
-    let result = "";
+  static getPath(...parts: Array<string>) {
+    let result = parts[0];
 
-    for (let i = 0; i < strs.length; i++) {
-      let str = strs[i];
+    for (let i = 1; i < parts.length; i++) {
+      let str = parts[i];
       if (str[0] !== "/") str = "/" + str;
       result += str;
     }
 
     result = result.replaceAll(/\/+/g, "/");
 
-    if (result[0] !== "/") return "/" + result;
+    if (result[0] === "/") return result.replaceAll(/\/+/g, "/");
 
     return result;
   }

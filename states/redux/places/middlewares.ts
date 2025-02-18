@@ -18,7 +18,15 @@ const getPlacesAsync = createAsyncThunk(
         places = state.places.briefPlaceListInformation,
         limit = places ? places.limit : 5,
         skip = places ? places.skip : 0;
-      const data = await PlaceManager.Api.getPlacesAsync({ limit, skip, type });
+      const userId = state.user.user?._id;
+
+      const data = await PlaceManager.Api.getPlacesAsync({
+        limit,
+        skip,
+        type,
+        userId,
+      });
+
       return [type, data] as [string, Array<Place>];
     } catch (error: any) {
       console.error(error.message);
@@ -30,8 +38,27 @@ const getPlaceDetailAsync = createAsyncThunk(
   "places/getPlaceDetailAsync",
   async (payload: string, thunkAPI) => {
     try {
-      const data = await PlaceManager.Api.getPlaceAsync({ id: payload });
+      const state = thunkAPI.getState() as AppState;
+      const userId = state.user.user?._id;
+
+      const data = await PlaceManager.Api.getPlaceAsync({
+        id: payload,
+        userId,
+      });
+
       return [payload, data] as [string, Place];
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
+const getPlaceTypesAsync = createAsyncThunk(
+  "places/getPlaceTypesAsync",
+  async () => {
+    try {
+      const data = await PlaceManager.Api.getPlaceTypes();
+      return data;
     } catch (error: any) {
       console.error(error.message);
     }
@@ -41,4 +68,5 @@ const getPlaceDetailAsync = createAsyncThunk(
 export const placesThunks = {
   getPlacesAsync,
   getPlaceDetailAsync,
+  getPlaceTypesAsync,
 };

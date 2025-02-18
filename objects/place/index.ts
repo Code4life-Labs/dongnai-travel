@@ -10,7 +10,7 @@ import type { Place } from "./type";
  * @NguyenAnhTuan1912
  */
 export class PlaceManager {
-  static Api = new PlaceAPI(process.env.EXPO_DONGNAITRAVEL_API_URL!);
+  static Api = new PlaceAPI(process.env.EXPO_PUBLIC_DONGNAITRAVEL_API_URL!);
   static Validator = new PlaceValidator();
   static Storage = new PlaceStorage();
 

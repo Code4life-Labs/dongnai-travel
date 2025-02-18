@@ -1,6 +1,14 @@
 // Import types
 import { Place } from "../place/type";
 
+export type BlogType = {
+  _id: string;
+  name: string;
+  value: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
 type BlogContent = {
   _id: string;
   plainText: {
@@ -41,8 +49,8 @@ export type Blog = {
   type: any;
   mentionedPlaces: Array<Partial<Place>>;
   isLiked?: boolean;
-  userFavoritesTotal?: number;
-  userCommentsTotal?: number;
+  totalFavorites?: number;
+  totalComments?: number;
   content?: string;
   plainContent?: string;
 } & $Extendable;

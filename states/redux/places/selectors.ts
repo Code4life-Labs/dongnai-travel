@@ -20,4 +20,14 @@ export const placesSelectors = {
   selectPlaceDetails(state: AppState, placeId: string) {
     return state.places.placeDict[placeId];
   },
+
+  /**
+   * Get place types (with default / redefined types)
+   * @param state
+   * @param placeId
+   * @returns
+   */
+  selectPlaceTypes(state: AppState) {
+    return state.places.types;
+  },
 };

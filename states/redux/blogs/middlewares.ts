@@ -18,7 +18,14 @@ const getBlogsAsync = createAsyncThunk(
         blogs = state.blogs.briefBlogListInformation,
         limit = blogs ? blogs.limit : 5,
         skip = blogs ? blogs.skip : 0;
-      const data = await BlogManager.Api.getBlogsAsync({ limit, skip, type });
+      const userId = state.user.user?._id;
+
+      const data = await BlogManager.Api.getBlogsAsync({
+        limit,
+        skip,
+        type,
+        userId,
+      });
       return [type, data] as [string, Array<Blog>];
     } catch (error: any) {
       console.error(error.message);
@@ -31,8 +38,25 @@ const getBlogDetailAsync = createAsyncThunk(
   "blogs/getBlogDetailAsync",
   async (payload: string, thunkAPI) => {
     try {
-      const data = await BlogManager.Api.getBlogAsync({ id: payload });
+      const state = thunkAPI.getState() as AppState;
+      const userId = state.user.user?._id;
+
+      const data = await BlogManager.Api.getBlogAsync({ id: payload, userId });
+
       return [payload, data] as [string, Blog];
+    } catch (error: any) {
+      console.error(error.message);
+      return null;
+    }
+  }
+);
+
+const getBlogTypesAsync = createAsyncThunk(
+  "blogs/getBlogTypesAsync",
+  async () => {
+    try {
+      const data = await BlogManager.Api.getPlaceTypes();
+      return data;
     } catch (error: any) {
       console.error(error.message);
       return null;
@@ -43,4 +67,5 @@ const getBlogDetailAsync = createAsyncThunk(
 export const blogsThunks = {
   getBlogsAsync,
   getBlogDetailAsync,
+  getBlogTypesAsync,
 };

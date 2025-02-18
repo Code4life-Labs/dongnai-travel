@@ -4,6 +4,7 @@ const ASYNC_STORAGE_CONSTANT_KEYS = {
   SAVED_BLOG_CONTENT_KEY: "_sbc",
   SAVED_BLOG_FOR_UPLOAD_KEY: "_sbfu",
   USER: "_usr",
+  REMEMBERED_USER: "_rmb_usr",
 };
 
 export class StorageUtils {
