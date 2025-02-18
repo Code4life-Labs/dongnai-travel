@@ -28,6 +28,7 @@ export default function ExploreStack() {
           name="places/[id]"
           options={{
             title: "Place",
+            headerShown: false,
           }}
         />
       </Stack>

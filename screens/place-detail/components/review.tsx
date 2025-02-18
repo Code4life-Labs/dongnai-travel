@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Image } from "react-native";
 import React from "react";
 
 // Import components
@@ -26,7 +26,7 @@ export default function ReviewsSlide({ placeId }: { placeId: string }) {
   }, []);
 
   if (!placeDetails) {
-    return;
+    return <FC.NoData />;
   }
 
   return (
@@ -64,7 +64,7 @@ export default function ReviewsSlide({ placeId }: { placeId: string }) {
             <FC.ReviewSectionPromise key={review.time} review={review} />
           ))
         ) : (
-          <FC.AppText>This place haven't reviewed yet.</FC.AppText>
+          <FC.NoData title={_languageData.reviewsDataMessage[language.code]} />
         )}
       </View>
       <View style={{ height: 50 }}></View>

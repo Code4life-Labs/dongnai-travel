@@ -29,7 +29,7 @@ import { styles } from "@/screens/explore/styles";
 import { ExploreScreenUtils } from "@/screens/explore/utils";
 
 export default function ExploreScreen() {
-  const { places, placesActions } = usePlaces();
+  const { places, placeTypes, placesDispatchers } = usePlaces();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -38,16 +38,30 @@ export default function ExploreScreen() {
     StateManager.getStateFns
   );
 
-  const _languageData = (language.data as any)["exploreScreen"] as any;
+  const types = React.useMemo(() => {
+    return placeTypes.map((placeType) => ({
+      value: placeType.value,
+      label: placeType.name,
+    }));
+  }, [placeTypes]);
 
-  // Example of navigate to place details
-  // router.navigate({ pathname: "/explore/place/[id]", params: { id: "test" } });
+  const _languageData = (language.data as any)["exploreScreen"] as any;
 
   React.useEffect(() => {
     if (!places || places.length === 0) {
-      placesActions.get(state.currentType);
+      placesDispatchers.fetchPlaces(state.currentType);
+      placesDispatchers.fetchPlaceTypes();
     }
   }, [state.currentType, places]);
+
+  // Test
+  React.useEffect(() => {
+    // Example of navigate to place details
+    // router.navigate({
+    //   pathname: "/explore/places/[id]",
+    //   params: { id: "test" },
+    // });
+  }, []);
 
   return (
     <View style={{ backgroundColor: theme.background }}>
@@ -94,10 +108,8 @@ export default function ExploreScreen() {
           backgroundColor: theme.background,
         }}
         onMomentumScrollEnd={() =>
-          ExploreScreenUtils.handleOnMomentumScrollEnd(
-            state,
-            places,
-            placesActions.get
+          ExploreScreenUtils.handleOnMomentumScrollEnd(state, places, () =>
+            placesDispatchers.fetchPlaces(state.currentType)
           )
         }
         onEndReached={(e) => ExploreScreenUtils.handleOnEndReached(state)}
@@ -116,7 +128,7 @@ export default function ExploreScreen() {
         }
         ListHeaderComponent={
           <FC.ButtonsScrollBar
-            buttonContents={(PlaceQualitiesData as any)[language.code]}
+            buttonContents={types}
             buttonType="capsule"
             onButtonPress={(content) => stateFns.setCurrentType(content.value)}
             scrollStyle={[Styles.spacings.ps_18, Styles.spacings.pv_12]}
@@ -137,7 +149,7 @@ export default function ExploreScreen() {
         )}
         keyExtractor={(item) => item._id as string}
         onRefresh={() => {
-          placesActions.clear();
+          placesDispatchers.clear();
         }}
         refreshing={false}
       />

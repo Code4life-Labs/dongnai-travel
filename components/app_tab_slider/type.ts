@@ -1,5 +1,11 @@
+type Slide = {
+  label: string;
+  value: string;
+  element: JSX.Element;
+};
+
 export type TabSliderProps = {
-  children: Array<JSX.Element>;
+  slides: Array<Slide>;
   lineIndexTranslateXStart?: number;
   slideTranslateXStart?: number;
   isSliderContainerScrollable?: boolean;

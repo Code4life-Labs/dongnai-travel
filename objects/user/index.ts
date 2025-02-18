@@ -8,7 +8,7 @@ import { UserValidator } from "./validator";
 import type { NewUser } from "./type";
 
 export class UserManager {
-  static Api = new UserAPI(process.env.EXPO_DONGNAITRAVEL_API_URL!);
+  static Api = new UserAPI(process.env.EXPO_PUBLIC_DONGNAITRAVEL_API_URL!);
   static Storage = new UserStorage();
   static Validator = new UserValidator();
 

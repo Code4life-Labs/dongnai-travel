@@ -6,7 +6,7 @@ import moment from "moment";
 import { UserManager } from "@/objects/user";
 
 // Import states
-import { updateUser, updateCanRemember } from "@/states/redux/user";
+import { userActions } from "@/states/redux/user";
 import { UserSelectors } from "@/states/redux/user/selector";
 
 // Import utils
@@ -33,40 +33,52 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
        */
       rememberAccount(status?: boolean) {
         // Save token to store
-        dispatch(updateCanRemember(Boolean(status)));
+        dispatch(userActions.setCanRemember(Boolean(status)));
       },
+
       /**
        * Hàm này dùng để đăng nhập.
        * @param data Dữ liệu tài khoản của người dùng.
        */
-      async signin(data: UserDataForAuthentication) {
+      async signin(data: any) {
         try {
-          if ((data.email || data.username) && data.password) {
+          console.log("Data:", data);
+          if (
+            (data.emailName && data.password) ||
+            (data.emailName && data.token)
+          ) {
             // Phuong: check emailName is email or username
-            let user;
-            if (data.email && ValidatorUtils.isValidEmail(data.email)) {
-              user = {
-                email: data.email,
+            let signInData;
+            if (data.emailName && ValidatorUtils.isValidEmail(data.emailName)) {
+              signInData = {
+                email: data.emailName,
+                password: data.password,
+              };
+            } else if (data.emailName && data.password) {
+              signInData = {
+                username: data.emailName,
                 password: data.password,
               };
             } else {
-              user = {
-                username: data.username,
-                password: data.password,
+              signInData = {
+                username: data.emailName,
+                token: data.token,
               };
             }
-            console.log("🚀 ~ file: useAuth.js:109 ~ signin ~ user:", user);
-            // Phuong: call Api
-            await UserManager.Api.signIn(user).then((data: any) => {
-              console.log("🚀 ~ file: useAuth.js:113 ~ signin ~ res", data);
-              const { user, token } = data;
-              if (data) {
-                // Phuong: Update user in persistent store
-                dispatch(updateUser(user));
 
-                // Check remember
-              }
-            });
+            // Phuong: call Api
+            const responsePayload = await UserManager.Api.signIn(signInData);
+            const responseData = responsePayload.data;
+
+            dispatch(userActions.setUser(responseData.user));
+            if (responseData.token) {
+              dispatch(
+                userActions.setRememberedUserData({
+                  user: responseData.user,
+                  token: responseData.token,
+                })
+              );
+            }
           }
         } catch (error: any) {
           console.error(error.message);
@@ -81,17 +93,30 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
         try {
           const newUser = UserManager.createNewUser(data);
           // Phuong: call Api
-          UserManager.Api.signUp(newUser).then((res) => {
-            if (res) {
-              console.log(
-                "🚀 ~ file: SignupScreen.js:80 ~ signUpUserAPI ~ userData",
-                res
-              );
-            }
-          });
+          const responsePayload = await UserManager.Api.signUp(newUser);
+          const responseData = responsePayload.data;
+
+          dispatch(userActions.setUser(responseData.user));
+          dispatch(
+            userActions.setRememberedUserData({
+              user: responseData.user,
+              token: responseData.token,
+            })
+          );
         } catch (error: any) {
           console.error(error.message);
         }
+      },
+
+      setToken(token: string | null = null) {
+        dispatch(userActions.setToken(token));
+      },
+
+      /**
+       * Dùng để xoá thông tin người dùng khỏi ứng dụng.
+       */
+      signOut() {
+        dispatch(userActions.reset());
       },
     };
 
@@ -114,7 +139,7 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
 
       return {
         ...all,
-        ...actions,
+        authDispatchers: actions,
       };
     },
 

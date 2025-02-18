@@ -19,6 +19,7 @@ import ReviewSectionPromise from "./review_section_promise";
 import Speech from "./speech";
 import Skeleton from "./skeleton";
 import DropDown from "./drop_down";
+import NoData from "./no-data";
 
 export const FC = {
   AppText,
@@ -47,4 +48,5 @@ export const FC = {
   Speech,
   Skeleton,
   DropDown,
+  NoData,
 };

@@ -11,7 +11,7 @@ import { FC } from "@/components";
 
 // Import from hooks
 import { useStateManager } from "@/hooks/useStateManager";
-import { usePlaces } from "@/hooks/usePlace";
+import { useBlogs } from "@/hooks/useBlog";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -29,7 +29,7 @@ import { styles } from "@/screens/blogs/styles";
 import { BlogsScreenUtils } from "@/screens/blogs/utils";
 
 export default function BlogsScreen() {
-  const { places, placesActions } = usePlaces();
+  const { blogs, blogTypes, blogsDispatchers } = useBlogs();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -38,18 +38,29 @@ export default function BlogsScreen() {
     StateManager.getStateFns
   );
 
+  const types = React.useMemo(() => {
+    return blogTypes.map((blogType) => ({
+      value: blogType.value,
+      label: blogType.name,
+    }));
+  }, [blogTypes]);
+
   const _languageData = (language.data as any)["blogsScreen"] as any;
 
   React.useEffect(() => {
-    if (!places || places.length === 0) {
-      placesActions.get(state.currentType);
+    if (!blogs || blogs.length === 0) {
+      blogsDispatchers.fetchBlogs(state.currentType);
+      blogsDispatchers.fetchBlogTypes();
     }
-  }, [state.currentType, places]);
+  }, [blogs]);
 
-  router.navigate({
-    pathname: "/blogs/[id]",
-    params: { id: "test" },
-  });
+  // Test
+  React.useEffect(() => {
+    // router.navigate({
+    //   pathname: "/blogs/[id]",
+    //   params: { id: "test" },
+    // });
+  }, []);
 
   return (
     <View style={{ backgroundColor: theme.background }}>
@@ -86,7 +97,7 @@ export default function BlogsScreen() {
         </View>
       )}
       <FlatList
-        data={places ? places : []}
+        data={blogs ? blogs : []}
         style={[
           styles.scroll_view_container,
           { backgroundColor: theme.background },
@@ -98,8 +109,8 @@ export default function BlogsScreen() {
         onMomentumScrollEnd={() =>
           BlogsScreenUtils.handleOnMomentumScrollEnd(
             state,
-            places,
-            placesActions.get
+            blogs,
+            blogsDispatchers.fetchBlogs
           )
         }
         onEndReached={(e) => BlogsScreenUtils.handleOnEndReached(state)}
@@ -118,7 +129,7 @@ export default function BlogsScreen() {
         }
         ListHeaderComponent={
           <FC.ButtonsScrollBar
-            buttonContents={(BlogQualitiesData as any)[language.code]}
+            buttonContents={types}
             buttonType="capsule"
             onButtonPress={(content) => stateFns.setCurrentType(content.value)}
             scrollStyle={[Styles.spacings.ps_18, Styles.spacings.pv_12]}
@@ -130,16 +141,16 @@ export default function BlogsScreen() {
         }
         renderItem={(item) => (
           <View style={Styles.spacings.ph_18}>
-            <FC.HorizontalPlaceCard
+            <FC.HorizontalBlogCard
               data={item.item}
               type={state.currentType}
-              placeIndex={item.index}
+              blogIndex={item.index}
             />
           </View>
         )}
         keyExtractor={(item) => item._id as string}
         onRefresh={() => {
-          placesActions.clear();
+          blogsDispatchers.clear();
         }}
         refreshing={false}
       />

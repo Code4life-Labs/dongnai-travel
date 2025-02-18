@@ -9,7 +9,7 @@ export const blogsSelectors = {
    * @returns
    */
   selectCurrentBlogs(state: AppState) {
-    return state.blogs.currentBlogs.data;
+    return state.blogs.briefBlogListInformation.data;
   },
 
   /**
@@ -18,6 +18,10 @@ export const blogsSelectors = {
    * @returns
    */
   selectBlogDetails(state: AppState, blogId: string) {
-    return state.blogs.detailsOfBlogs.get(blogId);
+    return state.blogs.blogDict[blogId];
+  },
+
+  selectBlogTypes(state: AppState) {
+    return state.blogs.types;
   },
 };

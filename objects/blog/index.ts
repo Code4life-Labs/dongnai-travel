@@ -6,7 +6,7 @@ import { BlogStorage } from "./storage";
 import type { Blog } from "./type";
 
 export class BlogManager {
-  static Api = new BlogAPI(process.env.EXPO_DONGNAITRAVEL_API_URL!);
+  static Api = new BlogAPI(process.env.EXPO_PUBLIC_DONGNAITRAVEL_API_URL!);
   static Validator = new BlogValidator();
   static Storage = new BlogStorage();
 

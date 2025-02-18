@@ -5,7 +5,7 @@ import { API } from "@/classes/API";
 import { RouteUtils } from "@/utils/route";
 
 // Import types
-import type { Place } from "./type";
+import type { Place, PlaceType } from "./type";
 
 type GetPlacesAsyncOptions = {
   limit?: number | string;
@@ -38,19 +38,24 @@ export class PlaceAPI {
     try {
       const { limit = 10, skip = 0, type = "all", userId } = options;
       const url = RouteUtils.getPath("places");
-      let query = `limit=${limit}&skip=${skip}&type=${type}&fields=${PlaceAPI.Fields}`;
+      let query = `limit=${limit}&skip=${skip}&types=${type}`;
 
       if (userId) query += `&userId=${userId}`;
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
 
-      return response.data as Promise<Array<Place>>;
+      return response.data.data as Array<Place>;
     } catch (error: any) {
       console.warn(error.message);
       return [];
     }
   }
 
+  /**
+   * Get a place with full information
+   * @param options
+   * @returns
+   */
   async getPlaceAsync(options: GetPlaceAsyncOptions) {
     try {
       const { id, userId } = options;
@@ -60,12 +65,29 @@ export class PlaceAPI {
       if (userId) query += `&userId=${userId}`;
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
+      // const data = await import("@/assets/mock-data/place/place.json");
 
-      return response.data as Promise<Array<Place>>;
+      return response.data.data as Place;
     } catch (error: any) {
       console.warn(error.message);
       return [];
     }
   }
-  async updatePlaceAynsc() {}
+
+  /**
+   * Get types of places
+   * @returns
+   */
+  async getPlaceTypes() {
+    try {
+      const url = RouteUtils.getPath("places", "types");
+
+      const response = await this.api.get(url);
+
+      return response.data.data as Array<PlaceType>;
+    } catch (error: any) {
+      console.warn(error.message);
+      return [];
+    }
+  }
 }
