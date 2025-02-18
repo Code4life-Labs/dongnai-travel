@@ -5,7 +5,7 @@ import { API } from "@/classes/API";
 import { RouteUtils } from "@/utils/route";
 
 // Import types
-import type { Blog } from "./type";
+import type { Blog, BlogType } from "./type";
 
 type GetBlogsAsyncOptions = {
   limit?: number | string;
@@ -37,13 +37,13 @@ export class BlogAPI {
     try {
       const { limit = 10, skip = 0, type = "all", userId } = options;
       const url = RouteUtils.getPath("blogs");
-      let query = `limit=${limit}&skip=${skip}&type=${type}&fields=${BlogAPI.Fields}`;
+      let query = `limit=${limit}&skip=${skip}&types=${type}`;
 
       if (userId) query += `&userId=${userId}`;
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
 
-      return response.data as Array<Blog>;
+      return response.data.data as Array<Blog>;
     } catch (error: any) {
       console.warn(error.message);
       return null;
@@ -63,14 +63,30 @@ export class BlogAPI {
 
       if (userId) params.append("userId", userId);
 
-      // const response = await this.api.get(url, { params });
-      const data = await import("@/assets/mock-data/blog/blog.json");
+      const response = await this.api.get(url, { params });
+      // const data = await import("@/assets/mock-data/blog/blog.json");
 
-      return data as Blog;
+      return response.data.data as Blog;
     } catch (error: any) {
       console.warn(error.message);
       return null;
     }
   }
-  async updateBlogAsync() {}
+
+  /**
+   * Get types of blogs
+   * @returns
+   */
+  async getPlaceTypes() {
+    try {
+      const url = RouteUtils.getPath("blogs", "types");
+
+      const response = await this.api.get(url);
+
+      return response.data.data as Array<BlogType>;
+    } catch (error: any) {
+      console.warn(error.message);
+      return [];
+    }
+  }
 }

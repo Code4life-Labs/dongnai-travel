@@ -29,30 +29,29 @@ type _KindOfOnFulfilled = {
   ) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>;
 };
 
-let _instance: API | null = null;
+type Status = {
+  title: string;
+  message: string;
+};
 
-/**
- * An singleton class of API
- */
+type Response<Data> = {
+  success: Status | null;
+  error: Status | null;
+  data: Data;
+  code: number;
+};
+
 export class API {
   private _http!: Axios;
 
   constructor(config?: AxiosRequestConfig) {
-    if (_instance) return _instance;
-
     this._http = axios.create(config);
-
-    // Place this in the last line
-    _instance = this;
   }
 
-  /**
-   * Get valid URL
-   * @param paths
-   * @returns
-   */
-  private _getURL(...paths: Array<string>) {
-    return StringUtils.getPath(this._http.defaults.baseURL || "", ...paths);
+  static generateBearerToken(token: string, isHTTPHeader: boolean = false) {
+    const result = `Bearer ${token}`;
+    if (isHTTPHeader) return { Authorization: result };
+    return result;
   }
 
   /**
@@ -99,15 +98,14 @@ export class API {
    * @param config
    * @returns
    */
-  async get<ResponseData>(path: string, config?: AxiosRequestConfig) {
+  async get<T = any>(path: string, config?: AxiosRequestConfig) {
     try {
-      const response = await this._http.get<ResponseData>(
-        this._getURL(path),
+      const response = await this._http.get<Response<T>>(
+        StringUtils.getPath(path),
         config
       );
       return response;
     } catch (e: any) {
-      console.warn(e);
       throw e;
     }
   }
@@ -118,20 +116,19 @@ export class API {
    * @param config
    * @returns
    */
-  async post<Payload, ResponseData>(
+  async post<T = any, Payload = any>(
     path: string,
     data: Payload,
     config?: AxiosRequestConfig
   ) {
     try {
-      const response = await this._http.post<ResponseData>(
-        this._getURL(path),
+      const response = await this._http.post<Response<T>>(
+        StringUtils.getPath(path),
         data,
         config
       );
       return response;
     } catch (e: any) {
-      console.warn(e);
       throw e;
     }
   }
@@ -143,20 +140,19 @@ export class API {
    * @param config
    * @returns
    */
-  async put<Payload, ResponseData>(
+  async put<T = any, Payload = any>(
     path: string,
     data: Payload,
     config?: AxiosRequestConfig
   ) {
     try {
-      const response = await this._http.put<ResponseData>(
-        this._getURL(path),
+      const response = await this._http.put<Response<T>>(
+        StringUtils.getPath(path),
         data,
         config
       );
       return response;
     } catch (e: any) {
-      console.warn(e);
       throw e;
     }
   }
@@ -168,20 +164,19 @@ export class API {
    * @param config
    * @returns
    */
-  async patch<Payload, ResponseData>(
+  async patch<T = any, Payload = any>(
     path: string,
     data: Payload,
     config?: AxiosRequestConfig
   ) {
     try {
-      const response = await this._http.patch<ResponseData>(
-        this._getURL(path),
+      const response = await this._http.patch<Response<T>>(
+        StringUtils.getPath(path),
         data,
         config
       );
       return response;
     } catch (e: any) {
-      console.warn(e);
       throw e;
     }
   }
@@ -193,15 +188,14 @@ export class API {
    * @param config
    * @returns
    */
-  async delete<ResponseData>(path: string, config?: AxiosRequestConfig) {
+  async delete<T = any>(path: string, config?: AxiosRequestConfig) {
     try {
-      const response = await this._http.delete<ResponseData>(
-        this._getURL(path),
+      const response = await this._http.delete<Response<T>>(
+        StringUtils.getPath(path),
         config
       );
       return response;
     } catch (e: any) {
-      console.warn(e);
       throw e;
     }
   }

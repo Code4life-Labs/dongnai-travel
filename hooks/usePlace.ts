@@ -20,6 +20,11 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
       fetchPlaces(type: string = "all") {
         dispatch(placesThunks.getPlacesAsync(type));
       },
+
+      fetchPlaceTypes() {
+        dispatch(placesThunks.getPlaceTypesAsync());
+      },
+
       update(id: string, briefPlace: Partial<Place>) {
         dispatch(placesActions.updateBriefPlace({ id, briefPlace }));
       },
@@ -38,8 +43,12 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
     };
   };
 
-  const select = function (_useSelector: typeof useSelector) {
+  const selectPlaces = function (_useSelector: typeof useSelector) {
     return _useSelector(placesSelectors.selectCurrentPlaces);
+  };
+
+  const selectPlaceTypes = function (_useSelector: typeof useSelector) {
+    return _useSelector(placesSelectors.selectPlaceTypes);
   };
 
   return {
@@ -51,10 +60,12 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
     usePlaces() {
       const dispatch = useDispatch();
       const placesDispatchers = createDispatchers(dispatch);
-      const places = select(useSelector);
+      const places = selectPlaces(useSelector);
+      const placeTypes = selectPlaceTypes(useSelector);
 
       return {
         places,
+        placeTypes,
         placesDispatchers,
       };
     },
@@ -74,7 +85,10 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
      * @returns
      */
     usePlacesState() {
-      return select(useSelector);
+      return {
+        places: selectPlaces(useSelector),
+        placeTypes: selectPlaceTypes(useSelector),
+      };
     },
   };
 })();

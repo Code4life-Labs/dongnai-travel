@@ -13,18 +13,10 @@ import { REGEXES } from "@/constants/regexes";
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useAuth } from "@/hooks/useAuth";
 
 // Import from styles
 import { Styles } from "@/styles";
-
-// Import from utils
-
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-
-// Import screen configs (Import from local)
-// Import states
-import { StateManager } from "@/screens/signin/state";
 
 // Import styles
 import { styles } from "@/screens/signin/styles";
@@ -33,6 +25,8 @@ export default function SignInScreen() {
   const { theme } = useTheme();
   const { language } = useLanguage();
   const router = useRouter();
+
+  const { canRemember, authDispatchers } = useAuth();
 
   const {
     control,
@@ -48,23 +42,9 @@ export default function SignInScreen() {
   const _formLanguageData = (language.data as any)["form"];
   const _languageData = (language.data as any)["signInScreen"];
 
-  // const onSubmit = async data => {
-  //   // console.log("Sign in data: ", data);
-  //   await signin(data, {
-  //     callWhenResolve: (data) => {
-  //       // console.log("Res data: ", data)
-  //       if (isChecked) {
-  //         console.log("REMEMBER THIS USER");
-  //         // Phuong: save emailName and password to remember
-  //         rememberAccount(data.emailName, data.password)
-  //       } else {
-  //         // Phuong: If don't check remember. We clear sesitive infomation
-  //         rememberAccount(null, null)
-  //       }
-  //       navigation.replace("GroupBottomTab")
-  //     }
-  //   })
-  // }
+  const submit = async function (data: any) {
+    authDispatchers.signin(data);
+  };
 
   return (
     <KeyboardAwareScrollView
@@ -159,14 +139,14 @@ export default function SignInScreen() {
             )}
 
             <View style={styles.container_settings}>
-              {/* <CheckBoxText
+              <FC.CheckBoxText
                 label={_languageData.remember_me[language.code]}
-                onPress={() => setIsChecked(!isChecked)}
-                isChecked={isChecked}
-              /> */}
+                onPress={() => authDispatchers.rememberAccount(!canRemember)}
+                isChecked={canRemember}
+              />
               <FC.RectangleButton
-                // Phuong: vi user goback() dc
                 isTransparent
+                style={Styles.spacings.ph_0}
                 onPress={() => router.navigate("/forgot-password")}
               >
                 <FC.AppText size="h5" color="secondary">
@@ -179,7 +159,7 @@ export default function SignInScreen() {
               type="opacity"
               shape="rounded_8"
               style={[Styles.spacings.mt_12, Styles.spacings.pv_16]}
-              // onPress={handleSubmit(onSubmit)}
+              onPress={handleSubmit(submit)}
             >
               {_languageData.text_header[language.code]}
             </FC.RectangleButton>

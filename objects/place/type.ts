@@ -30,7 +30,7 @@ type BusinessStatus = {
   createdAt: number;
 };
 
-type PlaceType = {
+export type PlaceType = {
   _id: string;
   value: string;
   name: string;
@@ -50,10 +50,7 @@ type $Extendable = {
   rating: number;
   url: string;
   website: string;
-  userRatingsTotal: number;
   isRecommended: boolean;
-  userFavoritesTotal: number;
-  visitsTotal: number;
   updatedAt: number;
   createdAt: number;
 };
@@ -69,7 +66,10 @@ export type Place = {
   content: string;
   businessStatus: BusinessStatus;
   types: Array<PlaceType>;
-  isLiked?: boolean;
-  isVisited?: boolean;
-  reviews?: Array<any>;
+  totalReviews: number;
+  totalFavorites: number;
+  totalVisits: number;
+  isLiked: boolean;
+  isVisited: boolean;
+  reviews: Array<any>;
 } & $Extendable;

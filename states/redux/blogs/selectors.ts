@@ -20,4 +20,8 @@ export const blogsSelectors = {
   selectBlogDetails(state: AppState, blogId: string) {
     return state.blogs.blogDict[blogId];
   },
+
+  selectBlogTypes(state: AppState) {
+    return state.blogs.types;
+  },
 };

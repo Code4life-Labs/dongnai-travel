@@ -63,7 +63,12 @@ export function withPlaceActions<T extends object>(
     const actions: WithPlaceActions_Actions = {
       navigate() {
         placeDetailsActions.add(data);
-        router.navigate(`/explore/details`);
+        router.navigate({
+          pathname: "/explore/places/[id]",
+          params: {
+            id: data._id,
+          },
+        });
       },
 
       like() {

@@ -51,6 +51,8 @@ function _HorizontalPlaceCard({
   const { theme, currentScheme } = useTheme();
   const { language } = useLanguage();
 
+  const _languageData = (language.data as any)["exploreScreen"] as any;
+
   let presentationImage = data && data.photos ? { uri: data.photos[0] } : {};
 
   return React.useMemo(
@@ -69,9 +71,14 @@ function _HorizontalPlaceCard({
             source={presentationImage}
           >
             {data.isRecommended && (
-              <View style={styles.card_recommended_mark_container}>
+              <View
+                style={[
+                  styles.card_recommended_mark_container,
+                  { backgroundColor: theme.subBackground },
+                ]}
+              >
                 <AppText size="body2" color="secondary">
-                  {language.data.place_card_recommended[language.code] ||
+                  {_languageData.place_card_recommended[language.code] ||
                     "Recommended"}
                 </AppText>
               </View>
@@ -85,7 +92,9 @@ function _HorizontalPlaceCard({
             <View style={styles.card_tag_container}>
               <AppText size="body2" numberOfLines={1}>
                 {data
-                  .types!.map((type, index) => StringUtils.toTitleCase(type))
+                  .types!.map((type, index) =>
+                    StringUtils.toTitleCase(type.name)
+                  )
                   .join(", ")}
               </AppText>
             </View>
@@ -102,7 +111,7 @@ function _HorizontalPlaceCard({
                 <View style={styles.card_information_cell}>
                   <Ionicons name="star-outline" style={Styles.spacings.me_6} />
                   <AppText size="body2">
-                    {NumberUtils.toMetricNumber(data.userRatingsTotal!)}
+                    {NumberUtils.toMetricNumber(data.rating!)}
                   </AppText>
                 </View>
                 <View style={styles.card_information_cell}>
@@ -111,7 +120,7 @@ function _HorizontalPlaceCard({
                     style={Styles.spacings.me_6}
                   />
                   <AppText size="body2">
-                    {NumberUtils.toMetricNumber(data.userRatingsTotal!)}
+                    {NumberUtils.toMetricNumber(data.totalReviews!)}
                   </AppText>
                 </View>
               </View>
@@ -119,7 +128,7 @@ function _HorizontalPlaceCard({
                 <View style={styles.card_information_cell}>
                   <Ionicons name="heart-outline" style={Styles.spacings.me_6} />
                   <AppText size="body2">
-                    {NumberUtils.toMetricNumber(data.userFavoritesTotal!)}
+                    {NumberUtils.toMetricNumber(data.totalFavorites!)}
                   </AppText>
                 </View>
               </View>
@@ -168,8 +177,9 @@ function _HorizontalPlaceCard({
     [
       data.isLiked,
       data.rating,
-      data.userFavoritesTotal,
-      data.userRatingsTotal,
+      data.totalFavorites,
+      data.totalVisits,
+      data.totalReviews,
       currentScheme,
     ]
   );

@@ -5,7 +5,9 @@ import { TextAPI } from "./api";
  * @NguyenAnhTuan1912
  */
 export class TextManager {
-  static Api = new TextAPI(`${process.env.EXPO_DONGNAITRAVEL_API_URL!}/text`);
+  static Api = new TextAPI(
+    `${process.env.EXPO_PUBLIC_DONGNAITRAVEL_API_URL!}/text`
+  );
 
   private constructor() {}
 }

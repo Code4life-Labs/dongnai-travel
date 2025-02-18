@@ -6,11 +6,12 @@ import { BooleanUtils } from "@/utils/boolean";
 import { NumberUtils } from "@/utils/number";
 
 // Import types
-import type { Blog } from "@/objects/blog/type";
+import type { Blog, BlogType } from "@/objects/blog/type";
 
 import { blogsThunks } from "./middlewares";
 
 type InitialState = {
+  types: Array<BlogType>;
   blogDict: Record<string, Blog>;
   briefBlogListInformation: {
     type: string;
@@ -35,7 +36,15 @@ function _createDefaultBriefBlog(limit = 5, skip = 0) {
   };
 }
 
+const _DefaultTypes = [
+  {
+    value: "all",
+    name: "All",
+  },
+] as Array<BlogType>;
+
 const initialState: InitialState = {
+  types: [],
   blogDict: Object(),
   briefBlogListInformation: _createDefaultBriefBlog(),
 };
@@ -153,6 +162,15 @@ export const blogsSlice = createSlice({
         console.log("Blog Metadata:", blog);
 
         state.blogDict[blogId] = blog;
+      }
+    );
+
+    builder.addCase(
+      blogsThunks.getBlogTypesAsync.fulfilled,
+      (state, action) => {
+        if (!action.payload) return;
+
+        state.types = state.types.concat(_DefaultTypes, action.payload);
       }
     );
   },

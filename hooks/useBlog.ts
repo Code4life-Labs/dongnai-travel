@@ -17,7 +17,13 @@ import type { Blog } from "@/objects/blog/type";
 export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
   const createDispatchers = function (dispatch: AppDispatch) {
     return {
-      fetchBlogs() {},
+      fetchBlogs(type: string = "all") {
+        dispatch(blogsThunks.getBlogsAsync(type));
+      },
+
+      fetchBlogTypes() {
+        dispatch(blogsThunks.getBlogTypesAsync());
+      },
 
       updateBriefBlog(id: string, briefBlog: Partial<Blog>) {
         dispatch(blogsActions.updateBriefBlog({ id, briefBlog }));
@@ -41,13 +47,8 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
     return _useSelector(blogsSelectors.selectCurrentBlogs);
   };
 
-  const selectBlogDetails = function (
-    _useSelector: typeof useSelector,
-    id: string
-  ) {
-    return _useSelector((state: AppState) =>
-      blogsSelectors.selectBlogDetails(state, id)
-    );
+  const selectBlogTypes = function (_useSelector: typeof useSelector) {
+    return _useSelector(blogsSelectors.selectBlogTypes);
   };
 
   return {
@@ -60,9 +61,11 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
       const dispatch = useDispatch();
       const blogsDispatchers = createDispatchers(dispatch);
       const blogs = selectBlogs(useSelector);
+      const blogTypes = selectBlogTypes(useSelector);
 
       return {
         blogs,
+        blogTypes,
         blogsDispatchers,
       };
     },
@@ -82,7 +85,10 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
      * @returns
      */
     useBlogsState() {
-      return selectBlogs(useSelector);
+      return {
+        blogs: selectBlogs(useSelector),
+        blogTypes: selectBlogTypes(useSelector),
+      };
     },
   };
 })();

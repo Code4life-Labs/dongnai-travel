@@ -1,17 +1,17 @@
 import React from "react";
 import { View, FlatList } from "react-native";
-import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 // Import from assets
-import BlogQualitiesData from "@/assets/json/blog-qualities.json";
+import PlaceQualitiesData from "@/assets/json/place-qualities.json";
 
 // Import from components
 import { FC } from "@/components";
 
 // Import from hooks
 import { useStateManager } from "@/hooks/useStateManager";
-import { useBlogs } from "@/hooks/useBlog";
+import { usePlaces } from "@/hooks/usePlace";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -20,16 +20,16 @@ import { Styles } from "@/styles";
 
 // Import screen configs (Import from local)
 // Import states
-import { StateManager } from "@/screens/blogs/state";
+import { StateManager } from "@/screens/explore/state";
 
 // Import styles
-import { styles } from "@/screens/blogs/styles";
+import { styles } from "@/screens/explore/styles";
 
 // Import utils
-import { BlogsScreenUtils } from "@/screens/blogs/utils";
+import { ExploreScreenUtils } from "@/screens/explore/utils";
 
-export default function BlogsScreen() {
-  const { blogs, blogsDispatchers } = useBlogs();
+export default function ExploreScreen() {
+  const { places, placeTypes, placesDispatchers } = usePlaces();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -38,20 +38,29 @@ export default function BlogsScreen() {
     StateManager.getStateFns
   );
 
-  const _languageData = (language.data as any)["blogsScreen"] as any;
+  const types = React.useMemo(() => {
+    return placeTypes.map((placeType) => ({
+      value: placeType.value,
+      label: placeType.name,
+    }));
+  }, [placeTypes]);
+
+  const _languageData = (language.data as any)["exploreScreen"] as any;
 
   React.useEffect(() => {
-    if (!blogs || blogs.length === 0) {
-      blogsDispatchers.fetchBlogs();
+    if (!places || places.length === 0) {
+      placesDispatchers.fetchPlaces(state.currentType);
+      placesDispatchers.fetchPlaceTypes();
     }
-  }, [blogs]);
+  }, [state.currentType, places]);
 
   // Test
   React.useEffect(() => {
-    router.navigate({
-      pathname: "/blogs/[id]",
-      params: { id: "test" },
-    });
+    // Example of navigate to place details
+    // router.navigate({
+    //   pathname: "/explore/places/[id]",
+    //   params: { id: "test" },
+    // });
   }, []);
 
   return (
@@ -89,7 +98,7 @@ export default function BlogsScreen() {
         </View>
       )}
       <FlatList
-        data={blogs ? blogs : []}
+        data={places ? places : []}
         style={[
           styles.scroll_view_container,
           { backgroundColor: theme.background },
@@ -99,15 +108,13 @@ export default function BlogsScreen() {
           backgroundColor: theme.background,
         }}
         onMomentumScrollEnd={() =>
-          BlogsScreenUtils.handleOnMomentumScrollEnd(
-            state,
-            blogs,
-            blogsDispatchers.fetchBlogs
+          ExploreScreenUtils.handleOnMomentumScrollEnd(state, places, () =>
+            placesDispatchers.fetchPlaces(state.currentType)
           )
         }
-        onEndReached={(e) => BlogsScreenUtils.handleOnEndReached(state)}
+        onEndReached={(e) => ExploreScreenUtils.handleOnEndReached(state)}
         onScroll={(e) =>
-          BlogsScreenUtils.handleOnScroll(e, stateFns.setIsOnTop)
+          ExploreScreenUtils.handleOnScroll(e, stateFns.setIsOnTop)
         }
         scrollEventThrottle={1000}
         stickyHeaderHiddenOnScroll
@@ -115,13 +122,13 @@ export default function BlogsScreen() {
         ListEmptyComponent={
           <View style={[Styles.spacings.mh_18, Styles.spacings.mb_12]}>
             {[1, 2, 3, 4, 5].map((value, index) => (
-              <FC.Skeletons.HorizontalBlogCard key={value + index} />
+              <FC.Skeletons.HorizontalPlaceCard key={value + index} />
             ))}
           </View>
         }
         ListHeaderComponent={
           <FC.ButtonsScrollBar
-            buttonContents={(BlogQualitiesData as any)[language.code]}
+            buttonContents={types}
             buttonType="capsule"
             onButtonPress={(content) => stateFns.setCurrentType(content.value)}
             scrollStyle={[Styles.spacings.ps_18, Styles.spacings.pv_12]}
@@ -133,16 +140,16 @@ export default function BlogsScreen() {
         }
         renderItem={(item) => (
           <View style={Styles.spacings.ph_18}>
-            <FC.HorizontalBlogCard
+            <FC.HorizontalPlaceCard
               data={item.item}
               type={state.currentType}
-              blogIndex={item.index}
+              placeIndex={item.index}
             />
           </View>
         )}
         keyExtractor={(item) => item._id as string}
         onRefresh={() => {
-          blogsDispatchers.clear();
+          placesDispatchers.clear();
         }}
         refreshing={false}
       />

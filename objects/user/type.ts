@@ -22,6 +22,7 @@ export type UserDataForAuthentication = {
   email?: string;
   username?: string;
   password?: string;
+  token?: string;
 };
 
 export type NewUser = Omit<$Extendable, "_id" | "createdAt" | "updatedAt"> & {

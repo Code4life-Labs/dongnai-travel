@@ -1,12 +1,16 @@
 import React from "react";
 import { SafeAreaView } from "react-native";
-import { Tabs } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 
 // Import from components
 import { FC } from "@/components";
 
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from "@/hooks/useAuth";
+
+// Import utils
+import { StorageUtils } from "@/utils/storage";
 
 export default function TabLayout() {
   const { theme } = useTheme();
