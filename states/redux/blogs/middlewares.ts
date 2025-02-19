@@ -72,7 +72,7 @@ const likeBlogAsync = createAsyncThunk(
       const state = thunkAPI.getState() as AppState;
       const userInStorage = await UserManager.Storage.get();
       const userId = userInStorage
-        ? userInStorage.user.userId
+        ? userInStorage.user._id
         : state.user.user?._id;
 
       await BlogManager.Api.postLikedBlogAsync(userId, placeId);
@@ -90,7 +90,7 @@ const unlikeBlogAsync = createAsyncThunk(
       const state = thunkAPI.getState() as AppState;
       const userInStorage = await UserManager.Storage.get();
       const userId = userInStorage
-        ? userInStorage.user.userId
+        ? userInStorage.user._id
         : state.user.user?._id;
 
       await BlogManager.Api.deleteLikedBlogAsync(userId, placeId);

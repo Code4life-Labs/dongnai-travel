@@ -50,7 +50,6 @@ export default function ExploreScreen() {
   React.useEffect(() => {
     if (!places || places.length === 0) {
       placesDispatchers.fetchPlaces(state.currentType);
-      placesDispatchers.fetchPlaceTypes();
     }
   }, [state.currentType, places]);
 
@@ -61,6 +60,7 @@ export default function ExploreScreen() {
     //   pathname: "/explore/places/[id]",
     //   params: { id: "test" },
     // });
+    placesDispatchers.fetchPlaceTypes();
   }, []);
 
   return (

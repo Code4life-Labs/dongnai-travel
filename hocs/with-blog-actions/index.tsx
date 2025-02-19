@@ -5,7 +5,10 @@ import { router } from "expo-router";
 // Import hooks
 import { useBlogDetailsActions } from "@/hooks/useBlog";
 
-// Import from utils
+// Import objects
+import { BlogManager } from "@/objects/blog";
+
+// Import utils
 import { StringUtils } from "@/utils/string";
 
 // Import types
@@ -50,22 +53,10 @@ export function withBlogActions<T extends object>(
     props: T & WithBlogActions_WrappedComponentProps
   ) => JSX.Element
 ) {
-  const _toggleLike = debounce(function (
-    blog: any,
-    likePlace: any,
-    unlikePlace: any
-  ) {
-    if (blog.isLiked) {
-      likePlace(blog._id);
-    } else {
-      unlikePlace(blog._id);
-    }
-  }, 100);
-
   /**
    * Component này sẽ nhận một component khác và bọc nó lại, đồng thời function này sẽ truyền logic lại cho
    * component được bọc đó (WrappedComponent).
-   * @param {ViewProps & BlogCardProps} props Props của component.
+   * @param props Props của component.
    */
   return function (props: T) {
     const { data } = props as any;
@@ -81,7 +72,7 @@ export function withBlogActions<T extends object>(
         router.push("/blogs");
       },
       toggleLike() {
-        _toggleLike(
+        BlogManager.toggleLike(
           data,
           blogDetailsActions.likeBlog,
           blogDetailsActions.unlikeBlog

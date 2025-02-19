@@ -22,7 +22,7 @@ const getPlacesAsync = createAsyncThunk(
 
       const userInStorage = await UserManager.Storage.get();
       const userId = userInStorage
-        ? userInStorage.user.userId
+        ? userInStorage.user._id
         : state.user.user?._id;
       const data = await PlaceManager.Api.getPlacesAsync({
         limit,
@@ -45,7 +45,7 @@ const getPlaceDetailAsync = createAsyncThunk(
       const state = thunkAPI.getState() as AppState;
       const userInStorage = await UserManager.Storage.get();
       const userId = userInStorage
-        ? userInStorage.user.userId
+        ? userInStorage.user._id
         : state.user.user?._id;
 
       const data = await PlaceManager.Api.getPlaceAsync({
@@ -78,7 +78,7 @@ const favoritePlaceAsync = createAsyncThunk(
       const state = thunkAPI.getState() as AppState;
       const userInStorage = await UserManager.Storage.get();
       const userId = userInStorage
-        ? userInStorage.user.userId
+        ? userInStorage.user._id
         : state.user.user?._id;
 
       await PlaceManager.Api.postFavoritedPlaceAsync(userId, placeId);
@@ -96,7 +96,7 @@ const unfavoritePlaceAsync = createAsyncThunk(
       const state = thunkAPI.getState() as AppState;
       const userInStorage = await UserManager.Storage.get();
       const userId = userInStorage
-        ? userInStorage.user.userId
+        ? userInStorage.user._id
         : state.user.user?._id;
 
       await PlaceManager.Api.deleteFavoritedPlaceAsync(userId, placeId);
@@ -114,7 +114,7 @@ const visitPlaceAsync = createAsyncThunk(
       const state = thunkAPI.getState() as AppState;
       const userInStorage = await UserManager.Storage.get();
       const userId = userInStorage
-        ? userInStorage.user.userId
+        ? userInStorage.user._id
         : state.user.user?._id;
 
       await PlaceManager.Api.postVisitedPlaceAsync(userId, placeId);
@@ -132,7 +132,7 @@ const unvisitPlaceAsync = createAsyncThunk(
       const state = thunkAPI.getState() as AppState;
       const userInStorage = await UserManager.Storage.get();
       const userId = userInStorage
-        ? userInStorage.user.userId
+        ? userInStorage.user._id
         : state.user.user?._id;
 
       await PlaceManager.Api.deleteVisitedPlaceAsync(userId, placeId);

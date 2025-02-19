@@ -105,12 +105,12 @@ export class PlaceAPI {
         "favorites/places",
         `${placeId}`
       );
-
+      console.log("URL:", url);
       await this.api.post(url, null);
 
       return true;
     } catch (error: any) {
-      console.warn(error.message);
+      console.warn("Post Favorited Place:", error);
       return false;
     }
   }

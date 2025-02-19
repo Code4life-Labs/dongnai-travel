@@ -50,7 +50,6 @@ export default function BlogsScreen() {
   React.useEffect(() => {
     if (!blogs || blogs.length === 0) {
       blogsDispatchers.fetchBlogs(state.currentType);
-      blogsDispatchers.fetchBlogTypes();
     }
   }, [blogs]);
 
@@ -60,6 +59,7 @@ export default function BlogsScreen() {
     //   pathname: "/blogs/[id]",
     //   params: { id: "test" },
     // });
+    blogsDispatchers.fetchBlogTypes();
   }, []);
 
   return (

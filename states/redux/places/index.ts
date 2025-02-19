@@ -147,12 +147,15 @@ export const placesSlice = createSlice({
 
       const [type, places] = action.payload;
 
-      if (!places) return;
+      if (!places || places.length === 0) return;
 
-      if (places.length !== 0) {
-        state.briefPlaceListInformation.type = type;
+      if (state.briefPlaceListInformation.type === type) {
         state.briefPlaceListInformation.data =
           state.briefPlaceListInformation.data.concat(places);
+        state.briefPlaceListInformation.skip += places.length;
+      } else {
+        state.briefPlaceListInformation.type = type;
+        state.briefPlaceListInformation.data = places;
         state.briefPlaceListInformation.skip += places.length;
       }
     });
@@ -185,13 +188,15 @@ export const placesSlice = createSlice({
         // Update in list
         for (const place of state.briefPlaceListInformation.data) {
           if (place._id === action.payload) {
-            place.isLiked = true;
+            place.isFavorited = true;
+            place.totalFavorites! += 1;
           }
         }
 
         // Update in detail (if has)
         if (state.placeDict[action.payload]) {
-          state.placeDict[action.payload].isLiked = true;
+          state.placeDict[action.payload].isFavorited = true;
+          state.placeDict[action.payload].totalFavorites! += 1;
         }
       }
     );
@@ -204,13 +209,15 @@ export const placesSlice = createSlice({
         // Update in list
         for (const place of state.briefPlaceListInformation.data) {
           if (place._id === action.payload) {
-            place.isLiked = false;
+            place.isFavorited = false;
+            place.totalFavorites! -= 1;
           }
         }
 
         // Update in detail (if has)
         if (state.placeDict[action.payload]) {
-          state.placeDict[action.payload].isLiked = false;
+          state.placeDict[action.payload].isFavorited = false;
+          state.placeDict[action.payload].totalFavorites! -= 1;
         }
       }
     );
@@ -222,12 +229,14 @@ export const placesSlice = createSlice({
       for (const place of state.briefPlaceListInformation.data) {
         if (place._id === action.payload) {
           place.isVisited = true;
+          place.totalVisits! += 1;
         }
       }
 
       // Update in detail (if has)
       if (state.placeDict[action.payload]) {
         state.placeDict[action.payload].isVisited = true;
+        state.placeDict[action.payload].totalVisits! += 1;
       }
     });
 
@@ -240,12 +249,14 @@ export const placesSlice = createSlice({
         for (const place of state.briefPlaceListInformation.data) {
           if (place._id === action.payload) {
             place.isVisited = false;
+            place.totalVisits! -= 1;
           }
         }
 
         // Update in detail (if has)
         if (state.placeDict[action.payload]) {
           state.placeDict[action.payload].isVisited = false;
+          state.placeDict[action.payload].totalVisits! -= 1;
         }
       }
     );

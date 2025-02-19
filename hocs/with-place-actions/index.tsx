@@ -2,10 +2,13 @@ import React from "react";
 import { debounce } from "lodash";
 import { router } from "expo-router";
 
-// Import from hooks
+// Import hooks
 import { usePlaceDetailsActions } from "@/hooks/usePlace";
 
-// Import from utils
+// Import objects
+import { PlaceManager } from "@/objects/place";
+
+// Import utils
 import { StringUtils } from "@/utils/string";
 
 // Import types
@@ -51,29 +54,6 @@ export function withPlaceActions<T extends object>(
     "</span>"
   );
 
-  const toggleFavorite = debounce(function (
-    place: any,
-    favoritePlace: any,
-    unfavoritePlace: any
-  ) {
-    if (place.isLiked) {
-      favoritePlace(place._id);
-    } else {
-      unfavoritePlace(place._id);
-    }
-  }, 100);
-  const toggleVisit = debounce(function (
-    place: any,
-    visitPlace: any,
-    unvisitPlace: any
-  ) {
-    if (place.isVisited) {
-      visitPlace(place._id);
-    } else {
-      unvisitPlace(place._id);
-    }
-  }, 100);
-
   /**
    * Component này sẽ nhận một component khác và bọc nó lại, đồng thời function này sẽ truyền logic lại cho
    * component được bọc đó (WrappedComponent).
@@ -96,7 +76,7 @@ export function withPlaceActions<T extends object>(
       },
 
       toggleFavorite() {
-        toggleFavorite(
+        PlaceManager.toggleFavorite(
           data,
           placeDetailsActions.favoritePlace,
           placeDetailsActions.unfavoritePlace
@@ -104,7 +84,7 @@ export function withPlaceActions<T extends object>(
       },
 
       toggleVisit() {
-        toggleVisit(
+        PlaceManager.toggleVisit(
           data,
           placeDetailsActions.visitPlace,
           placeDetailsActions.unvisitPlace

@@ -40,13 +40,6 @@ import type { ButtonsScrollBarProps, ButtonsScrollBarLocalData } from "./type";
  * @NguyenAnhTuan1912
  */
 export default function ButtonsScrollBar(props: ButtonsScrollBarProps) {
-  if (BooleanUtils.isEmpty(props.buttonContents)) {
-    console.warn(
-      "ButtonsScrollBar requires a list of ButtonContent for rendering"
-    );
-    return null;
-  }
-
   const { theme } = useTheme();
 
   const [state, stateFns] = useStateManager(
@@ -74,6 +67,13 @@ export default function ButtonsScrollBar(props: ButtonsScrollBarProps) {
     state,
     lineTranslateAmination
   );
+
+  if (BooleanUtils.isEmpty(props.buttonContents)) {
+    console.warn(
+      "ButtonsScrollBar requires a list of ButtonContent for rendering"
+    );
+    return null;
+  }
 
   return (
     <View style={[{ width: "100%" }, props.containerStyle]}>
