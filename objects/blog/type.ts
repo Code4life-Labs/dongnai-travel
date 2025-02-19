@@ -1,6 +1,14 @@
 // Import types
 import { Place } from "../place/type";
 
+export type BlogType = {
+  _id: string;
+  name: string;
+  value: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
 type BlogContent = {
   _id: string;
   plainText: {
@@ -22,22 +30,27 @@ type BlogContent = {
 export type $Extendable = {
   _id: string;
   name: string;
-  avatar: string;
-  type: string;
+  coverImage: string;
+  contentUrl: string;
   isApproved: boolean;
   readTime: number;
   createdAt: number;
   updatedAt: number;
 };
 
-export type BaseBlog = {
+export type BlogModel = {
   authorId: string;
-  contentId: string;
+  typeId: string;
   mentionedPlaces: Array<string>;
 } & $Extendable;
 
 export type Blog = {
   author: any;
-  content: BlogContent;
-  mentionedPlaces: Array<Place>;
+  type: any;
+  mentionedPlaces: Array<Partial<Place>>;
+  isLiked?: boolean;
+  totalFavorites?: number;
+  totalComments?: number;
+  content?: string;
+  plainContent?: string;
 } & $Extendable;

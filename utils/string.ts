@@ -7,9 +7,9 @@ import { NumberUtils } from "./number";
 const htmlTagTemplate = "[OPEN_TAG_WITH_REGEX](.*?)[CLOSE_TAG]";
 
 type GetTextPartsOptions = {
-  max: number;
-  divisible: number;
-  canFillSpace: boolean;
+  max?: number;
+  divisible?: number;
+  canFillSpace?: boolean;
 };
 
 export class StringUtils {
@@ -185,7 +185,7 @@ export class StringUtils {
    * @param {GetTextPartsOptions} options Options dùng để lấy các phần text như mong muốn.
    * @returns
    */
-  static getTextParts(text: string, options: GetTextPartsOptions) {
+  static getTextParts(text: string, options?: GetTextPartsOptions) {
     options = Object.assign(
       {
         max: 900,
@@ -205,12 +205,12 @@ export class StringUtils {
     while (end <= wordsLength) {
       let sub = words.slice(start, end);
       let subLength = sub.join(" ").length;
-      if (subLength >= options.max) {
+      if (subLength >= options.max!) {
         let filled =
-          subLength % options.divisible !== 0 &&
+          subLength % options.divisible! !== 0 &&
           StringUtils.repeat(
             " ",
-            options.divisible - 1 - (subLength % options.divisible)
+            options.divisible! - 1 - (subLength % options.divisible!)
           );
         if (filled !== false && options.canFillSpace) sub.push(filled);
         textParts.push(sub.join(" "));
@@ -258,18 +258,18 @@ export class StringUtils {
    * @param strs
    * @returns
    */
-  static getPath(...strs: Array<string>) {
-    let result = "";
+  static getPath(...parts: Array<string>) {
+    let result = parts[0];
 
-    for (let i = 0; i < strs.length; i++) {
-      let str = strs[i];
+    for (let i = 1; i < parts.length; i++) {
+      let str = parts[i];
       if (str[0] !== "/") str = "/" + str;
       result += str;
     }
 
     result = result.replaceAll(/\/+/g, "/");
 
-    if (result[0] !== "/") return "/" + result;
+    if (result[0] === "/") return result.replaceAll(/\/+/g, "/");
 
     return result;
   }

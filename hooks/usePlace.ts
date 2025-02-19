@@ -17,30 +17,38 @@ import type { Place } from "@/objects/place/type";
 export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
   const createDispatchers = function (dispatch: AppDispatch) {
     return {
+      fetchPlaces(type: string = "all") {
+        dispatch(placesThunks.getPlacesAsync(type));
+      },
+
+      fetchPlaceTypes() {
+        dispatch(placesThunks.getPlaceTypesAsync());
+      },
+
       update(id: string, briefPlace: Partial<Place>) {
         dispatch(placesActions.updateBriefPlace({ id, briefPlace }));
       },
 
       increaseSkipAmount() {
-        dispatch(placesActions.increaseSkipBriefPlacesAmount());
+        dispatch(placesActions.increaseSkipInBriefPlaceListInformation());
       },
 
       decreaseSkipAmount() {
-        dispatch(placesActions.decreaseSkipBriefPlacesAmount());
+        dispatch(placesActions.decreaseSkipInBriefPlaceListInformation());
       },
 
       clear() {
         dispatch(placesActions.clearCurrentPlaces());
       },
-
-      get(type: string = "all") {
-        dispatch(placesThunks.getPlacesByTypeAsync(type));
-      },
     };
   };
 
-  const select = function (_useSelector: typeof useSelector) {
+  const selectPlaces = function (_useSelector: typeof useSelector) {
     return _useSelector(placesSelectors.selectCurrentPlaces);
+  };
+
+  const selectPlaceTypes = function (_useSelector: typeof useSelector) {
+    return _useSelector(placesSelectors.selectPlaceTypes);
   };
 
   return {
@@ -52,10 +60,12 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
     usePlaces() {
       const dispatch = useDispatch();
       const placesDispatchers = createDispatchers(dispatch);
-      const places = select(useSelector);
+      const places = selectPlaces(useSelector);
+      const placeTypes = selectPlaceTypes(useSelector);
 
       return {
         places,
+        placeTypes,
         placesDispatchers,
       };
     },
@@ -75,7 +85,10 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
      * @returns
      */
     usePlacesState() {
-      return select(useSelector);
+      return {
+        places: selectPlaces(useSelector),
+        placeTypes: selectPlaceTypes(useSelector),
+      };
     },
   };
 })();
@@ -84,13 +97,17 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
   (function () {
     const createDispatchers = function (dispatch: AppDispatch) {
       return {
+        fetchPlaceDetail(id: string) {
+          dispatch(placesThunks.getPlaceDetailAsync(id));
+        },
+
         add(placeDetails: Place) {
-          dispatch(placesActions.addPlaceDetails(placeDetails));
+          dispatch(placesActions.addPlace(placeDetails));
         },
 
         update(placeDetails: Place) {
           dispatch(
-            placesActions.updatePlaceDetails({
+            placesActions.updatePlace({
               id: placeDetails._id,
               placeDetails,
             })
@@ -98,7 +115,7 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
         },
 
         remove(id: string) {
-          dispatch(placesActions.clearPlaceDetails(id));
+          dispatch(placesActions.clearPlace(id));
         },
       };
     };

@@ -82,7 +82,7 @@ export default function ButtonsScrollBar(props: ButtonsScrollBarProps) {
         horizontal
         showsHorizontalScrollIndicator={false}
         overScrollMode="never"
-        style={props.scrollStyle}
+        contentContainerStyle={props.scrollStyle}
         onLayout={(e) => {
           const { width } = e.nativeEvent.layout;
           localData.current.buttonScrollContainerWidth = width;

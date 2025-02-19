@@ -1,5 +1,5 @@
 {
-  "index": {
+  "home": {
     "inactive": "home-outline",
     "active": "home",
     "isHighlight": false,

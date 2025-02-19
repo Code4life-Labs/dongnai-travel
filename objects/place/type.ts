@@ -1,15 +1,15 @@
-export type AddressComoponent = {
+type AddressComoponent = {
   shortName: string;
   longName: string;
   types: Array<string>;
 };
 
-export type Coordinate = {
+type Coordinate = {
   lat: number;
   lng: number;
 };
 
-export type Geometry = {
+type Geometry = {
   location: Coordinate;
   viewport: {
     northeast: Coordinate;
@@ -17,46 +17,40 @@ export type Geometry = {
   };
 };
 
-export type PlusCode = {
+type PlusCode = {
   compoundCode: string;
   globalCode: string;
 };
 
-export type PlaceContent = {
+type BusinessStatus = {
   _id: string;
-  plainText: {
-    vi: string;
-    en: string;
-  };
-  formattedText: {
-    vi: string;
-    en: string;
-  };
-  speech?: {
-    vi: { female: string; male: string };
-    en: { female: string; male: string };
-  };
-  createdAt: number;
+  value: string;
+  name: string;
   updatedAt: number;
+  createdAt: number;
+};
+
+export type PlaceType = {
+  _id: string;
+  value: string;
+  name: string;
+  updatedAt: number;
+  createdAt: number;
 };
 
 // Use for base type of place
 type $Extendable = {
   _id: string;
   addressComponents: Array<AddressComoponent>;
-  businessStatus: "OPERATIONAL" | "CLOSED";
   geometry: Geometry;
   phoneNumber: string;
   name: string;
   plusCode: PlusCode;
+  photos: Array<string>;
   rating: number;
-  types: Array<string>;
   url: string;
   website: string;
-  userRatingsTotal: number;
   isRecommended: boolean;
-  userFavoritesTotal: number;
-  visitsTotal: number;
   updatedAt: number;
   createdAt: number;
 };
@@ -64,14 +58,18 @@ type $Extendable = {
 // The complete Place data structure (Place Document)
 export type BasePlace = {
   placeId: string;
-  contentId: string;
-  photosId: string;
+  typeIds: Array<string>;
 } & $Extendable;
 
 // The actual place data structure (A data that is joined from multiple documents)
 export type Place = {
-  content: PlaceContent;
-  photos: Array<string>;
+  content: string;
+  businessStatus: BusinessStatus;
+  types: Array<PlaceType>;
+  totalReviews: number;
+  totalFavorites: number;
+  totalVisits: number;
   isLiked: boolean;
   isVisited: boolean;
+  reviews: Array<any>;
 } & $Extendable;

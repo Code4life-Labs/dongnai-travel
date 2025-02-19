@@ -1,16 +1,21 @@
 // Import types
 import type { ChangeStateFn } from "@/hooks/useStateManager";
 
-export type ExploreScreenState = ReturnType<typeof getInitialState>;
+export type ExploreScreenStateType = ReturnType<typeof getInitialState>;
 
 function getInitialState() {
   return {
     currentType: "all",
     isOnTop: true,
+    status: {
+      isFirstFetch: true,
+      isEndReach: false,
+      isReload: false,
+    },
   };
 }
 
-function getStateFns(changeState: ChangeStateFn<ExploreScreenState>) {
+function getStateFns(changeState: ChangeStateFn<ExploreScreenStateType>) {
   return {
     setCurrentType(type: string) {
       changeState("currentType", function () {

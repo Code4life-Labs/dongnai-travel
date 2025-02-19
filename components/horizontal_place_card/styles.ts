@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
     height: 145,
     overflow: "hidden",
     ...Styles.shapes.rounded_4,
-    ...Styles.spacings.p_10,
   },
 
   card_recommended_mark_container: {
@@ -28,6 +27,7 @@ export const styles = StyleSheet.create({
     ...Styles.shapes.capsule,
     ...Styles.spacings.ph_12,
     ...Styles.spacings.pv_6,
+    ...Styles.spacings.mb_8,
   },
 
   card_main_container: {
@@ -79,5 +79,6 @@ export const styles = StyleSheet.create({
   card_skeleton_rectangle: {
     width: "100%",
     height: 19,
+    ...Styles.shapes.rounded_4,
   },
 });

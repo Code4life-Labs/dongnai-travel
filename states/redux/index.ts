@@ -10,12 +10,13 @@ import { placesSlice } from "./places";
 import { mapSlice } from "./map";
 // import { profileSlice } from "./profile";
 // import { settingSlice } from "./setting";
-// import { userSlice } from "./user";
+import { userSlice } from "./user";
 import { manifoldSlice } from "./manifold";
 // import { warehouseSlice } from "./warehouse";
 // import { filterSlice } from "./filter";
 import { languageSlice } from "./language";
 // import { itinerarySlice } from "./itinerary";
+import { settingSlice } from "./settings";
 
 // Central Reducer.
 const reducers = combineReducers({
@@ -26,12 +27,13 @@ const reducers = combineReducers({
   [mapSlice.name]: mapSlice.reducer,
   // [profileSlice.name]: profileSlice.reducer,
   // [settingSlice.name]: settingSlice.reducer,
-  // [userSlice.name]: userSlice.reducer,
+  [userSlice.name]: userSlice.reducer,
   [manifoldSlice.name]: manifoldSlice.reducer,
   // [warehouseSlice.name]: warehouseSlice.reducer,
   // [filterSlice.name]: filterSlice.reducer,
   [languageSlice.name]: languageSlice.reducer,
   // [itinerarySlice.name]: itinerarySlice.reducer,
+  [settingSlice.name]: settingSlice.reducer,
 });
 
 const persistConfig = {
@@ -39,7 +41,7 @@ const persistConfig = {
   // Phuong: luu tru o localstorage
   storage: AsyncStorage,
   // Phuong: định nghĩa các slice được phép duy trì qua mỗi lần reload, hoặc đóng ứng dụng tạm thời
-  whitelist: ["user", "warehouse"],
+  whitelist: ["warehouse"],
   // Phuong: blacklist: ['user'] // Phuong: định nghĩa các slice không được phép duy trì qua mỗi lần reload, hoặc đóng ứng dụng tạm thời
 };
 

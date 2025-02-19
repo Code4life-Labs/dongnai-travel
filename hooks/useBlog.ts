@@ -1,8 +1,11 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-// Import actions
+// Import redux actions
 import { blogsActions } from "@/states/redux/blogs";
+
+// Import redux middlewares
+import { blogsThunks } from "@/states/redux/blogs/middlewares";
 
 // Import selectors
 import { blogsSelectors } from "@/states/redux/blogs/selectors";
@@ -14,20 +17,28 @@ import type { Blog } from "@/objects/blog/type";
 export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
   const createDispatchers = function (dispatch: AppDispatch) {
     return {
+      fetchBlogs(type: string = "all") {
+        dispatch(blogsThunks.getBlogsAsync(type));
+      },
+
+      fetchBlogTypes() {
+        dispatch(blogsThunks.getBlogTypesAsync());
+      },
+
       updateBriefBlog(id: string, briefBlog: Partial<Blog>) {
         dispatch(blogsActions.updateBriefBlog({ id, briefBlog }));
       },
 
-      increaseSkipBriefBlogsAmount() {
-        dispatch(blogsActions.increaseSkipBriefBlogsAmount());
+      increaseSkipAmount() {
+        dispatch(blogsActions.increaseSkipInBriefBlogListInformation());
       },
 
-      decreaseSkipBriefBlogsAmount() {
-        dispatch(blogsActions.decreaseSkipBriefBlogsAmount());
+      decreaseSkipAmount() {
+        dispatch(blogsActions.decreaseSkipInBriefBlogListInformation());
       },
 
-      clearCurrentBlogs() {
-        dispatch(blogsActions.clearCurrentBlogs());
+      clear() {
+        dispatch(blogsActions.clearBriefBlogInformation());
       },
     };
   };
@@ -36,13 +47,8 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
     return _useSelector(blogsSelectors.selectCurrentBlogs);
   };
 
-  const selectBlogDetails = function (
-    _useSelector: typeof useSelector,
-    id: string
-  ) {
-    return _useSelector((state: AppState) =>
-      blogsSelectors.selectBlogDetails(state, id)
-    );
+  const selectBlogTypes = function (_useSelector: typeof useSelector) {
+    return _useSelector(blogsSelectors.selectBlogTypes);
   };
 
   return {
@@ -55,9 +61,11 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
       const dispatch = useDispatch();
       const blogsDispatchers = createDispatchers(dispatch);
       const blogs = selectBlogs(useSelector);
+      const blogTypes = selectBlogTypes(useSelector);
 
       return {
         blogs,
+        blogTypes,
         blogsDispatchers,
       };
     },
@@ -77,7 +85,10 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
      * @returns
      */
     useBlogsState() {
-      return selectBlogs(useSelector);
+      return {
+        blogs: selectBlogs(useSelector),
+        blogTypes: selectBlogTypes(useSelector),
+      };
     },
   };
 })();
@@ -86,13 +97,17 @@ export const { useBlogDetails, useBlogDetailsActions, useBlogDetailsState } =
   (function () {
     const createDispatchers = function (dispatch: AppDispatch) {
       return {
-        addBlogDetails(blogDetails: Blog) {
-          dispatch(blogsActions.addBlogDetails(blogDetails));
+        fetchBlogDetail(id: string) {
+          dispatch(blogsThunks.getBlogDetailAsync(id));
         },
 
-        updateBlogDetails(blogDetails: Blog) {
+        add(blogDetails: Blog) {
+          dispatch(blogsActions.addBlog(blogDetails));
+        },
+
+        update(blogDetails: Blog) {
           dispatch(
-            blogsActions.updateBlogDetails({
+            blogsActions.updateBlog({
               id: blogDetails._id,
               blogDetails,
             })
@@ -100,7 +115,7 @@ export const { useBlogDetails, useBlogDetailsActions, useBlogDetailsState } =
         },
 
         remove(id: string) {
-          dispatch(blogsActions.clearBlogDetails(id));
+          dispatch(blogsActions.clearBlog(id));
         },
       };
     };
@@ -147,107 +162,3 @@ export const { useBlogDetails, useBlogDetailsActions, useBlogDetailsState } =
       },
     };
   })();
-
-/**
- * Hook này tạo ra các functions cho việc tương tác với Blog, còn ý tưởng như nào thì ae sang đọc file
- * `useBlog`, t cũng có để ở đó rồi.
- * @param {BlogDataProps} blog Dữ liệu của blog.
- * @returns
- * @example
- * ...
- * import { useBlogInteractionAPI } from 'customHooks/useBlog'
- *
- * function MyComponent({blog, blogIndex}) {
- *   // Ta có likeBlog là 1 interact action
- *   let { extendedBlogInfo, likeBlog } = useBlogInteractionAPI(blog);
- *
- *   let handleLikeButton = () => likeBlog(
- *     // Hàm này sẽ được gọi khi
- *     (data, state) => updateBlogDetail(blog.blog_id, blogIndex, { isLiked: state }),
- *     (state) => updateBlogDetail(blog.blog_id, blogIndex, { isLiked: state })
- *   )
- * }
- * ...
- */
-export function useBlogInteractionActions(blog: Partial<Blog>) {
-  const [extendedBlogInfo, setExtendedBlogInfo] = React.useState({
-    isLiked: blog.isLiked ? true : false,
-  });
-
-  const createToggleInteractionActionsFunc = React.useCallback(
-    /**
-     * @param {"isLiked"} toggleInteraction
-     * @param {string} updateCaseWhenActive
-     * @param {string} updateCaseWhenInActive
-     * @returns
-     */
-    (toggleInteraction, updateCaseWhenActive, updateCaseWhenInActive) => {
-      /**
-       * @param {(data: any, state: boolean) => {}} callWhenAPIResolve Callback gọi khi API resolve
-       * @param {(state: boolean) => {}} callWhenAPIReject Callback gọi khi API reject
-       */
-      return function (callWhenAPIResolve, callWhenAPIReject) {
-        setExtendedBlogInfo((prevState) => {
-          let state = true;
-          let updateCase = updateCaseWhenActive;
-          if (prevState[toggleInteraction]) {
-            state = false;
-            updateCase = updateCaseWhenInActive;
-          }
-          let data = {
-            updateCase: updateCase,
-            updateData: blog._id,
-          };
-          updateUserByCaseAPI(data)
-            .then((data) => {
-              // Update lên store.
-              if (callWhenAPIResolve) callWhenAPIResolve(data, state);
-            })
-            .catch((error) => {
-              if (callWhenAPIReject) callWhenAPIReject(!state);
-              setExtendedBlogInfo((prevState) => ({
-                ...prevState,
-                [toggleInteraction]: !state,
-              }));
-              console.error(error.message);
-            });
-          return { ...prevState, [toggleInteraction]: state };
-        });
-      };
-    },
-    []
-  );
-
-  /**
-   * Hàm này dùng để yêu thích một blog, nó sẽ gửi id của blog về server và tự server nó sẽ xử lý.
-   */
-  const { likeBlog } = React.useMemo(
-    () => ({
-      /**
-       * Hàm này dùng để yêu thích/bỏ yêu thích một địa điểm nào đó. Nhận vào hai tham số là
-       * `callWhenAPIResolve` và `callWhenAPIReject`
-       */
-      likeBlog: createToggleInteractionActionsFunc(
-        "isLiked",
-        UPDATE_USER_CASES["addEle:savedBlogs"],
-        UPDATE_USER_CASES["removeEle:savedBlogs"]
-      ),
-    }),
-    []
-  );
-
-  React.useEffect(() => {
-    // console.log("Isliked from blog: ", Boolean(blog.isLiked));
-    if (Boolean(blog.isLiked) !== extendedBlogInfo.isLiked) {
-      setExtendedBlogInfo((prevState) => ({
-        ...prevState,
-        isLiked: Boolean(blog.isLiked),
-      }));
-    }
-  }, [blog.isLiked, blog.isVisited]);
-
-  return {
-    extendedBlogInfo,
-    likeBlog,
-  };
-}
