@@ -77,20 +77,21 @@ export default function BlogsScreen() {
         >
           <FC.RectangleButton
             type="highlight"
-            activeColor="type_1"
             defaultColor="type_5"
             style={[{ justifyContent: "space-between" }, Styles.spacings.mt_12]}
+            onPress={() => {
+              router.navigate("/blogs/create");
+            }}
           >
             {(isActive, currentLabelStyle) => (
               <>
-                <FC.AppText size="h2" style={{ width: 140 }}>
+                <FC.AppText
+                  size="h2"
+                  style={[{ width: 140 }, currentLabelStyle]}
+                >
                   {_languageData["banner_button"][language.code]}
                 </FC.AppText>
-                <Ionicons
-                  name="chevron-forward-outline"
-                  style={currentLabelStyle}
-                  size={25}
-                />
+                <Ionicons name="pencil" style={currentLabelStyle} size={25} />
               </>
             )}
           </FC.RectangleButton>

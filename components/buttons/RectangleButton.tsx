@@ -75,7 +75,11 @@ export default function RectangleButton(props: RectangleButtonProps) {
   }
 
   return (
-    <Button {...rest} style={type === "none" ? {} : contentContainerStyle}>
+    <Button
+      {...rest}
+      underlayColor={buttonColors.underlayColor}
+      style={type === "none" ? {} : contentContainerStyle}
+    >
       {type === "none" ? (
         <View style={contentContainerStyle}>{<>{ButtonChildren}</>}</View>
       ) : (

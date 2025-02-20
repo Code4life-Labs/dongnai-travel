@@ -15,7 +15,7 @@ import { styles } from "./styles";
  * @FromSunNews
  * @NguyenAnhTuan1912
  */
-export default function Loading() {
+export default function GlobalLoading() {
   const { theme } = useTheme();
   const { status } = useStatus();
 

@@ -115,7 +115,7 @@ export class BlogAPI {
   }
 
   /**
-   * Unmark `like` on a blog
+   * Delete blog
    * @param userId
    * @param blogId
    * @returns
@@ -135,6 +135,25 @@ export class BlogAPI {
     } catch (error: any) {
       console.warn(error.message);
       return false;
+    }
+  }
+
+  /**
+   * Get suggested titles
+   * @param userId
+   * @param blogId
+   * @returns
+   */
+  async postToGetSuggestedTitles(data: any) {
+    try {
+      const url = RouteUtils.getPath("blogs", "content", "sugggested-titles");
+
+      const response = await this.api.post(url, data);
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
     }
   }
 }

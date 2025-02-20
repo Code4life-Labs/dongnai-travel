@@ -10,6 +10,7 @@ import type { Place, PlaceType } from "./type";
 type GetPlacesAsyncOptions = {
   limit?: number | string;
   skip?: number | string;
+  name?: string;
   type?: string;
   userId?: string;
 };
@@ -36,11 +37,12 @@ export class PlaceAPI {
    */
   async getPlacesAsync(options: GetPlacesAsyncOptions) {
     try {
-      const { limit = 10, skip = 0, type = "all", userId } = options;
+      const { limit = 10, skip = 0, type = "all", name, userId } = options;
       const url = RouteUtils.getPath("places");
       let query = `limit=${limit}&skip=${skip}&types=${type}`;
 
       if (userId) query += `&userId=${userId}`;
+      if (name) query += `&name=${name}`;
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
 
