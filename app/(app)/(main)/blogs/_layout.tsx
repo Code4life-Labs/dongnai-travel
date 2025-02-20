@@ -35,7 +35,22 @@ export default function BlogsLayout() {
         <Stack.Screen
           name="[id]/comments"
           options={{
-            title: "Blogs",
+            title: "Blog Comments",
+          }}
+        />
+
+        <Stack.Screen
+          name="create"
+          options={{
+            title: "Blog Editor",
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="prepare-to-publish"
+          options={{
+            title: "Prepare to publish",
           }}
         />
       </Stack>

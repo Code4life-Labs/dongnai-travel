@@ -1,13 +1,14 @@
 import React from "react";
 import { View, Animated } from "react-native";
 
-// Import from hooks
-import { useTheme } from "@/hooks/useTheme";
-
 // Import from local
 // Import components
 import TabButton from "./TabButton";
 import HighlightTabButton from "./HighlightTabButton";
+
+// Import from hooks
+import { useTheme } from "@/hooks/useTheme";
+import { useStatus } from "@/hooks/useStatus";
 
 // Import data
 import TabButtonsData from "./tab_buttons.json";
@@ -31,6 +32,7 @@ import type { TabButtonProps } from "./type";
  */
 export default function BottomTabBar(props: BottomTabBarProps) {
   const { theme } = useTheme();
+  const { status } = useStatus();
 
   const dotWidth = 5;
   const buttonCounts = props.state.routes.length;
@@ -58,6 +60,8 @@ export default function BottomTabBar(props: BottomTabBarProps) {
     dotMovementDistance,
     centerDotDistance
   );
+
+  if (!status.isBottomTabShown) return;
 
   return (
     <View

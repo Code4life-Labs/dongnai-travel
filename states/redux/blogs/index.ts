@@ -141,12 +141,17 @@ export const blogsSlice = createSlice({
     builder.addCase(blogsThunks.getBlogsAsync.fulfilled, (state, action) => {
       if (!action.payload) return;
 
-      let [typeOfBlog, blogs] = action.payload;
+      const [type, blogs] = action.payload;
 
-      if (blogs.length !== 0) {
-        state.briefBlogListInformation.type = typeOfBlog;
+      if (!blogs || blogs.length === 0) return;
+
+      if (state.briefBlogListInformation.type === type) {
         state.briefBlogListInformation.data =
           state.briefBlogListInformation.data.concat(blogs);
+        state.briefBlogListInformation.skip += blogs.length;
+      } else {
+        state.briefBlogListInformation.type = type;
+        state.briefBlogListInformation.data = blogs;
         state.briefBlogListInformation.skip += blogs.length;
       }
     });
@@ -157,9 +162,6 @@ export const blogsSlice = createSlice({
         if (!action.payload) return;
 
         let [blogId, blog] = action.payload;
-
-        console.log("BlogID:", blogId);
-        console.log("Blog Metadata:", blog);
 
         state.blogDict[blogId] = blog;
       }
@@ -173,6 +175,42 @@ export const blogsSlice = createSlice({
         state.types = state.types.concat(_DefaultTypes, action.payload);
       }
     );
+
+    builder.addCase(blogsThunks.likeBlogAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      // Update in list
+      for (const blog of state.briefBlogListInformation.data) {
+        if (blog._id === action.payload) {
+          blog.isLiked = true;
+          blog.totalFavorites! += 1;
+        }
+      }
+
+      // Update in detail (if has)
+      if (state.blogDict[action.payload]) {
+        state.blogDict[action.payload].isLiked = true;
+        state.blogDict[action.payload].totalFavorites! += 1;
+      }
+    });
+
+    builder.addCase(blogsThunks.unlikeBlogAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      // Update in list
+      for (const blog of state.briefBlogListInformation.data) {
+        if (blog._id === action.payload) {
+          blog.isLiked = false;
+          blog.totalFavorites! -= 1;
+        }
+      }
+
+      // Update in detail (if has)
+      if (state.blogDict[action.payload]) {
+        state.blogDict[action.payload].isLiked = false;
+        state.blogDict[action.payload].totalFavorites! -= 1;
+      }
+    });
   },
 });
 

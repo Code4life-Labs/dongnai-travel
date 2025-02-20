@@ -1,5 +1,6 @@
-import React from "react";
 import { View } from "react-native";
+import React from "react";
+import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 // Import from components
@@ -49,7 +50,8 @@ export default function AppHeader(
       ? { backgroundColor: "rgba(255, 255, 255, 0)" }
       : {},
   ];
-  const LeftPart = (props as any).back ? (
+
+  const LeftPart = router.canGoBack() ? (
     <StackLeftPart {...(props as AppStackHeaderProps)} />
   ) : (
     <TabLeftPart {...(props as AppTabHeaderProps)} />

@@ -5,10 +5,10 @@ export class UserStorage {
   constructor() {}
 
   async save(data: any) {
-    await StorageUtils.setItemAsync("USER", data);
+    await StorageUtils.setItemAsync("REMEMBERED_USER", data);
   }
 
   async get() {
-    return await StorageUtils.getItemAsync("USER");
+    return await StorageUtils.getItemAsync("REMEMBERED_USER");
   }
 }

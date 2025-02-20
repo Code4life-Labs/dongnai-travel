@@ -9,7 +9,7 @@ import BottomSheetScroll from "./bottom_sheet/BottomSheetScroll";
 import { CircleButton, RectangleButton } from "./buttons";
 import CheckBoxText from "./checkbox_text";
 import TabBarIcon from "./navigation/TabBarIcon";
-import Loading from "./loading";
+import GlobalLoading from "./global-loading";
 import HorizontalPlaceCard from "./horizontal_place_card";
 import HorizontalPlaceCardSkeleton from "./horizontal_place_card/skeleton";
 import HorizontalBlogCard from "./horizontal_blog_card";
@@ -20,6 +20,8 @@ import Speech from "./speech";
 import Skeleton from "./skeleton";
 import DropDown from "./drop_down";
 import NoData from "./no-data";
+import Search from "./search/search";
+import SearchResultList from "./search/search-result-list";
 
 export const FC = {
   AppText,
@@ -31,7 +33,7 @@ export const FC = {
   UnorderedList: AppUnorderedList,
   AppTabSlider,
   TabBarIcon,
-  Loading,
+  GlobalLoading,
   ButtonsScrollBar,
   BottomTabBar,
   BottomSheetScroll,
@@ -49,4 +51,6 @@ export const FC = {
   Skeleton,
   DropDown,
   NoData,
+  Search,
+  SearchResultList,
 };

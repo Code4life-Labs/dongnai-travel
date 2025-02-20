@@ -69,7 +69,7 @@ export type Place = {
   totalReviews: number;
   totalFavorites: number;
   totalVisits: number;
-  isLiked: boolean;
+  isFavorited: boolean;
   isVisited: boolean;
   reviews: Array<any>;
 } & $Extendable;

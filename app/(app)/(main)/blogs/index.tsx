@@ -50,7 +50,6 @@ export default function BlogsScreen() {
   React.useEffect(() => {
     if (!blogs || blogs.length === 0) {
       blogsDispatchers.fetchBlogs(state.currentType);
-      blogsDispatchers.fetchBlogTypes();
     }
   }, [blogs]);
 
@@ -60,6 +59,7 @@ export default function BlogsScreen() {
     //   pathname: "/blogs/[id]",
     //   params: { id: "test" },
     // });
+    blogsDispatchers.fetchBlogTypes();
   }, []);
 
   return (
@@ -77,20 +77,21 @@ export default function BlogsScreen() {
         >
           <FC.RectangleButton
             type="highlight"
-            activeColor="type_1"
             defaultColor="type_5"
             style={[{ justifyContent: "space-between" }, Styles.spacings.mt_12]}
+            onPress={() => {
+              router.navigate("/blogs/create");
+            }}
           >
             {(isActive, currentLabelStyle) => (
               <>
-                <FC.AppText size="h2" style={{ width: 140 }}>
+                <FC.AppText
+                  size="h2"
+                  style={[{ width: 140 }, currentLabelStyle]}
+                >
                   {_languageData["banner_button"][language.code]}
                 </FC.AppText>
-                <Ionicons
-                  name="chevron-forward-outline"
-                  style={currentLabelStyle}
-                  size={25}
-                />
+                <Ionicons name="pencil" style={currentLabelStyle} size={25} />
               </>
             )}
           </FC.RectangleButton>
@@ -141,11 +142,7 @@ export default function BlogsScreen() {
         }
         renderItem={(item) => (
           <View style={Styles.spacings.ph_18}>
-            <FC.HorizontalBlogCard
-              data={item.item}
-              type={state.currentType}
-              blogIndex={item.index}
-            />
+            <FC.HorizontalBlogCard data={item.item} type={state.currentType} />
           </View>
         )}
         keyExtractor={(item) => item._id as string}
