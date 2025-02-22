@@ -1,10 +1,14 @@
 // Import classes
 import { API } from "@/classes/API";
 
+// Import objects
+import { UserManager } from "../user";
+
 // Import utils
 import { RouteUtils } from "@/utils/route";
 
 // Import types
+import type { AxiosRequestConfig } from "axios";
 import type { Blog, BlogType } from "./type";
 
 type GetBlogsAsyncOptions = {
@@ -149,6 +153,36 @@ export class BlogAPI {
       const url = RouteUtils.getPath("blogs", "content", "sugggested-titles");
 
       const response = await this.api.post(url, data);
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Upload blog
+   * @param data
+   */
+  async postBlog(userId: string, data: FormData, configs?: AxiosRequestConfig) {
+    try {
+      const url = RouteUtils.getPath("users", userId, "blog");
+      const userInStorage = await UserManager.Storage.get();
+
+      configs = Object.assign(
+        {},
+        {
+          headers: {
+            Authorization: API.generateBearerToken(userInStorage.token),
+          },
+        },
+        configs
+      );
+
+      console.log("Configs:", configs);
+
+      const response = await this.api.post(url, data, configs);
 
       return response.data.data;
     } catch (error: any) {

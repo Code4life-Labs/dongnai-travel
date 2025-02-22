@@ -35,6 +35,12 @@ export const styles = StyleSheet.create({
     ...Styles.shapes.rounded_8,
   },
 
+  bd_content_image_button: {
+    width: Styles.dimension.screenWidth / 2,
+    aspectRatio: 1,
+    overflow: "hidden",
+  },
+
   float_button_container: {
     flexDirection: "row",
     justifyContent: "center",

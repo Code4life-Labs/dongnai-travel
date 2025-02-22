@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -24,7 +25,8 @@ import { createSearchWithResultList } from "@/hocs/create-result-list";
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/hooks/useAuth";
-import { useStatus } from "@/hooks/useStatus";
+import { useBlogs } from "@/hooks/useBlog";
+import { useLanguage } from "@/hooks/useLanguage";
 import { useStatusActions } from "@/hooks/useStatus";
 import { usePlacesState } from "@/hooks/usePlace";
 import { useStateManager } from "@/hooks/useStateManager";
@@ -32,8 +34,10 @@ import { useStateManager } from "@/hooks/useStateManager";
 // Import objects
 import { PlaceManager } from "@/objects/place";
 import { BlogManager } from "@/objects/blog";
+import { Library } from "@/objects/others/library";
 
 // Import utils
+import { MEDIA_FILE_SIZE_LIMIT } from "@/utils/constants";
 import { StringUtils } from "@/utils/string";
 
 // Import local state
@@ -43,6 +47,9 @@ import { StateManager } from "@/screens/prepare-to-public-blog/state";
 import { Styles } from "@/styles";
 import { styles } from "@/screens/prepare-to-public-blog/styles";
 
+// Import types
+import type { UploadBlog } from "@/objects/blog/type";
+
 const MyPlaceSearchResultList = createSearchWithResultList([
   async (text) => {
     let data = await PlaceManager.Api.getPlacesAsync({ name: text });
@@ -50,42 +57,18 @@ const MyPlaceSearchResultList = createSearchWithResultList([
   },
 ]);
 
-async function pickImageFromLibrary(options: ImagePicker.ImagePickerOptions) {
-  try {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      return undefined;
-    }
-
-    options = Object.assign(
-      {},
-      {
-        mediaTypes: ["images"],
-        quality: 1,
-        base64: true,
-      },
-      options
-    );
-
-    const result = await ImagePicker.launchImageLibraryAsync(options);
-
-    if (result.canceled) return undefined;
-    return result;
-  } catch (error: any) {
-    console.log("Image pick result error: ", error.message);
-    return undefined;
-  }
-}
-
 export default function PrepareToPublishBlogScreen() {
   const { theme } = useTheme();
   const { user } = useAuth();
-  const placesState = usePlacesState();
+  const { language } = useLanguage();
+  const { blogTypes, preparedPublishBlog } = useBlogs();
   const statusDispatchers = useStatusActions();
   const [state, stateFns] = useStateManager(
     StateManager.getInitialState(),
     StateManager.getStateFns
   );
+
+  const _languageData = language.data["prepareToPublishBlogScreen"];
 
   const {
     control,
@@ -104,28 +87,48 @@ export default function PrepareToPublishBlogScreen() {
    * @param {any} data dữ liệu được lấy từ form.
    * @returns
    */
-  const handlePostBlogSubmit = (data: any) => {
-    if (!data.name) {
+  const handlePublishBlog = (data: any) => {
+    if (!data.name || !user || !preparedPublishBlog) {
       return;
     }
 
-    let blog = {
-      name: data.name,
-      avatar: state.presentationImage,
-      userFavoritesTotal: 0,
-      userCommentsTotal: 0,
-      type: state.type,
-      mentionedPlaces: state.mentionedPlaces.map((place) => place._id),
-      authorId: user!._id,
-      isApproved: false,
-    };
+    const formData = new FormData();
+    let index = 0;
+    for (const image of preparedPublishBlog.images!) {
+      formData.append("images", {
+        uri: image.uri,
+        type: image.type!,
+        mimeType: image.mimeType!,
+        name: image.fileName!,
+      } as any);
+      index++;
+    }
 
-    statusDispatchers.setIsLoading(true);
-    BlogManager.Storage.savePublishContent({
-      blog: blog,
-      content: state.content,
-    }).then(() => {
-      statusDispatchers.setIsLoading(false);
+    formData.append("name", data.name);
+    formData.append("typeId", state.type!);
+    formData.append("content", preparedPublishBlog.content);
+    formData.append(
+      "mentionedPlaces",
+      JSON.stringify(state.mentionedPlaces.map((place) => place._id) as any)
+    );
+    formData.append("authorId", user._id);
+    formData.append("coverImage", {
+      uri: state.presentationImage!.uri,
+      type: state.presentationImage!.type!,
+      mimeType: state.presentationImage!.mimeType!,
+      name: "coverimage-" + state.presentationImage!.fileName!,
+    } as any);
+
+    console.log("File:", JSON.stringify(formData, null, 2));
+
+    // Upload blog here
+    BlogManager.Api.postBlog(user._id, formData, {
+      onUploadProgress(e) {
+        console.log("Progress:", e.progress);
+        console.log("Total:", e.total);
+      },
+    }).then((data) => {
+      console.log("Upload Blog:", data);
     });
   };
 
@@ -153,7 +156,9 @@ export default function PrepareToPublishBlogScreen() {
       >
         <View style={[Styles.spacings.ph_18, { paddingBottom: 10 }]}>
           {/* TextInput để nhập name cho blog */}
-          <FC.AppText size="h4">Blog's name</FC.AppText>
+          <FC.AppText size="h4">
+            {_languageData.blog_name[language.code]}
+          </FC.AppText>
           <View
             style={{
               display: "flex",
@@ -174,7 +179,7 @@ export default function PrepareToPublishBlogScreen() {
                 name="name"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <FC.Input
-                    label="Enter blog's name here"
+                    label={_languageData.input_blog_name[language.code]}
                     isPassword={false}
                     onChange={onChange}
                     onBlur={onBlur}
@@ -238,24 +243,31 @@ export default function PrepareToPublishBlogScreen() {
         {/* Button mở ImagePicker trong Native */}
         <View style={[Styles.spacings.mv_12, Styles.spacings.ph_18]}>
           <FC.AppText size="h4" style={Styles.spacings.mb_12}>
-            Blog's image
+            {_languageData.blog_cover[language.code]}
           </FC.AppText>
           <FC.RectangleButton
             shape="rounded_8"
             onPress={() => {
-              pickImageFromLibrary({
+              Library.pickImage({
+                base64: false,
                 allowsEditing: true,
-              }).then((result) => {
-                if (result) {
-                  stateFns.setPresentationImage(
-                    `data:image/png;base64,${result.assets[0].base64}`
-                  );
+              }).then((image) => {
+                if (image && !image.canceled) {
+                  const asset = image.assets[0];
+
+                  if (asset.fileSize! > MEDIA_FILE_SIZE_LIMIT) {
+                    Alert.alert(
+                      `Image size must be less than ${MEDIA_FILE_SIZE_LIMIT / 1024 / 1024} Mb`
+                    );
+                    return;
+                  }
+                  stateFns.setPresentationImage(asset);
                 }
               });
             }}
             style={Styles.spacings.pv_12}
           >
-            Choose an image
+            {_languageData.blog_cover_pick_image[language.code]}
           </FC.RectangleButton>
           <View
             style={[
@@ -270,11 +282,11 @@ export default function PrepareToPublishBlogScreen() {
             {state.presentationImage ? (
               <Image
                 style={{ width: "100%", aspectRatio: 1, resizeMode: "contain" }}
-                source={{ uri: state.presentationImage }}
+                source={{ uri: state.presentationImage.uri }}
               />
             ) : (
               <FC.AppText color="tertiary">
-                Blog image will show up here
+                {_languageData.blog_cover_image_placeholder[language.code]}
               </FC.AppText>
             )}
           </View>
@@ -283,11 +295,11 @@ export default function PrepareToPublishBlogScreen() {
         {/* Type của blog, một blog chỉ được có một type duy nhất, bởi vì chính những blog này đã có kiểu là "Blog du lịch" */}
         <View style={[Styles.spacings.mv_12, Styles.spacings.ph_18]}>
           <FC.AppText size="h4" style={Styles.spacings.mb_12}>
-            Blog's type
+            {_languageData.blog_type[language.code]}
           </FC.AppText>
           <View style={{ flexDirection: "row" }}>
-            {placesState.placeTypes.map((type) => {
-              let isActive = type.value === state.type;
+            {blogTypes.map((type) => {
+              let isActive = type._id === state.type;
               return (
                 <FC.RectangleButton
                   key={type._id}
@@ -298,7 +310,7 @@ export default function PrepareToPublishBlogScreen() {
                   shape="capsule"
                   style={Styles.spacings.me_12}
                   onPress={() => {
-                    stateFns.setType(type.value);
+                    stateFns.setType(type._id);
                   }}
                 >
                   {(isActive, currentLabelStyle) => (
@@ -317,7 +329,7 @@ export default function PrepareToPublishBlogScreen() {
           size="h4"
           style={[Styles.spacings.mb_12, Styles.spacings.mh_18]}
         >
-          Mentioned places
+          {_languageData.mentioned_places[language.code]}
         </FC.AppText>
         <MyPlaceSearchResultList
           style={Styles.spacings.mh_18}
@@ -381,11 +393,11 @@ export default function PrepareToPublishBlogScreen() {
           type="opacity"
           shape="capsule"
           onPress={() => {
-            handleSubmit(handlePostBlogSubmit)();
+            handleSubmit(handlePublishBlog)();
           }}
           style={[Styles.spacings.pv_16, Styles.spacings.mh_18]}
         >
-          Publish
+          {_languageData.publish_button[language.code]}
         </FC.RectangleButton>
       </View>
 

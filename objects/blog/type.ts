@@ -1,5 +1,6 @@
 // Import types
-import { Place } from "../place/type";
+import type { Place } from "../place/type";
+import type { ImagePickerAsset } from "expo-image-picker";
 
 export type BlogType = {
   _id: string;
@@ -31,8 +32,9 @@ export type $Extendable = {
   _id: string;
   name: string;
   coverImage: string;
-  contentUrl: string;
+  content: string;
   isApproved: boolean;
+  images: Array<string>;
   readTime: number;
   createdAt: number;
   updatedAt: number;
@@ -54,3 +56,10 @@ export type Blog = {
   content?: string;
   plainContent?: string;
 } & $Extendable;
+
+export type UploadBlog = {
+  images: Array<ImagePickerAsset>;
+} & Omit<
+  BlogModel,
+  "_id" | "readTime" | "images" | "createdAt" | "updatedAt" | "isApproved"
+>;

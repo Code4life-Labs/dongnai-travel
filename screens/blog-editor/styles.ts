@@ -6,9 +6,7 @@ export const styles = StyleSheet.create({
   },
 
   buttonsContainer: {
-    position: "absolute",
     flexDirection: "row",
-    bottom: 18,
-    right: 18,
+    justifyContent: "flex-end",
   },
 });

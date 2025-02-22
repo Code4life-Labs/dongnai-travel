@@ -70,9 +70,9 @@ export default function BlogDetailScreen() {
     if (!blog || (blog && blog._id !== id)) {
       console.log("Go here?");
       blogDispatchers.fetchBlogDetail(id);
-      import("@/assets/mock-data/blog/content.json").then((data) => {
-        setContent(data.data);
-      });
+      // import("@/assets/mock-data/blog/content.json").then((data) => {
+      //   setContent(data.data);
+      // });
 
       if (relatedBlogs.length === 0) {
         // BlogManager.Api.getBlogsAsync({
@@ -215,11 +215,42 @@ export default function BlogDetailScreen() {
           />
         </View>
 
-        {/* Blog Content */}
+        {/* Blog content */}
         <View style={styles.bd_content_container}>
-          {content && <Markdown>{content}</Markdown>}
+          {blog.content && <Markdown>{blog.content}</Markdown>}
         </View>
 
+        {/* Blog images */}
+        <View style={styles.bd_content_container}>
+          <ScrollView
+            style={Styles.spacings.mb_12}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {blog.images.map((url, index) => {
+              let actualStyle: Array<any> = [
+                styles.bd_content_image_button,
+                Styles.spacings.me_18,
+              ];
+              return (
+                <FC.RectangleButton
+                  isOnlyContent
+                  type="highlight"
+                  shape="rounded_8"
+                  style={actualStyle}
+                  key={url}
+                >
+                  <Image
+                    source={{ uri: url }}
+                    style={{ width: "100%", aspectRatio: 1 }}
+                  />
+                </FC.RectangleButton>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        {/* Related blogs */}
         <View
           style={[
             styles.bd_content_container,

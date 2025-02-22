@@ -21,7 +21,21 @@ export const blogsSelectors = {
     return state.blogs.blogDict[blogId];
   },
 
+  /**
+   * Get types of blog
+   * @param state
+   * @returns
+   */
   selectBlogTypes(state: AppState) {
     return state.blogs.types;
+  },
+
+  /**
+   * Get blog data which is prepared to publish
+   * @param state
+   * @returns
+   */
+  selectPreparedPublishBlog(state: AppState) {
+    return state.blogs.preparedPublishBlog;
   },
 };

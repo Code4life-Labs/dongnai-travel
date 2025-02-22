@@ -6,13 +6,14 @@ import { BooleanUtils } from "@/utils/boolean";
 import { NumberUtils } from "@/utils/number";
 
 // Import types
-import type { Blog, BlogType } from "@/objects/blog/type";
+import type { Blog, BlogType, UploadBlog } from "@/objects/blog/type";
 
 import { blogsThunks } from "./middlewares";
 
 type InitialState = {
   types: Array<BlogType>;
   blogDict: Record<string, Blog>;
+  preparedPublishBlog: UploadBlog | null;
   briefBlogListInformation: {
     type: string;
     limit: number;
@@ -45,6 +46,7 @@ const _DefaultTypes = [
 
 const initialState: InitialState = {
   types: [],
+  preparedPublishBlog: null,
   blogDict: Object(),
   briefBlogListInformation: _createDefaultBriefBlog(),
 };
@@ -129,12 +131,34 @@ export const blogsSlice = createSlice({
     },
 
     /**
-     * Use to refresh current blogs
+     * Use to refresh current publish blogs
      * @param state
      * @param action
      */
     clearBriefBlogInformation(state) {
       state.briefBlogListInformation = _createDefaultBriefBlog();
+    },
+
+    /**
+     * Use to set data of blog
+     * @param state
+     * @param action
+     */
+    setPreparedPublishBlog(state, action) {
+      state.preparedPublishBlog = action.payload;
+    },
+
+    /**
+     * Use to update data of publish blog
+     * @param state
+     * @param action
+     */
+    updatePreparedPublishBlog(state, action) {
+      state.preparedPublishBlog = Object.assign(
+        {},
+        state.preparedPublishBlog,
+        action.payload
+      );
     },
   },
   extraReducers(builder) {
