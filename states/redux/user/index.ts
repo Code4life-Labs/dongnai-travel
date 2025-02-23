@@ -3,9 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 // Import objects
 import { UserManager } from "@/objects/user";
 
-// Import utils
-import { StorageUtils } from "@/utils/storage";
-
 // Import types
 import { User } from "@/objects/user/type";
 

@@ -22,8 +22,10 @@ export default function TabLayout() {
 
   React.useEffect(() => {
     if (
-      ((segments as string[]).includes("create") && hide) ||
-      ((segments as string[]).includes("prepare-to-publish") && hide)
+      hide &&
+      ((segments as string[]).includes("create") ||
+        (segments as string[]).includes("prepare-to-publish") ||
+        (segments as string[]).includes("comments"))
     ) {
       statusDispatchers.setIsBottomTabShown(false);
     } else {

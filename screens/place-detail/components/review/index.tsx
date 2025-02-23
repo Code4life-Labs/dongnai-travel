@@ -7,22 +7,40 @@ import { FC } from "@/components";
 // Import hooks
 import { useLanguage } from "@/hooks/useLanguage";
 import { usePlaceDetailsState } from "@/hooks/usePlace";
+import { useStateManager } from "@/hooks/useStateManager";
+
+// Import objects
+import { PlaceManager } from "@/objects/place";
+
+// Import local state
+import { StateManager } from "./state";
 
 // Import styles
 import { Styles } from "@/styles";
-import { styles } from "../styles";
+import { styles } from "../../styles";
 
 export default function ReviewsSlide({ placeId }: { placeId: string }) {
   const { language } = useLanguage();
-
+  const [state, stateFns] = useStateManager(
+    StateManager.getInitialState(),
+    StateManager.getStateFns
+  );
   const placeDetails = usePlaceDetailsState(placeId);
 
   const _languageData = (language.data as any)["placeDetailScreen"] as any;
 
   React.useEffect(() => {
-    // setTimeout(() => {
-    //   if (placeDetails) setReviews(placeDetails.reviews);
-    // }, 500);
+    let query = {
+      placeId: placeDetails._id,
+      skip: 0,
+      limit: 20,
+    };
+
+    PlaceManager.Api.getPlaceReviews(query).then((data) => {
+      if (data === null || data.length === 0) return;
+
+      stateFns.setReviews(data);
+    });
   }, []);
 
   if (!placeDetails) {
@@ -40,7 +58,7 @@ export default function ReviewsSlide({ placeId }: { placeId: string }) {
         {/* Rating statistic */}
         <View style={styles.pd_content_rr_stats_container}>
           <View style={styles.pd_content_rr_rating_point_container}>
-            <FC.AppText size="h0">4.6</FC.AppText>
+            <FC.AppText size="h0">{placeDetails.rating}</FC.AppText>
             <FC.AppText size="body2">out of 5</FC.AppText>
           </View>
 

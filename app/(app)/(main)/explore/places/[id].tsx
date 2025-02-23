@@ -68,12 +68,10 @@ export default function PlaceDetailsScreen() {
 
   React.useEffect(() => {
     if (place) navigation.setOptions({ title: place.name });
-    if (!place || (place && place._id !== id)) {
-      placeDetailsDispatchers.fetchPlaceDetail(id);
-      return () => {
-        placeDetailsDispatchers.remove(id);
-      };
-    }
+    placeDetailsDispatchers.fetchPlaceDetail(id);
+    return () => {
+      placeDetailsDispatchers.remove(id);
+    };
   }, [id, language.code]);
 
   if (!place) return <PlaceDetailsSkeletonScreen />;
@@ -96,6 +94,8 @@ export default function PlaceDetailsScreen() {
       placeDetailsDispatchers.unvisitPlace
     );
   };
+
+  console.log("Place:", place);
 
   const presentationImageUrl =
     place.photos && place.photos.length > 0 ? place.photos[0] : undefined;

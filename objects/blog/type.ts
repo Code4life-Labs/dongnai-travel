@@ -1,5 +1,6 @@
 // Import types
 import type { Place } from "../place/type";
+import type { User } from "../user/type";
 import type { ImagePickerAsset } from "expo-image-picker";
 
 export type BlogType = {
@@ -63,3 +64,25 @@ export type UploadBlog = {
   BlogModel,
   "_id" | "readTime" | "images" | "createdAt" | "updatedAt" | "isApproved"
 >;
+
+export type BlogCommentModel = {
+  _id: string;
+  userId: string;
+  blogId: string;
+  content: string;
+  updatedAt: number;
+  createdAt: number;
+};
+
+export type BlogComment = {
+  _id: string;
+  user: Partial<User>;
+  blog: Partial<Blog>;
+  content: string;
+  updatedAt: number;
+  createdAt: number;
+};
+
+export type CreateBlogComment = {
+  content: string;
+};

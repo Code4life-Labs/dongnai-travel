@@ -8,6 +8,7 @@ import ButtonsScrollBar from "./buttons_scroll_bar";
 import BottomSheetScroll from "./bottom_sheet/BottomSheetScroll";
 import { CircleButton, RectangleButton } from "./buttons";
 import CheckBoxText from "./checkbox_text";
+import BlogComment from "./blog-comment";
 import TabBarIcon from "./navigation/TabBarIcon";
 import GlobalLoading from "./global-loading";
 import HorizontalPlaceCard from "./horizontal_place_card";
@@ -32,6 +33,7 @@ export const FC = {
   OrderedList: AppOrderedList,
   UnorderedList: AppUnorderedList,
   AppTabSlider,
+  BlogComment,
   TabBarIcon,
   GlobalLoading,
   ButtonsScrollBar,

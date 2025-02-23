@@ -1,3 +1,6 @@
+// Import types
+import type { User } from "../user/type";
+
 type AddressComoponent = {
   shortName: string;
   longName: string;
@@ -73,3 +76,28 @@ export type Place = {
   isVisited: boolean;
   reviews: Array<any>;
 } & $Extendable;
+
+export type PlaceReviewModel = {
+  _id: string;
+  userId: string;
+  placeId: string;
+  content: string;
+  rating: number;
+  updatedAt: number;
+  createdAt: number;
+};
+
+export type PlaceReview = {
+  _id: string;
+  user: Partial<User>;
+  place: Partial<Place>;
+  content: string;
+  rating: number;
+  updatedAt: number;
+  createdAt: number;
+};
+
+export type CreatePlaceReview = {
+  content: string;
+  rating: number;
+};

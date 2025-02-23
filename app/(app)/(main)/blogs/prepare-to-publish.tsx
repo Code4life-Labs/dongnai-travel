@@ -122,7 +122,7 @@ export default function PrepareToPublishBlogScreen() {
     console.log("File:", JSON.stringify(formData, null, 2));
 
     // Upload blog here
-    BlogManager.Api.postBlog(user._id, formData, {
+    BlogManager.Api.postBlog(formData, {
       onUploadProgress(e) {
         console.log("Progress:", e.progress);
         console.log("Total:", e.total);

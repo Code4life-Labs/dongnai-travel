@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     position: "absolute",
-    bottom: 125,
+    bottom: 115,
     ...Styles.spacings.ph_12,
     ...Styles.spacings.pv_6,
     ...Styles.boxShadows.type_1,
