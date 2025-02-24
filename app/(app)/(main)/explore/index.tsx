@@ -29,7 +29,7 @@ import { styles } from "@/screens/explore/styles";
 import { ExploreScreenUtils } from "@/screens/explore/utils";
 
 export default function ExploreScreen() {
-  const { places, placeTypes, placesDispatchers } = usePlaces();
+  const { places, status, placeTypes, placesDispatchers } = usePlaces();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -147,7 +147,7 @@ export default function ExploreScreen() {
         onRefresh={() => {
           placesDispatchers.clear();
         }}
-        refreshing={false}
+        refreshing={status.isFetching}
       />
     </View>
   );

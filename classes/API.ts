@@ -65,12 +65,33 @@ export class API {
    */
   static generateBearerToken(isHTTPHeader: boolean = false) {
     const token = store.getState().user.token;
-    console.log("User:", store.getState().user);
+
+    if (!token) return null;
+
     const result = `Bearer ${token}`;
     if (isHTTPHeader) return { Authorization: result };
     return result;
   }
 
+  /**
+   * Use to add Authorization to Header
+   * @param headers
+   * @returns
+   */
+  static addAuthorizationToHeader(headers: Record<string, any>) {
+    const token = API.generateBearerToken();
+
+    if (token) {
+      headers.Authorization = token;
+    }
+
+    return headers;
+  }
+
+  /**
+   * Use to inject Redux store
+   * @param _store
+   */
   static injectStore(_store: any) {
     store = _store;
   }

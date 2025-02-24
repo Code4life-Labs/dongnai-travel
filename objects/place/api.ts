@@ -41,13 +41,12 @@ export class PlaceAPI {
       const { limit = 10, skip = 0, type = "all", name } = options;
       const url = RouteUtils.getPath("places");
       let query = `limit=${limit}&skip=${skip}&types=${type}`;
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
       if (name) query += `&name=${name}`;
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query), {
-        headers: {
-          Authorization: API.generateBearerToken() as string,
-        },
+        headers,
       });
 
       return response.data.data as Array<Place>;
@@ -66,11 +65,10 @@ export class PlaceAPI {
     try {
       const { id } = options;
       const url = RouteUtils.getPath("places", id);
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
       const response = await this.api.get(url, {
-        headers: {
-          Authorization: API.generateBearerToken() as string,
-        },
+        headers,
       });
       // const data = await import("@/assets/mock-data/place/place.json");
 
@@ -112,6 +110,24 @@ export class PlaceAPI {
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
 
       return response.data.data as Array<PlaceReview>;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   *  Get total review of a place
+   * @param placeId
+   * @returns
+   */
+  async getTotalReviewsOfPlace(placeId: string) {
+    try {
+      const url = RouteUtils.getPath("places", placeId, "total-reviews");
+
+      const response = await this.api.get(url);
+
+      return response.data.data as { count: number };
     } catch (error: any) {
       console.warn(error.message);
       return null;

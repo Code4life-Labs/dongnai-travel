@@ -43,11 +43,10 @@ export class BlogAPI {
       const { limit = 10, skip = 0, type = "all" } = options;
       const url = RouteUtils.getPath("blogs");
       let query = `limit=${limit}&skip=${skip}&types=${type}`;
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query), {
-        headers: {
-          Authorization: API.generateBearerToken() as string,
-        },
+        headers,
       });
 
       return response.data.data as Array<Blog>;
@@ -66,11 +65,10 @@ export class BlogAPI {
     try {
       const { id } = options;
       const url = RouteUtils.getPath("blogs", id);
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
       const response = await this.api.get(url, {
-        headers: {
-          Authorization: API.generateBearerToken() as string,
-        },
+        headers,
       });
       // const data = await import("@/assets/mock-data/blog/blog.json");
 
@@ -108,8 +106,6 @@ export class BlogAPI {
       const { limit = 10, skip = 0, blogId } = options;
       const url = RouteUtils.getPath("blogs", blogId, "comments");
       let query = `limit=${limit}&skip=${skip}`;
-
-      console.log("URL:", url);
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
 

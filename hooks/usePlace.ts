@@ -67,6 +67,10 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
     return _useSelector(placesSelectors.selectPlaceTypes);
   };
 
+  const selectPlacesStatus = function (_useSelector: typeof useSelector) {
+    return _useSelector(placesSelectors.selectCurrentPlacesStatus);
+  };
+
   return {
     /**
      * Use this hook to manage `places` and get actions to
@@ -78,9 +82,11 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
       const placesDispatchers = createDispatchers(dispatch);
       const places = selectPlaces(useSelector);
       const placeTypes = selectPlaceTypes(useSelector);
+      const status = selectPlacesStatus(useSelector);
 
       return {
         places,
+        status,
         placeTypes,
         placesDispatchers,
       };
@@ -103,6 +109,7 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
     usePlacesState() {
       return {
         places: selectPlaces(useSelector),
+        status: selectPlacesStatus(useSelector),
         placeTypes: selectPlaceTypes(useSelector),
       };
     },

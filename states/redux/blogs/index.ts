@@ -19,6 +19,9 @@ type InitialState = {
     limit: number;
     skip: number;
     data: Array<Partial<Blog>>;
+    status: {
+      isFetching: boolean;
+    };
   };
 };
 
@@ -34,6 +37,9 @@ function _createDefaultBriefBlog(limit = 5, skip = 0) {
     limit: limit,
     skip: skip,
     data: [] as Array<Partial<Blog>>,
+    status: {
+      isFetching: false,
+    },
   };
 }
 
@@ -162,6 +168,10 @@ export const blogsSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder.addCase(blogsThunks.getBlogsAsync.pending, (state, action) => {
+      state.briefBlogListInformation.status.isFetching = false;
+    });
+
     builder.addCase(blogsThunks.getBlogsAsync.fulfilled, (state, action) => {
       if (!action.payload) return;
 
@@ -173,7 +183,9 @@ export const blogsSlice = createSlice({
         state.briefBlogListInformation.data =
           state.briefBlogListInformation.data.concat(blogs);
         state.briefBlogListInformation.skip += blogs.length;
+        state.briefBlogListInformation.status.isFetching = false;
       } else {
+        state.briefBlogListInformation = _createDefaultBriefBlog();
         state.briefBlogListInformation.type = type;
         state.briefBlogListInformation.data = blogs;
         state.briefBlogListInformation.skip += blogs.length;

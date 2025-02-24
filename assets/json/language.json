@@ -278,13 +278,13 @@
       "vi": "Địa điểm liên quan",
       "en": "Related Places"
     },
-    "review": {
+    "reviews": {
       "vi": "Nhận xét",
       "en": "Reviews"
     },
-    "review_texth3": {
-      "vi": "Xếp hạng và đánh giá",
-      "en": "Ratings & reviews"
+    "ratings": {
+      "vi": "Điểm",
+      "en": "Ratings"
     },
     "relatedPlacesDataMessage": {
       "vi": "Không có địa điểm nào giống với địa điểm này.",

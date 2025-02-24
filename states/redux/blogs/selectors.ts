@@ -13,6 +13,15 @@ export const blogsSelectors = {
   },
 
   /**
+   * Get current status of current brief blog
+   * @param state
+   * @returns
+   */
+  selectCurrentBlogsStatus(state: AppState) {
+    return state.blogs.briefBlogListInformation.status;
+  },
+
+  /**
    * Get blog details in redux store by id
    * @param state
    * @returns

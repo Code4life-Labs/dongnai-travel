@@ -67,6 +67,10 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
     return _useSelector(blogsSelectors.selectBlogTypes);
   };
 
+  const selectBlogsStatus = function (_useSelector: typeof useSelector) {
+    return _useSelector(blogsSelectors.selectCurrentBlogsStatus);
+  };
+
   const selectPreparedPublishBlog = function (
     _useSelector: typeof useSelector
   ) {
@@ -84,10 +88,12 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
       const blogsDispatchers = createDispatchers(dispatch);
       const blogs = selectBlogs(useSelector);
       const blogTypes = selectBlogTypes(useSelector);
+      const status = selectBlogsStatus(useSelector);
       const preparedPublishBlog = selectPreparedPublishBlog(useSelector);
 
       return {
         blogs,
+        status,
         blogTypes,
         preparedPublishBlog,
         blogsDispatchers,
@@ -111,6 +117,7 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
     useBlogsState() {
       return {
         blogs: selectBlogs(useSelector),
+        status: selectBlogsStatus(useSelector),
         blogTypes: selectBlogTypes(useSelector),
         preparedPublishBlog: selectPreparedPublishBlog(useSelector),
       };

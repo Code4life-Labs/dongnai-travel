@@ -17,6 +17,7 @@ import Feather from "react-native-vector-icons/Feather";
 
 // Import components
 import { FC } from "@/components";
+import SetRating from "@/screens/place-reviews/components/set-rating";
 
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
@@ -24,18 +25,18 @@ import { useAuth } from "@/hooks/useAuth";
 import { useStateManager } from "@/hooks/useStateManager";
 
 // Import objects
-import { BlogManager } from "@/objects/blog";
+import { PlaceManager } from "@/objects/place";
 
 // Import local state
-import { StateManager } from "@/screens/blog-comments/state";
+import { StateManager } from "@/screens/place-reviews/state";
 
 // Import styles
 import { Styles } from "@/styles";
 
 // Import types
-import type { BlogComment } from "@/objects/blog/type";
+import type { PlaceReview } from "@/objects/place/type";
 
-export default function BlogCommentsScreen() {
+export default function PlaceReviewsScreen() {
   const { user } = useAuth();
   const { theme } = useTheme();
   const route = useRoute();
@@ -46,21 +47,22 @@ export default function BlogCommentsScreen() {
     StateManager.getStateFns
   );
 
-  const handleCreateComment = function () {
-    if (!state.commentContent) return;
+  const handleCreateReview = function () {
+    if (!state.reviewContent || !state.reviewRating) return;
 
-    const newComment = {
-      content: state.commentContent,
+    const newReview = {
+      content: state.reviewContent,
+      rating: state.reviewRating,
     };
 
-    BlogManager.Api.postBlogComment(id, newComment).then((data) => {
+    PlaceManager.Api.postPlaceReview(id, newReview).then((data) => {
       if (!data || !user) return;
       // Data will be
       // _id, blogId, userId, content, ...
       // So I have to transform it
-      stateFns.addComment({
+      stateFns.addReview({
         _id: data._id,
-        blog: { _id: data.blogId },
+        place: { _id: data.placeId },
         user: {
           _id: data.userId,
           firstName: user.firstName,
@@ -68,33 +70,35 @@ export default function BlogCommentsScreen() {
           displayName: user.displayName,
         },
         content: data.content,
+        rating: data.rating,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
       });
 
       // Clear input
-      stateFns.setCommentContent("");
+      stateFns.setReviewContent("");
+      stateFns.setReviewRating(0);
     });
   };
 
-  const getCommments = function () {
+  const getReviews = function () {
     let query = {
-      blogId: id,
-      skip: state.comments.length,
+      placeId: id,
+      skip: state.reviews.length,
       limit: 20,
     };
-    BlogManager.Api.getBlogComments(query).then((data) => {
+    PlaceManager.Api.getPlaceReviews(query).then((data) => {
       if (data === null || data.length === 0) return;
 
-      stateFns.setComments(data);
+      stateFns.setReviews(data);
     });
   };
 
   React.useEffect(() => {
-    if (state.comments.length === 0) {
-      getCommments();
+    if (state.reviews.length === 0) {
+      getReviews();
     }
-  }, [state.comments]);
+  }, [state.reviews]);
 
   React.useEffect(() => {
     if (!user) {
@@ -116,7 +120,7 @@ export default function BlogCommentsScreen() {
     >
       {/* FlatList */}
       <FlatList
-        data={state.comments}
+        data={state.reviews}
         style={[
           {
             backgroundColor: theme.background,
@@ -129,13 +133,13 @@ export default function BlogCommentsScreen() {
           Styles.spacings.ph_18,
           Styles.spacings.pt_18,
         ]}
-        onMomentumScrollEnd={() => getCommments()}
+        onMomentumScrollEnd={() => getReviews()}
         scrollEventThrottle={1000}
         stickyHeaderHiddenOnScroll
         stickyHeaderIndices={[0]}
         ListEmptyComponent={
           <FC.AppText style={{ textAlign: "center" }}>
-            There aren't comments yet
+            There aren't reviews yet
           </FC.AppText>
         }
         renderItem={(item) => {
@@ -147,18 +151,18 @@ export default function BlogCommentsScreen() {
             style.push({ borderTopColor: theme.outline, borderTopWidth: 1 });
           }
           return (
-            <FC.BlogComment
+            <FC.PlaceReview
               key={data._id}
-              comment={data}
+              review={data}
               isOwnedByUser={data.user._id === user!._id}
-              onDelete={(commentId) => stateFns.removeComment(commentId)}
+              onDelete={(reviewId) => stateFns.removeReview(reviewId)}
               style={style}
             />
           );
         }}
         keyExtractor={(item) => item._id as string}
         onRefresh={() => {
-          stateFns.clearComments();
+          stateFns.clearReviews();
         }}
         refreshing={false}
       />
@@ -175,6 +179,19 @@ export default function BlogCommentsScreen() {
           }}
         />
       )}
+      <View
+        style={[
+          Styles.spacings.ph_18,
+          Styles.spacings.pv_18,
+          { flexDirection: "row", alignItems: "center" },
+        ]}
+      >
+        <FC.AppText style={Styles.spacings.me_6}>Your ratings:</FC.AppText>
+        <SetRating
+          rating={state.reviewRating}
+          setRating={stateFns.setReviewRating}
+        />
+      </View>
       <View
         style={[
           Styles.spacings.ph_18,
@@ -195,25 +212,25 @@ export default function BlogCommentsScreen() {
           multiline
           onFocus={() => stateFns.setKeyBoardVisible(true)}
           onBlur={() => stateFns.setKeyBoardVisible(false)}
-          value={state.commentContent}
-          onChangeText={stateFns.setCommentContent}
+          value={state.reviewContent}
+          onChangeText={stateFns.setReviewContent}
           style={[
             Styles.spacings.pb_16,
             Styles.spacings.pt_16,
             { flex: 1, maxHeight: 120, color: theme.onBackground },
           ]}
-          placeholder="Write your comment here..."
+          placeholder="Write your review here..."
           placeholderTextColor={theme.outline}
         />
         <FC.CircleButton
-          disabled={!Boolean(state.commentContent)}
+          disabled={!Boolean(state.reviewContent)}
           defaultColor="type_3"
           style={[Styles.spacings.ms_6, Styles.spacings.mb_6]}
           type="highlight"
           setIcon={(isActive, currentLabelStyle) => (
             <Feather name="send" size={16} style={currentLabelStyle} />
           )}
-          onPress={handleCreateComment}
+          onPress={handleCreateReview}
         />
       </View>
     </KeyboardAvoidingView>

@@ -7,6 +7,7 @@ export type PlaceReviewsScreenStateType = ReturnType<typeof getInitialState>;
 function getInitialState() {
   return {
     keyboardVisible: false,
+    reviewRating: 0,
     reviewContent: "",
     reviews: [] as Array<PlaceReview>,
   };
@@ -23,6 +24,12 @@ function getStateFns(changeState: ChangeStateFn<PlaceReviewsScreenStateType>) {
     setReviewContent(content: string) {
       changeState("reviewContent", function () {
         return content;
+      });
+    },
+
+    setReviewRating(rating: number) {
+      changeState("reviewRating", function () {
+        return rating;
       });
     },
 
@@ -48,6 +55,12 @@ function getStateFns(changeState: ChangeStateFn<PlaceReviewsScreenStateType>) {
         data.splice(index, 1);
 
         return data;
+      });
+    },
+
+    clearReviews() {
+      changeState("reviews", function (data) {
+        return [];
       });
     },
   };

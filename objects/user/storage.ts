@@ -11,4 +11,8 @@ export class UserStorage {
   async get() {
     return await StorageUtils.getItemAsync("REMEMBERED_USER");
   }
+
+  async remove() {
+    return await StorageUtils.removeItemAsync("REMEMBERED_USER");
+  }
 }

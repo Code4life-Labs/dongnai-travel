@@ -1,5 +1,5 @@
-import { SimpleBarChart } from "./app_chart/app_bar_chart";
 import AppText from "./app_text";
+import AppFlatList from "./app-flat-list";
 import AppHeader from "./app_header";
 import { AppListItem, AppOrderedList, AppUnorderedList } from "./app_list";
 import AppTabSlider from "./app_tab_slider";
@@ -23,10 +23,13 @@ import DropDown from "./drop_down";
 import NoData from "./no-data";
 import Search from "./search/search";
 import SearchResultList from "./search/search-result-list";
+import { SimpleBarChart } from "./app_chart/app_bar_chart";
+import PlaceReview from "./place-review";
 
 export const FC = {
   AppText,
   AppHeader,
+  AppFlatList,
   CircleButton,
   RectangleButton,
   ListItem: AppListItem,
@@ -55,4 +58,5 @@ export const FC = {
   NoData,
   Search,
   SearchResultList,
+  PlaceReview,
 };

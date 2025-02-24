@@ -29,7 +29,7 @@ import { styles } from "@/screens/blogs/styles";
 import { BlogsScreenUtils } from "@/screens/blogs/utils";
 
 export default function BlogsScreen() {
-  const { blogs, blogTypes, blogsDispatchers } = useBlogs();
+  const { blogs, status, blogTypes, blogsDispatchers } = useBlogs();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -149,7 +149,7 @@ export default function BlogsScreen() {
         onRefresh={() => {
           blogsDispatchers.clear();
         }}
-        refreshing={false}
+        refreshing={status.isFetching}
       />
     </View>
   );

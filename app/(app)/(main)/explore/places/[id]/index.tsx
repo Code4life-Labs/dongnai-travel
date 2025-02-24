@@ -47,7 +47,7 @@ export default function PlaceDetailsScreen() {
   const bottomSheetRef = React.useRef(null);
   const opacityValue = React.useRef(new Animated.Value(0)).current;
 
-  const animFade = React.useCallback(
+  const animateFade = React.useCallback(
     (toValue: number) => {
       Animated.timing(opacityValue, {
         toValue: toValue,
@@ -60,9 +60,9 @@ export default function PlaceDetailsScreen() {
 
   const handleChangeBottomSheet = (index: number) => {
     if (index === 1) {
-      animFade(1);
+      animateFade(1);
     } else {
-      animFade(0);
+      animateFade(0);
     }
   };
 
@@ -95,22 +95,12 @@ export default function PlaceDetailsScreen() {
     );
   };
 
-  console.log("Place:", place);
-
   const presentationImageUrl =
     place.photos && place.photos.length > 0 ? place.photos[0] : undefined;
   const _languageData = (language.data as any)["placeDetailScreen"] as any;
 
   return (
     <View style={{ backgroundColor: theme.background, flex: 1 }}>
-      <Animated.View
-        style={{
-          opacity: opacityValue,
-          backgroundColor: theme.background,
-          height: HEADER_HEIGHT,
-          zIndex: 999,
-        }}
-      />
       <Image
         source={presentationImageUrl ? { uri: presentationImageUrl } : {}}
         style={styles.pd_background_image}
