@@ -1,3 +1,6 @@
+// Import utils
+import { StringUtils } from "./string";
+
 export class RouteUtils {
   static Regexes = {
     DoubleStartQueryChar: /^\?{2,}/,
@@ -25,13 +28,7 @@ export class RouteUtils {
    * @NguyenAnhTuan1912
    */
   static getPath(...routeNames: Array<string>) {
-    let path = "";
-
-    for (let routeName of routeNames) {
-      path += RouteUtils.getHref(routeName);
-    }
-
-    return path;
+    return StringUtils.getPath(...routeNames);
   }
 
   /**

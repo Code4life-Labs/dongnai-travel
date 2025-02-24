@@ -25,6 +25,14 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
         dispatch(blogsThunks.getBlogTypesAsync());
       },
 
+      likeBlog(placeId: string) {
+        dispatch(blogsThunks.likeBlogAsync(placeId));
+      },
+
+      unlikeBlog(placeId: string) {
+        dispatch(blogsThunks.unlikeBlogAsync(placeId));
+      },
+
       updateBriefBlog(id: string, briefBlog: Partial<Blog>) {
         dispatch(blogsActions.updateBriefBlog({ id, briefBlog }));
       },
@@ -99,6 +107,14 @@ export const { useBlogDetails, useBlogDetailsActions, useBlogDetailsState } =
       return {
         fetchBlogDetail(id: string) {
           dispatch(blogsThunks.getBlogDetailAsync(id));
+        },
+
+        likeBlog(placeId: string) {
+          dispatch(blogsThunks.likeBlogAsync(placeId));
+        },
+
+        unlikeBlog(placeId: string) {
+          dispatch(blogsThunks.unlikeBlogAsync(placeId));
         },
 
         add(blogDetails: Blog) {

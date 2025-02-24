@@ -35,7 +35,6 @@ import type { WithBlogActions_WrappedComponentProps } from "@/hocs/with-blog-act
  */
 function _HorizontalBlogCard({
   data,
-  blogIndex,
   type,
   actions,
   ...props
@@ -125,7 +124,7 @@ function _HorizontalBlogCard({
               activeColor="type_1"
               style={Styles.spacings.me_8}
               type="highlight"
-              onPress={actions.like}
+              onPress={actions.toggleLike}
               setIcon={
                 <Ionicons
                   name={data.isLiked ? "heart" : "heart-outline"}

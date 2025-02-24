@@ -77,7 +77,7 @@ export class BlogAPI {
    * Get types of blogs
    * @returns
    */
-  async getPlaceTypes() {
+  async getBlogTypes() {
     try {
       const url = RouteUtils.getPath("blogs", "types");
 
@@ -87,6 +87,73 @@ export class BlogAPI {
     } catch (error: any) {
       console.warn(error.message);
       return [];
+    }
+  }
+
+  /**
+   * Mark `like` on a blog
+   * @param userId
+   * @param blogId
+   * @returns
+   */
+  async postLikedBlogAsync(userId: string, blogId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "likes/blogs",
+        `${blogId}`
+      );
+
+      await this.api.post(url, null);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * Delete blog
+   * @param userId
+   * @param blogId
+   * @returns
+   */
+  async deleteLikedBlogAsync(userId: string, blogId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "likes/blogs",
+        `${blogId}`
+      );
+
+      await this.api.delete(url);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * Get suggested titles
+   * @param userId
+   * @param blogId
+   * @returns
+   */
+  async postToGetSuggestedTitles(data: any) {
+    try {
+      const url = RouteUtils.getPath("blogs", "content", "sugggested-titles");
+
+      const response = await this.api.post(url, data);
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
     }
   }
 }

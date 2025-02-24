@@ -1,10 +1,14 @@
 import React from "react";
+import { debounce } from "lodash";
 import { router } from "expo-router";
 
 // Import hooks
 import { useBlogDetailsActions } from "@/hooks/useBlog";
 
-// Import from utils
+// Import objects
+import { BlogManager } from "@/objects/blog";
+
+// Import utils
 import { StringUtils } from "@/utils/string";
 
 // Import types
@@ -52,7 +56,7 @@ export function withBlogActions<T extends object>(
   /**
    * Component này sẽ nhận một component khác và bọc nó lại, đồng thời function này sẽ truyền logic lại cho
    * component được bọc đó (WrappedComponent).
-   * @param {ViewProps & BlogCardProps} props Props của component.
+   * @param props Props của component.
    */
   return function (props: T) {
     const { data } = props as any;
@@ -67,12 +71,12 @@ export function withBlogActions<T extends object>(
         blogDetailsActions.add(data);
         router.push("/blogs");
       },
-      like() {
-        data.isLiked = !data.isLiked;
-        // Call API
-
-        // Update state if call api successfully
-        blogDetailsActions.update(data);
+      toggleLike() {
+        BlogManager.toggleLike(
+          data,
+          blogDetailsActions.likeBlog,
+          blogDetailsActions.unlikeBlog
+        );
       },
 
       share() {

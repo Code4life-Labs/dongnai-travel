@@ -42,8 +42,8 @@ export default function RightPart(
     />
   );
 
-  if (!BooleanUtils.isEmpty(props.setLeftPart)) {
-    child = props.setLeftPart();
+  if (!BooleanUtils.isEmpty(props.setRightPart)) {
+    child = props.setRightPart();
   }
 
   return (

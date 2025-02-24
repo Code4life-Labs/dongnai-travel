@@ -49,6 +49,7 @@ export class ButtonUtils {
       lblColorStyle: {
         color: colors.active[defaultColor].lbl,
       },
+      underlayColor: colors.active[defaultColor].lbl + "33",
     };
 
     if (BooleanUtils.isTrue(props.isActive)) {
@@ -111,12 +112,7 @@ export class ButtonUtils {
 
     contentContainerStyle = ComponentUtils.mergeStyle(
       contentContainerStyle,
-      props.style,
-      {
-        underlayColor: props.underlayColor
-          ? props.underlayColor
-          : buttonColors.lblColorStyle.color,
-      } as any
+      props.style
     );
 
     return {

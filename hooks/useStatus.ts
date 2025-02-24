@@ -12,16 +12,20 @@ import type { AppDispatch } from "@/states/redux/type";
 export const { useStatus, useStatusActions, useStatusState } = (function () {
   const createDispatchers = function (dispatch: AppDispatch) {
     return {
-      updateIsLoading(status: boolean) {
-        dispatch(manifoldActions.updateIsLoading(status));
+      setIsLoading(status?: boolean) {
+        dispatch(manifoldActions.setIsLoading(status));
       },
 
-      updateIsMaintaining(notification: any) {
-        dispatch(manifoldActions.updateIsMaintaining(notification));
+      setIsMaintaining(status?: boolean) {
+        dispatch(manifoldActions.setIsMaintaining(status));
       },
 
-      updateHasNetworkConnection(status: boolean) {
-        dispatch(manifoldActions.updateHasNetworkConnection(status));
+      setIsBottomTabShown(status?: boolean) {
+        dispatch(manifoldActions.setIsBottomTabShown(status));
+      },
+
+      setHasNetworkConnection(status?: boolean) {
+        dispatch(manifoldActions.setHasNetworkConnection(status));
       },
     };
   };

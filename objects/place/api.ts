@@ -10,6 +10,7 @@ import type { Place, PlaceType } from "./type";
 type GetPlacesAsyncOptions = {
   limit?: number | string;
   skip?: number | string;
+  name?: string;
   type?: string;
   userId?: string;
 };
@@ -36,11 +37,12 @@ export class PlaceAPI {
    */
   async getPlacesAsync(options: GetPlacesAsyncOptions) {
     try {
-      const { limit = 10, skip = 0, type = "all", userId } = options;
+      const { limit = 10, skip = 0, type = "all", name, userId } = options;
       const url = RouteUtils.getPath("places");
       let query = `limit=${limit}&skip=${skip}&types=${type}`;
 
       if (userId) query += `&userId=${userId}`;
+      if (name) query += `&name=${name}`;
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query));
 
@@ -88,6 +90,102 @@ export class PlaceAPI {
     } catch (error: any) {
       console.warn(error.message);
       return [];
+    }
+  }
+
+  /**
+   * Mark `favorite` on a place
+   * @param userId
+   * @param placeId
+   * @returns
+   */
+  async postFavoritedPlaceAsync(userId: string, placeId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "favorites/places",
+        `${placeId}`
+      );
+      console.log("URL:", url);
+      await this.api.post(url, null);
+
+      return true;
+    } catch (error: any) {
+      console.warn("Post Favorited Place:", error);
+      return false;
+    }
+  }
+
+  /**
+   * Unmark `favorite` on a place
+   * @param userId
+   * @param placeId
+   * @returns
+   */
+  async deleteFavoritedPlaceAsync(userId: string, placeId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "favorites/places",
+        `${placeId}`
+      );
+
+      await this.api.delete(url);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * Mark `visit` on a place
+   * @param userId
+   * @param placeId
+   * @returns
+   */
+  async postVisitedPlaceAsync(userId: string, placeId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "visits/places",
+        `${placeId}`
+      );
+
+      await this.api.post(url, null);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
+    }
+  }
+
+  /**
+   * Unmark `visit` on a place
+   * @param userId
+   * @param placeId
+   * @returns
+   */
+  async deleteVisitedPlaceAsync(userId: string, placeId: string) {
+    try {
+      const url = RouteUtils.getPath(
+        "users",
+        `${userId}`,
+        "favorites/places",
+        `${placeId}`
+      );
+
+      await this.api.delete(url);
+
+      return true;
+    } catch (error: any) {
+      console.warn(error.message);
+      return false;
     }
   }
 }

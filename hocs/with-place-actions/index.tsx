@@ -1,10 +1,14 @@
 import React from "react";
+import { debounce } from "lodash";
 import { router } from "expo-router";
 
-// Import from hooks
+// Import hooks
 import { usePlaceDetailsActions } from "@/hooks/usePlace";
 
-// Import from utils
+// Import objects
+import { PlaceManager } from "@/objects/place";
+
+// Import utils
 import { StringUtils } from "@/utils/string";
 
 // Import types
@@ -71,20 +75,20 @@ export function withPlaceActions<T extends object>(
         });
       },
 
-      like() {
-        data.isLiked = !data.isLiked;
-        // Call API
-
-        // Update state if call api successfully
-        placeDetailsActions.update(data);
+      toggleFavorite() {
+        PlaceManager.toggleFavorite(
+          data,
+          placeDetailsActions.favoritePlace,
+          placeDetailsActions.unfavoritePlace
+        );
       },
 
-      visit() {
-        data.isVisited = !data.isVisited;
-        // Call API
-
-        // Update state if call api successfully
-        placeDetailsActions.update(data);
+      toggleVisit() {
+        PlaceManager.toggleVisit(
+          data,
+          placeDetailsActions.visitPlace,
+          placeDetailsActions.unvisitPlace
+        );
       },
 
       share() {
