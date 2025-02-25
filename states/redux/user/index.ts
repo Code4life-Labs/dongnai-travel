@@ -71,6 +71,16 @@ export const userSlice = createSlice({
     reset(state) {
       state = { ...initialState };
     },
+    updateUserAvatar(state, action) {
+      if (state.user) {
+        state.user.avatar = action.payload;
+      }
+    },
+    updateUserCoverPhoto(state, action) {
+      if (state.user) {
+        state.user.coverPhoto = action.payload;
+      }
+    },
   },
 });
 
