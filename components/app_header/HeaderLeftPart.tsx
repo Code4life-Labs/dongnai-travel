@@ -1,4 +1,5 @@
 import React from "react";
+import { router } from "expo-router";
 import { useNavigationState } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -24,12 +25,14 @@ import type { AppStackHeaderProps, AppTabHeaderProps } from "./type";
 function StackLeftPart(props: AppStackHeaderProps) {
   const navigationIndex = useNavigationState((state) => state.index);
 
-  let child = props.navigation.canGoBack() && navigationIndex && (
+  let child = router.canGoBack() && navigationIndex !== 0 && (
     <CircleButton
       defaultColor="type_5"
       boxShadowType="type_1"
       type="opacity"
-      onPress={() => props.navigation.goBack()}
+      onPress={() => {
+        router.back();
+      }}
       setIcon={(isActive, currentLabelStyle) => (
         <Ionicons
           name="chevron-back-outline"
@@ -51,7 +54,7 @@ function StackLeftPart(props: AppStackHeaderProps) {
         alignItems: "center",
       }}
     >
-      {child}
+      {child as any}
     </HeaderPart>
   );
 }
@@ -66,8 +69,8 @@ function StackLeftPart(props: AppStackHeaderProps) {
 function TabLeftPart(props: AppTabHeaderProps) {
   let child;
 
-  if (!BooleanUtils.isEmpty(props.setRightPart)) {
-    child = props.setRightPart();
+  if (!BooleanUtils.isEmpty(props.setLeftPart)) {
+    child = props.setLeftPart();
   }
 
   return (

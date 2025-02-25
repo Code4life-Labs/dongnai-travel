@@ -5,6 +5,7 @@ export const manifoldSlice = createSlice({
   initialState: {
     settings: {},
     status: {
+      isBottomTabShown: true,
       isLoading: false,
       isMaintaining: false,
       hasNetworkConnection: false,
@@ -19,16 +20,32 @@ export const manifoldSlice = createSlice({
   },
 
   reducers: {
-    updateIsLoading(state, action) {
-      state.status.isLoading = action.payload as boolean;
+    setIsLoading(state, action) {
+      state.status.isLoading = Boolean(action.payload);
     },
 
-    updateIsMaintaining(state, action) {
-      state.status.isMaintaining = action.payload as boolean;
+    setIsMaintaining(state, action) {
+      state.status.isMaintaining = Boolean(action.payload);
     },
 
-    updateHasNetworkConnection(state, action) {
-      state.status.hasNetworkConnection = action.payload as boolean;
+    setIsBottomTabShown(state, action) {
+      state.status.isBottomTabShown = Boolean(action.payload);
+    },
+
+    setHasNetworkConnection(state, action) {
+      state.status.hasNetworkConnection = Boolean(action.payload);
+    },
+
+    setBottomSheetDisplayStatus(state, action) {
+      state.bottomSheet.isShown = Boolean(action.payload);
+    },
+
+    setBottomSheetContent(state, action) {
+      state.bottomSheet.content = action.payload;
+    },
+
+    setStatusBarDisplayStatus(state, action) {
+      state.statusBar.isShown = Boolean(action.payload);
     },
   },
 });

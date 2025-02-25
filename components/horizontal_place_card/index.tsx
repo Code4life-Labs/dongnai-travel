@@ -42,7 +42,6 @@ import type { WithPlaceActions_WrappedComponentProps } from "@/hocs/with-place-a
  */
 function _HorizontalPlaceCard({
   data,
-  placeIndex,
   type,
   getTextContentInHTMLTag,
   actions,
@@ -54,6 +53,8 @@ function _HorizontalPlaceCard({
   const _languageData = (language.data as any)["exploreScreen"] as any;
 
   let presentationImage = data && data.photos ? { uri: data.photos[0] } : {};
+
+  console.log("IsLiked:", data.isFavorited);
 
   return React.useMemo(
     () => (
@@ -131,21 +132,30 @@ function _HorizontalPlaceCard({
                     {NumberUtils.toMetricNumber(data.totalFavorites!)}
                   </AppText>
                 </View>
+                <View style={styles.card_information_cell}>
+                  <Ionicons
+                    name="compass-outline"
+                    style={Styles.spacings.me_6}
+                  />
+                  <AppText size="body2">
+                    {NumberUtils.toMetricNumber(data.totalVisits!)}
+                  </AppText>
+                </View>
               </View>
             </View>
           </View>
           <View style={styles.card_buttons_container}>
             <CircleButton
-              isActive={data.isLiked}
+              isActive={data.isFavorited}
               border={1}
               defaultColor="type_5"
               activeColor="type_1"
               style={Styles.spacings.me_8}
               type="highlight"
-              onPress={actions.like}
+              onPress={actions.toggleFavorite}
               setIcon={
                 <Ionicons
-                  name={data.isLiked ? "heart" : "heart-outline"}
+                  name={data.isFavorited ? "heart" : "heart-outline"}
                   size={14}
                 />
               }
@@ -175,7 +185,7 @@ function _HorizontalPlaceCard({
       </View>
     ),
     [
-      data.isLiked,
+      data.isFavorited,
       data.rating,
       data.totalFavorites,
       data.totalVisits,

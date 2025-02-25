@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// Import objects
+import { UserManager } from "@/objects/user";
+
 // Import utils
 import { StorageUtils } from "@/utils/storage";
 
@@ -51,7 +54,7 @@ export const userSlice = createSlice({
     },
     setRememberedUserData(state, action) {
       if (state.canRemember)
-        StorageUtils.setItemAsync("REMEMBERED_USER", {
+        UserManager.Storage.save({
           user: action.payload.user,
           token: action.payload.token,
         });

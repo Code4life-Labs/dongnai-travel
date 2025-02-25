@@ -1,3 +1,5 @@
+import { debounce } from "lodash";
+
 import { PlaceAPI } from "./api";
 import { PlaceValidator } from "./validator";
 import { PlaceStorage } from "./storage";
@@ -40,4 +42,40 @@ export class PlaceManager {
 
     return result;
   }
+
+  /**
+   * Toggle favorite a place
+   * @param place
+   * @param favoritePlace
+   * @param unfavoritePlace
+   */
+  static toggleFavorite = debounce(function (
+    place: Place,
+    favoritePlace: (placeId: string) => void,
+    unfavoritePlace: (placeId: string) => void
+  ) {
+    if (place.isFavorited) {
+      unfavoritePlace(place._id);
+    } else {
+      favoritePlace(place._id);
+    }
+  }, parseInt(process.env.EXPO_PUBLIC_BUTTON_DEBOUNCE_TIME!));
+
+  /**
+   * Toggle visit a place
+   * @param place
+   * @param visitPlace
+   * @param unvisitPlace
+   */
+  static toggleVisit = debounce(function (
+    place: Place,
+    visitPlace: (placeId: string) => void,
+    unvisitPlace: (placeId: string) => void
+  ) {
+    if (place.isVisited) {
+      unvisitPlace(place._id);
+    } else {
+      visitPlace(place._id);
+    }
+  }, parseInt(process.env.EXPO_PUBLIC_BUTTON_DEBOUNCE_TIME!));
 }

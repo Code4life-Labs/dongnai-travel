@@ -1,9 +1,12 @@
 import React from "react";
 import { SafeAreaView } from "react-native";
-import { Stack, router, SplashScreen } from "expo-router";
+import { Stack, router, SplashScreen, Slot } from "expo-router";
 import { useFonts } from "expo-font";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+// Import components
+import { FC } from "@/components";
 
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
@@ -60,12 +63,13 @@ export default function AppLayout() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null;
+    return <Slot />;
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-      <SafeAreaProvider>
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+        <FC.GlobalLoading />
         <GestureHandlerRootView>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(main)" />
@@ -77,7 +81,7 @@ export default function AppLayout() {
             <Stack.Screen name="not-found" />
           </Stack>
         </GestureHandlerRootView>
-      </SafeAreaProvider>
-    </SafeAreaView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }

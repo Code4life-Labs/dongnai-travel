@@ -50,7 +50,6 @@ export default function ExploreScreen() {
   React.useEffect(() => {
     if (!places || places.length === 0) {
       placesDispatchers.fetchPlaces(state.currentType);
-      placesDispatchers.fetchPlaceTypes();
     }
   }, [state.currentType, places]);
 
@@ -61,6 +60,7 @@ export default function ExploreScreen() {
     //   pathname: "/explore/places/[id]",
     //   params: { id: "test" },
     // });
+    placesDispatchers.fetchPlaceTypes();
   }, []);
 
   return (
@@ -140,11 +140,7 @@ export default function ExploreScreen() {
         }
         renderItem={(item) => (
           <View style={Styles.spacings.ph_18}>
-            <FC.HorizontalPlaceCard
-              data={item.item}
-              type={state.currentType}
-              placeIndex={item.index}
-            />
+            <FC.HorizontalPlaceCard data={item.item} type={state.currentType} />
           </View>
         )}
         keyExtractor={(item) => item._id as string}

@@ -41,6 +41,10 @@ const _DefaultTypes = [
     value: "all",
     name: "All",
   },
+  {
+    value: "recommended",
+    name: "Recommended",
+  },
 ] as Array<PlaceType>;
 
 const initialState: InitialState = {
@@ -143,12 +147,15 @@ export const placesSlice = createSlice({
 
       const [type, places] = action.payload;
 
-      if (!places) return;
+      if (!places || places.length === 0) return;
 
-      if (places.length !== 0) {
-        state.briefPlaceListInformation.type = type;
+      if (state.briefPlaceListInformation.type === type) {
         state.briefPlaceListInformation.data =
           state.briefPlaceListInformation.data.concat(places);
+        state.briefPlaceListInformation.skip += places.length;
+      } else {
+        state.briefPlaceListInformation.type = type;
+        state.briefPlaceListInformation.data = places;
         state.briefPlaceListInformation.skip += places.length;
       }
     });
@@ -170,6 +177,87 @@ export const placesSlice = createSlice({
         if (!action.payload) return;
 
         state.types = state.types.concat(_DefaultTypes, action.payload);
+      }
+    );
+
+    builder.addCase(
+      placesThunks.favoritePlaceAsync.fulfilled,
+      (state, action) => {
+        if (!action.payload) return;
+
+        // Update in list
+        for (const place of state.briefPlaceListInformation.data) {
+          if (place._id === action.payload) {
+            place.isFavorited = true;
+            place.totalFavorites! += 1;
+          }
+        }
+
+        // Update in detail (if has)
+        if (state.placeDict[action.payload]) {
+          state.placeDict[action.payload].isFavorited = true;
+          state.placeDict[action.payload].totalFavorites! += 1;
+        }
+      }
+    );
+
+    builder.addCase(
+      placesThunks.unfavoritePlaceAsync.fulfilled,
+      (state, action) => {
+        if (!action.payload) return;
+
+        // Update in list
+        for (const place of state.briefPlaceListInformation.data) {
+          if (place._id === action.payload) {
+            place.isFavorited = false;
+            place.totalFavorites! -= 1;
+          }
+        }
+
+        // Update in detail (if has)
+        if (state.placeDict[action.payload]) {
+          state.placeDict[action.payload].isFavorited = false;
+          state.placeDict[action.payload].totalFavorites! -= 1;
+        }
+      }
+    );
+
+    builder.addCase(placesThunks.visitPlaceAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      // Update in list
+      for (const place of state.briefPlaceListInformation.data) {
+        if (place._id === action.payload) {
+          place.isVisited = true;
+          place.totalVisits! += 1;
+        }
+      }
+
+      // Update in detail (if has)
+      if (state.placeDict[action.payload]) {
+        state.placeDict[action.payload].isVisited = true;
+        state.placeDict[action.payload].totalVisits! += 1;
+      }
+    });
+
+    builder.addCase(
+      placesThunks.unvisitPlaceAsync.fulfilled,
+      (state, action) => {
+        if (!action.payload) return;
+
+        // Update in list
+        for (const place of state.briefPlaceListInformation.data) {
+          if (place._id === action.payload) {
+            place.isVisited = false;
+            place.totalVisits! -= 1;
+          }
+        }
+
+        // Update in detail (if has)
+        if (state.placeDict[action.payload]) {
+          state.placeDict[action.payload].isVisited = false;
+          state.placeDict[action.payload].totalVisits! -= 1;
+        }
       }
     );
   },

@@ -20,9 +20,6 @@ import { usePlaceDetails } from "@/hooks/usePlace";
 // Import objects
 import { PlaceManager } from "@/objects/place";
 
-// Import states
-import { placesActions } from "@/states/redux/places";
-
 // Import utils
 import { HEADER_HEIGHT } from "@/utils/constants";
 import { StringUtils } from "@/utils/string";
@@ -34,7 +31,6 @@ import { styles } from "@/screens/place-detail/styles";
 export default function PlaceDetailsScreen() {
   const route = useRoute();
   const navigation = useNavigation();
-  const dimension = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const { id } = route.params as any;
   const { language } = useLanguage();
@@ -85,7 +81,21 @@ export default function PlaceDetailsScreen() {
   /**
    * Hàm này dùng để yêu thích / bỏ yêu thích một place, nó sẽ gửi id của place về server và tự server nó sẽ xử lý.
    */
-  const handleLikeButton = function () {};
+  const handleFavoriteButton = function () {
+    PlaceManager.toggleFavorite(
+      place,
+      placeDetailsDispatchers.favoritePlace,
+      placeDetailsDispatchers.unfavoritePlace
+    );
+  };
+
+  const handleVisitButton = function () {
+    PlaceManager.toggleVisit(
+      place,
+      placeDetailsDispatchers.visitPlace,
+      placeDetailsDispatchers.unvisitPlace
+    );
+  };
 
   const presentationImageUrl =
     place.photos && place.photos.length > 0 ? place.photos[0] : undefined;
@@ -160,17 +170,30 @@ export default function PlaceDetailsScreen() {
             {/* Buttons container row */}
             <View style={{ ...styles.pd_row, ...Styles.spacings.mb_12 }}>
               <FC.CircleButton
-                isActive={place.isLiked}
+                isActive={place.isFavorited}
                 style={Styles.spacings.me_8}
                 defaultColor="type_5"
                 type="highlight"
                 setIcon={
                   <Ionicons
-                    name={place.isLiked ? "heart" : "heart-outline"}
+                    name={place.isFavorited ? "heart" : "heart-outline"}
                     size={14}
                   />
                 }
-                onPress={handleLikeButton}
+                onPress={handleFavoriteButton}
+              />
+              <FC.CircleButton
+                isActive={place.isVisited}
+                style={Styles.spacings.me_8}
+                defaultColor="type_5"
+                type="highlight"
+                setIcon={
+                  <Ionicons
+                    name={place.isVisited ? "compass" : "compass-outline"}
+                    size={14}
+                  />
+                }
+                onPress={handleVisitButton}
               />
               <FC.CircleButton
                 style={Styles.spacings.me_8}
