@@ -3,7 +3,7 @@ import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Import components
-import AppText from "../app_text";
+import { FC } from "..";
 import RectangleButton from "../buttons/RectangleButton";
 import CircleButton from "../buttons/CircleButton";
 
@@ -89,18 +89,18 @@ function _HorizontalBlogCard({
                   style={styles.card_user_avatar}
                 />
               )}
-              <AppText size="body2">{" " + displayAuthorName}</AppText>
+              <FC.AppText size="body2">{" " + displayAuthorName}</FC.AppText>
             </View>
             <View>
-              <AppText numberOfLines={2} size="h3" style={styles.card_title}>
+              <FC.AppText numberOfLines={2} size="h3" style={styles.card_title}>
                 {data.name}
-              </AppText>
+              </FC.AppText>
             </View>
             <View style={styles.card_information_container}>
               <View style={styles.card_information_col}>
-                <AppText size="body2">
+                <FC.AppText size="body2">
                   {DatetimeUtils.getShortDateStr(data.createdAt!)}
-                </AppText>
+                </FC.AppText>
               </View>
               <View
                 style={{
@@ -108,11 +108,11 @@ function _HorizontalBlogCard({
                   alignItems: "flex-end",
                 }}
               >
-                <AppText size="body2">
+                <FC.AppText size="body2">
                   <Ionicons name="time-outline" />{" "}
                   {DatetimeUtils.toMinute(data.readTime ? data.readTime : 0)}{" "}
                   min
-                </AppText>
+                </FC.AppText>
               </View>
             </View>
           </View>

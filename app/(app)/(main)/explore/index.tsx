@@ -30,6 +30,7 @@ import { ExploreScreenUtils } from "@/screens/explore/utils";
 
 export default function ExploreScreen() {
   const { places, placeTypes, placesDispatchers } = usePlaces();
+  console.log("🚀 ~ ExploreScreen ~ places:", places)
   const { theme } = useTheme();
   const { language } = useLanguage();
 

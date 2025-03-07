@@ -22,6 +22,11 @@ import DropDown from "./drop_down";
 import NoData from "./no-data";
 import Search from "./search/search";
 import SearchResultList from "./search/search-result-list";
+import { CachedImage } from "./cached_image";
+import VerticalPlaceCard from "./vertical_place_card/VerticalPlaceCard";
+import VerticalPlaceCardSkeleton from "./vertical_place_card/VerticalPlaceCardSkeleton";
+import VerticalBlogCard from "./vertical_blog_card/VerticalBlogCard"; 
+import VerticalBlogCardSkeleton from "./vertical_blog_card/VerticalBlogCardSkeleton";
 
 export const FC = {
   AppText,
@@ -44,6 +49,8 @@ export const FC = {
   Skeletons: {
     HorizontalPlaceCard: HorizontalPlaceCardSkeleton,
     HorizontalBlogCard: HorizontalBlogCardSkeleton,
+    VerticalPlaceCard: VerticalPlaceCardSkeleton,
+    VerticalBlogCard: VerticalBlogCardSkeleton,
   },
   Input,
   ReviewSectionPromise,
@@ -53,4 +60,9 @@ export const FC = {
   NoData,
   Search,
   SearchResultList,
+  CachedImage,
+  VerticalPlaceCard,
+  VerticalBlogCard,
+  VerticalPlaceCardSkeleton,
+
 };
