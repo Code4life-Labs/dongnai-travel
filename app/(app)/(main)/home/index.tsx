@@ -1,21 +1,22 @@
 import * as React from "react";
-import { ScrollView, View, Text, TouchableOpacity } from "react-native";
+import { ScrollView, View, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 // Import from components
 import { FC } from "@/components";
 
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
+import { useLanguage } from "@/hooks/useLanguage";
+import { usePlaces } from "@/hooks/usePlace";
+import { useBlogs } from "@/hooks/useBlog";
 
 // Import from styles
 import { styles } from "@/screens/home/styles";
-import { Ionicons } from "@expo/vector-icons";
-import HomeBannerSlider from "@/screens/home/components/HomeBannerSlider";
-import { useRouter } from "expo-router";
-import { useLanguage } from "@/hooks/useLanguage";
-import { usePlaces } from "@/hooks/usePlace";
 import { Styles } from "@/styles";
-import { useBlogs } from "@/hooks/useBlog";
+import HomeBannerSlider from "@/screens/home/components/HomeBannerSlider";
+
 
 export default function HomeScreen() {
   const { theme } = useTheme();
@@ -26,8 +27,6 @@ export default function HomeScreen() {
   // const [weather, setWeather] = React.useState<any>(null);
   const [typePlace, setTypePlace] = React.useState("all");
   const [typeBlog, setTypeBlog] = React.useState("all");
-  // const [places, setPlaces] = React.useState(null);
-  // const [blogs, setBlogs] = React.useState(null);
 
   const previousTypes = React.useRef({
     place: typePlace,
@@ -43,6 +42,11 @@ export default function HomeScreen() {
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+
+  React.useEffect(() => {
+    placesDispatchers.fetchPlaces();
+    blogsDispatchers.fetchBlogs();
+  }, []);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={[styles.container]}>
@@ -61,7 +65,7 @@ export default function HomeScreen() {
         </View>
         {/*  end weather */}
         {/* Place */}
-        <View>
+        <View style={[{ backgroundColor: theme.background }]}>
           <TouchableOpacity
             style={styles.category_header}
             onPress={() => router.push("/explore")}
@@ -83,7 +87,6 @@ export default function HomeScreen() {
             contentContainerStyle={[{ flexGrow: 1 }, Styles.spacings.pb_18]}
             showsHorizontalScrollIndicator={false}
           >
-            {/* {!places || places.length === 0 ? ( */}
             {!places || places.length === 0
               ? [1, 2, 3, 4, 5].map((value, index) => {
                   return (
@@ -111,7 +114,6 @@ export default function HomeScreen() {
                   );
                 })}
           </ScrollView>
-          {/* </FC.TypeScrollView> */}
         </View>
         {/* end place */}
 
@@ -121,13 +123,11 @@ export default function HomeScreen() {
             style={styles.category_header}
             onPress={() => router.push("/blogs")}
           >
-            <FC.AppText>
-              {/* {_languageData["title_blog"][language.code]} */}
-              Blog
+            <FC.AppText size="h2">
+              {_languageData["title_blog"][language.code]}
             </FC.AppText>
             <Ionicons name="chevron-forward-outline" size={25} color="black" />
           </TouchableOpacity>
-          {/* <FC.TypeScrollView> */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -136,13 +136,29 @@ export default function HomeScreen() {
           >
             {!blogs || blogs.length === 0
               ? [1, 2, 3, 4, 5].map((value, index) => {
-                  return <FC.Skeletons.VerticalBlogCard key={value + index} />;
+                  return (
+                    <FC.Skeletons.VerticalBlogCard
+                      key={value + index}
+                      style={{
+                        marginLeft: index === 0 ? 16 : 0,
+                        marginRight: 16,
+                      }}
+                    />
+                  );
                 })
               : blogs.map((blog: any, index: number) => {
-                  return <FC.VerticalBlogCard blog={blog} key={index} />;
+                  return (
+                    <FC.VerticalBlogCard
+                      blog={blog}
+                      key={index}
+                      style={{
+                        marginLeft: index === 0 ? 16 : 0,
+                        marginRight: 16,
+                      }}
+                    />
+                  );
                 })}
           </ScrollView>
-          {/* </FC.TypeScrollView> */}
         </View>
         {/* end blog */}
       </View>

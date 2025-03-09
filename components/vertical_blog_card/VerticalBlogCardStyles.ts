@@ -1,17 +1,30 @@
 import { Styles } from "@/styles";
-import { StyleSheet } from "react-native"
+import { Platform, StyleSheet } from "react-native"
 
 
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    width: Styles.dimension.width * 0.5,
+    width: Styles.dimension.screenWidth * 0.5,
     aspectRatio: 180 / 239,
     alignSelf: 'flex-start',
-    backgroundColor: Styles.theme.data.light.background,
+    backgroundColor: Styles.theme.data.light.onSubBackground,
     ...Styles.spacings.p_10,
-    ...Styles.boxShadows.type_1,
-    ...Styles.shapes.rounded_8
+    ...Styles.shapes.rounded_8,
+    ...Platform.select({
+      ios: {
+        shadowColor: Styles.theme.data.light.primary,
+        shadowOffset: { width: 2, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3.4,
+      },
+      android: {
+        elevation: 2,
+        // borderWidth: 0.2, // Thêm borderWidth để hỗ trợ đổ bóng trên Android
+        // borderColor:  app_c.HEX.ext_second, // Màu sắc của đường viền
+        // shadowOpacity: 0.15,
+      },
+    }),
   },
 
   card_recommended: {
@@ -23,7 +36,9 @@ const styles = StyleSheet.create({
     width: '100%',
     aspectRatio: 16 / 10,
     backgroundColor: Styles.theme.data.light.background,
-    ...Styles.shapes.rounded_4
+    ...Styles.shapes.rounded_4,
+    ...Styles.spacings.mb_6,
+    ...Styles.spacings.mt_6
   },
 
   card_mid: {
@@ -45,7 +60,8 @@ const styles = StyleSheet.create({
   card_buttons_container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    ...Styles.spacings.mt_12
+    ...Styles.spacings.mt_12,
+    ...Styles.spacings.mb_10
   },
 
   card_button: {

@@ -214,13 +214,17 @@
       "vi": "Địa điểm",
       "en": "Place"
     },
-    "title_Blog": {
+    "title_blog": {
       "vi": "Bài viết",
       "en": "Blog"
     },
     "like": {
       "vi": "Thích",
       "en": "Like"
+    },
+    "liked": {
+      "vi": "Đã thích",
+      "en": "Liked"
     },
     "report": {
       "vi": "Báo cáo",

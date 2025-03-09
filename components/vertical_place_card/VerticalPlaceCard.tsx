@@ -182,8 +182,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
             ]}
           >
             <RectangleButton
-              // isActive={extendedPlaceInfo.isLiked}
-              isActive={true}
+              isActive={extendedPlaceInfo.isLiked}
               isTransparent
               type="opacity"
               style={styles.card_button}
@@ -226,10 +225,8 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
     [
       extendedPlaceInfo.isLiked,
       place.rating,
-      place.user_favorites_total,
-      place.user_ratings_total,
-      place, // Thêm place vào dependencies để cập nhật khi place thay đổi
-      theme, // Thêm theme vào dependencies để cập nhật khi theme thay đổi
+      place,
+      theme,
     ]
   );
 };
