@@ -63,6 +63,10 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
     return _useSelector(placesSelectors.selectCurrentPlaces);
   };
 
+  const selectCurrentPlacesType = function (_useSelector: typeof useSelector) {
+    return _useSelector(placesSelectors.selectCurrentPlacesType);
+  };
+
   const selectPlaceTypes = function (_useSelector: typeof useSelector) {
     return _useSelector(placesSelectors.selectPlaceTypes);
   };
@@ -81,11 +85,13 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
       const dispatch = useDispatch();
       const placesDispatchers = createDispatchers(dispatch);
       const places = selectPlaces(useSelector);
+      const currentType = selectCurrentPlacesType(useSelector);
       const placeTypes = selectPlaceTypes(useSelector);
       const status = selectPlacesStatus(useSelector);
 
       return {
         places,
+        currentType,
         status,
         placeTypes,
         placesDispatchers,
@@ -109,6 +115,7 @@ export const { usePlaces, usePlacesActions, usePlacesState } = (function () {
     usePlacesState() {
       return {
         places: selectPlaces(useSelector),
+        currentType: selectCurrentPlacesType(useSelector),
         status: selectPlacesStatus(useSelector),
         placeTypes: selectPlaceTypes(useSelector),
       };

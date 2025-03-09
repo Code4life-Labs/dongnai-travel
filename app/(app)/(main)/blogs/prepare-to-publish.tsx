@@ -119,16 +119,13 @@ export default function PrepareToPublishBlogScreen() {
       name: "coverimage-" + state.presentationImage!.fileName!,
     } as any);
 
-    console.log("File:", JSON.stringify(formData, null, 2));
-
     // Upload blog here
-    BlogManager.Api.postBlog(formData, {
-      onUploadProgress(e) {
-        console.log("Progress:", e.progress);
-        console.log("Total:", e.total);
-      },
-    }).then((data) => {
+    BlogManager.Api.postBlog(formData).then((data) => {
       console.log("Upload Blog:", data);
+
+      // Clear blog content
+
+      // Navigate to blogs screen
     });
   };
 

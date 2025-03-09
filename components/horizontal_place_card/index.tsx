@@ -54,8 +54,6 @@ function _HorizontalPlaceCard({
 
   let presentationImage = data && data.photos ? { uri: data.photos[0] } : {};
 
-  console.log("IsLiked:", data.isFavorited);
-
   return React.useMemo(
     () => (
       <View style={[styles.card, { backgroundColor: theme.subBackground }]}>

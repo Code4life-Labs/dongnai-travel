@@ -29,7 +29,8 @@ import { styles } from "@/screens/explore/styles";
 import { ExploreScreenUtils } from "@/screens/explore/utils";
 
 export default function ExploreScreen() {
-  const { places, status, placeTypes, placesDispatchers } = usePlaces();
+  const { places, currentType, status, placeTypes, placesDispatchers } =
+    usePlaces();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -48,20 +49,22 @@ export default function ExploreScreen() {
   const _languageData = (language.data as any)["exploreScreen"] as any;
 
   React.useEffect(() => {
+    // Fetch places when list is empty
     if (!places || places.length === 0) {
       placesDispatchers.fetchPlaces(state.currentType);
     }
+    // Fetch places when type is changed
+    else if (currentType !== state.currentType) {
+      placesDispatchers.clear();
+    }
   }, [state.currentType, places]);
 
-  // Test
+  // Fetch types of place
   React.useEffect(() => {
-    // Example of navigate to place details
-    // router.navigate({
-    //   pathname: "/explore/places/[id]",
-    //   params: { id: "test" },
-    // });
     placesDispatchers.fetchPlaceTypes();
   }, []);
+
+  console.log("Number of Places:", places.length);
 
   return (
     <View style={{ backgroundColor: theme.background }}>
@@ -107,12 +110,14 @@ export default function ExploreScreen() {
           paddingBottom: 200,
           backgroundColor: theme.background,
         }}
-        onMomentumScrollEnd={() =>
+        onMomentumScrollEnd={() => {
           ExploreScreenUtils.handleOnMomentumScrollEnd(state, places, () =>
             placesDispatchers.fetchPlaces(state.currentType)
-          )
-        }
-        onEndReached={(e) => ExploreScreenUtils.handleOnEndReached(state)}
+          );
+        }}
+        onEndReached={(e) => {
+          ExploreScreenUtils.handleOnEndReached(state);
+        }}
         onScroll={(e) =>
           ExploreScreenUtils.handleOnScroll(e, stateFns.setIsOnTop)
         }

@@ -12,6 +12,14 @@ export const placesSelectors = {
   },
 
   /**
+   * Get current type of places
+   * @param state
+   */
+  selectCurrentPlacesType(state: AppState) {
+    return state.places.briefPlaceListInformation.type;
+  },
+
+  /**
    * Get current status of current brief place
    * @param state
    * @returns

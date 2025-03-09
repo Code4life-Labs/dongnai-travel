@@ -132,8 +132,8 @@ export default function EditBlogScreen(props: any) {
     stateFns.setIsContentFromStorage(false);
   };
 
-  // Hàm này dùng để ấn next để người dùng sang screen khác để chuẩn bị publish cho blog.
-  const handleGetQuillContent = function () {
+  // Hàm này dùng để lấy text từ Quill Editor trong webview
+  const handleSaveQuillContent = function () {
     if (webViewRef.current) {
       webViewRef.current.injectJavaScript(`
         globalMessage = {
@@ -173,6 +173,8 @@ export default function EditBlogScreen(props: any) {
   `;
 
   React.useEffect(() => {
+    // If content is got from Storage and Webview is loaded
+    // Set content to Quill Editor
     if (state.content && state.isContentFromStorage && state.isWebviewLoaded) {
       // let reg = /\n(.+)/;
       let delta = JSON.stringify(deltaConverter.convert(state.content));
@@ -183,17 +185,36 @@ export default function EditBlogScreen(props: any) {
       }
     }
 
+    // If content is changed or loaded and it's not from Storage
+    // Save content to Storage
     if (state.content && !state.isContentFromStorage) {
       statusDispatchers.setIsLoading(true);
-      BlogManager.Storage.saveDraftContent(state.content).then(() => {
+
+      // Create an array of promises
+      const promises = [BlogManager.Storage.saveDraftContent(state.content)];
+
+      // If have image(s) to save
+      if (state.images.length > 0) {
+        promises.push(BlogManager.Storage.saveDraftImages(state.images));
+      }
+
+      Promise.all(promises).then(() => {
         statusDispatchers.setIsLoading(false);
       });
     }
 
+    // If content is empty and it's not from storage
+    // Get content from Storage
     if (!state.content && !state.isContentFromStorage) {
-      BlogManager.Storage.getDraftContent().then((data) => {
+      const promises = [
+        BlogManager.Storage.getDraftContent(),
+        BlogManager.Storage.getDraftImages(),
+      ];
+      Promise.all(promises).then((data) => {
         if (data) {
-          stateFns.setContent(data);
+          const [content, images] = data;
+          stateFns.setContent(content);
+          stateFns.setImages(images);
           stateFns.setIsContentFromStorage(true);
         }
       });
@@ -287,8 +308,6 @@ export default function EditBlogScreen(props: any) {
                     if (image && !image.canceled) {
                       const asset = image.assets[0];
 
-                      console.log("Asset:", asset);
-
                       if (asset.fileSize! > MEDIA_FILE_SIZE_LIMIT) {
                         Alert.alert(
                           `Image size must be less than ${MEDIA_FILE_SIZE_LIMIT / 1024 / 1024} Mb`
@@ -319,7 +338,7 @@ export default function EditBlogScreen(props: any) {
               <FC.RectangleButton
                 shape="capsule"
                 defaultColor="type_1"
-                onPress={handleGetQuillContent}
+                onPress={handleSaveQuillContent}
                 style={Styles.spacings.me_8}
               >
                 {_languageData.save_to_storage_button[language.code]}

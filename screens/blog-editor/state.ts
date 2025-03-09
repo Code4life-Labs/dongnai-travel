@@ -33,6 +33,12 @@ function getStateFns(changeState: ChangeStateFn<BlogEditorScreenStateType>) {
       });
     },
 
+    setImages(images: Array<ImagePickerAsset>) {
+      changeState("images", function () {
+        return images;
+      });
+    },
+
     addImage(source: ImagePickerAsset) {
       changeState("images", function (data) {
         data.push(source);

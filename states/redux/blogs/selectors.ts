@@ -13,6 +13,14 @@ export const blogsSelectors = {
   },
 
   /**
+   * Get current type of blogs
+   * @param state
+   */
+  selectCurrentBlogsType(state: AppState) {
+    return state.blogs.briefBlogListInformation.type;
+  },
+
+  /**
    * Get current status of current brief blog
    * @param state
    * @returns

@@ -139,8 +139,8 @@ export default function AboutSlide({ placeId }: { placeId: string }) {
         ) : (
           relatedPlaces.map((relatedPlace, index) => (
             <FC.HorizontalPlaceCard
+              key={relatedPlace._id}
               type={relatedPlace.types[0]}
-              key={relatedPlace.id}
               data={relatedPlace}
             />
           ))
