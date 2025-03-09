@@ -2,6 +2,9 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// Import classes
+import { API } from "@/classes/API";
+
 // Import slices
 import { themeSlice } from "./theme";
 import { blogsSlice } from "./blogs";
@@ -59,5 +62,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
 });
+
+// Inject store to API
+API.injectStore(store);
 
 export const persistor = persistStore(store);

@@ -1,5 +1,5 @@
-import { SimpleBarChart } from "./app_chart/app_bar_chart";
 import AppText from "./app_text";
+import AppFlatList from "./app-flat-list";
 import AppHeader from "./app_header";
 import { AppListItem, AppOrderedList, AppUnorderedList } from "./app_list";
 import AppTabSlider from "./app_tab_slider";
@@ -8,6 +8,7 @@ import ButtonsScrollBar from "./buttons_scroll_bar";
 import BottomSheetScroll from "./bottom_sheet/BottomSheetScroll";
 import { CircleButton, RectangleButton } from "./buttons";
 import CheckBoxText from "./checkbox_text";
+import BlogComment from "./blog-comment";
 import TabBarIcon from "./navigation/TabBarIcon";
 import GlobalLoading from "./global-loading";
 import HorizontalPlaceCard from "./horizontal_place_card";
@@ -22,16 +23,20 @@ import DropDown from "./drop_down";
 import NoData from "./no-data";
 import Search from "./search/search";
 import SearchResultList from "./search/search-result-list";
+import { SimpleBarChart } from "./app_chart/app_bar_chart";
+import PlaceReview from "./place-review";
 
 export const FC = {
   AppText,
   AppHeader,
+  AppFlatList,
   CircleButton,
   RectangleButton,
   ListItem: AppListItem,
   OrderedList: AppOrderedList,
   UnorderedList: AppUnorderedList,
   AppTabSlider,
+  BlogComment,
   TabBarIcon,
   GlobalLoading,
   ButtonsScrollBar,
@@ -53,4 +58,5 @@ export const FC = {
   NoData,
   Search,
   SearchResultList,
+  PlaceReview,
 };

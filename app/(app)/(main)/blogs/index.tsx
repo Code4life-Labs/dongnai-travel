@@ -29,7 +29,8 @@ import { styles } from "@/screens/blogs/styles";
 import { BlogsScreenUtils } from "@/screens/blogs/utils";
 
 export default function BlogsScreen() {
-  const { blogs, blogTypes, blogsDispatchers } = useBlogs();
+  const { blogs, currentType, status, blogTypes, blogsDispatchers } =
+    useBlogs();
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -48,17 +49,18 @@ export default function BlogsScreen() {
   const _languageData = (language.data as any)["blogsScreen"] as any;
 
   React.useEffect(() => {
+    // Fetch blogs when list is empty
     if (!blogs || blogs.length === 0) {
       blogsDispatchers.fetchBlogs(state.currentType);
     }
-  }, [blogs]);
+    // Fetch blogs when type is changed
+    else if (currentType !== state.currentType) {
+      blogsDispatchers.clear();
+    }
+  }, [state.currentType, blogs]);
 
-  // Test
+  // Fetch types of blog
   React.useEffect(() => {
-    // router.navigate({
-    //   pathname: "/blogs/[id]",
-    //   params: { id: "test" },
-    // });
     blogsDispatchers.fetchBlogTypes();
   }, []);
 
@@ -149,7 +151,7 @@ export default function BlogsScreen() {
         onRefresh={() => {
           blogsDispatchers.clear();
         }}
-        refreshing={false}
+        refreshing={status.isFetching}
       />
     </View>
   );

@@ -12,7 +12,7 @@ import { blogsSelectors } from "@/states/redux/blogs/selectors";
 
 // Import types
 import type { AppState, AppDispatch } from "@/states/redux/type";
-import type { Blog } from "@/objects/blog/type";
+import type { Blog, UploadBlog } from "@/objects/blog/type";
 
 export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
   const createDispatchers = function (dispatch: AppDispatch) {
@@ -48,6 +48,14 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
       clear() {
         dispatch(blogsActions.clearBriefBlogInformation());
       },
+
+      setPreparedPublishBlog(data: UploadBlog) {
+        dispatch(blogsActions.setPreparedPublishBlog(data));
+      },
+
+      updatePreparedPublishBlog(data: Partial<UploadBlog>) {
+        dispatch(blogsActions.updatePreparedPublishBlog(data));
+      },
     };
   };
 
@@ -55,8 +63,22 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
     return _useSelector(blogsSelectors.selectCurrentBlogs);
   };
 
+  const selectCurrentBlogsType = function (_useSelector: typeof useSelector) {
+    return _useSelector(blogsSelectors.selectCurrentBlogsType);
+  };
+
   const selectBlogTypes = function (_useSelector: typeof useSelector) {
     return _useSelector(blogsSelectors.selectBlogTypes);
+  };
+
+  const selectBlogsStatus = function (_useSelector: typeof useSelector) {
+    return _useSelector(blogsSelectors.selectCurrentBlogsStatus);
+  };
+
+  const selectPreparedPublishBlog = function (
+    _useSelector: typeof useSelector
+  ) {
+    return _useSelector(blogsSelectors.selectPreparedPublishBlog);
   };
 
   return {
@@ -69,11 +91,17 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
       const dispatch = useDispatch();
       const blogsDispatchers = createDispatchers(dispatch);
       const blogs = selectBlogs(useSelector);
+      const currentType = selectCurrentBlogsType(useSelector);
       const blogTypes = selectBlogTypes(useSelector);
+      const status = selectBlogsStatus(useSelector);
+      const preparedPublishBlog = selectPreparedPublishBlog(useSelector);
 
       return {
         blogs,
+        currentType,
+        status,
         blogTypes,
+        preparedPublishBlog,
         blogsDispatchers,
       };
     },
@@ -95,7 +123,10 @@ export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
     useBlogsState() {
       return {
         blogs: selectBlogs(useSelector),
+        currentType: selectCurrentBlogsType(useSelector),
+        status: selectBlogsStatus(useSelector),
         blogTypes: selectBlogTypes(useSelector),
+        preparedPublishBlog: selectPreparedPublishBlog(useSelector),
       };
     },
   };

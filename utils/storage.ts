@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ASYNC_STORAGE_CONSTANT_KEYS = {
+  SAVED_BLOG_IMAGES_KEY: "_sbi",
   SAVED_BLOG_CONTENT_KEY: "_sbc",
   SAVED_BLOG_METADATA_KEY: "_bmeta",
   USER: "_usr",

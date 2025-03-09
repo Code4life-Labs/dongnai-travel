@@ -35,13 +35,19 @@ export const styles = StyleSheet.create({
     ...Styles.shapes.rounded_8,
   },
 
+  bd_content_image_button: {
+    width: Styles.dimension.screenWidth / 2,
+    aspectRatio: 1,
+    overflow: "hidden",
+  },
+
   float_button_container: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
     position: "absolute",
-    bottom: 125,
+    bottom: 115,
     ...Styles.spacings.ph_12,
     ...Styles.spacings.pv_6,
     ...Styles.boxShadows.type_1,

@@ -20,15 +20,10 @@ const getPlacesAsync = createAsyncThunk(
         limit = places ? places.limit : 5,
         skip = places ? places.skip : 0;
 
-      const userInStorage = await UserManager.Storage.get();
-      const userId = userInStorage
-        ? userInStorage.user._id
-        : state.user.user?._id;
       const data = await PlaceManager.Api.getPlacesAsync({
         limit,
         skip,
         type,
-        userId,
       });
 
       return [type, data] as [string, Array<Place>];
@@ -40,17 +35,10 @@ const getPlacesAsync = createAsyncThunk(
 
 const getPlaceDetailAsync = createAsyncThunk(
   "places/getPlaceDetailAsync",
-  async (payload: string, thunkAPI) => {
+  async (payload: string) => {
     try {
-      const state = thunkAPI.getState() as AppState;
-      const userInStorage = await UserManager.Storage.get();
-      const userId = userInStorage
-        ? userInStorage.user._id
-        : state.user.user?._id;
-
       const data = await PlaceManager.Api.getPlaceAsync({
         id: payload,
-        userId,
       });
       return [payload, data] as [string, Place];
     } catch (error: any) {
@@ -73,15 +61,9 @@ const getPlaceTypesAsync = createAsyncThunk(
 
 const favoritePlaceAsync = createAsyncThunk(
   "places/favoritePlaceAsync",
-  async (placeId: string, thunkAPI) => {
+  async (placeId: string) => {
     try {
-      const state = thunkAPI.getState() as AppState;
-      const userInStorage = await UserManager.Storage.get();
-      const userId = userInStorage
-        ? userInStorage.user._id
-        : state.user.user?._id;
-
-      await PlaceManager.Api.postFavoritedPlaceAsync(userId, placeId);
+      await PlaceManager.Api.postFavoritedPlaceAsync(placeId);
       return placeId;
     } catch (error: any) {
       console.error(error.message);
@@ -91,15 +73,9 @@ const favoritePlaceAsync = createAsyncThunk(
 
 const unfavoritePlaceAsync = createAsyncThunk(
   "places/unfavoritePlaceAsync",
-  async (placeId: string, thunkAPI) => {
+  async (placeId: string) => {
     try {
-      const state = thunkAPI.getState() as AppState;
-      const userInStorage = await UserManager.Storage.get();
-      const userId = userInStorage
-        ? userInStorage.user._id
-        : state.user.user?._id;
-
-      await PlaceManager.Api.deleteFavoritedPlaceAsync(userId, placeId);
+      await PlaceManager.Api.deleteFavoritedPlaceAsync(placeId);
       return placeId;
     } catch (error: any) {
       console.error(error.message);
@@ -109,15 +85,9 @@ const unfavoritePlaceAsync = createAsyncThunk(
 
 const visitPlaceAsync = createAsyncThunk(
   "places/visitPlaceAsync",
-  async (placeId: string, thunkAPI) => {
+  async (placeId: string) => {
     try {
-      const state = thunkAPI.getState() as AppState;
-      const userInStorage = await UserManager.Storage.get();
-      const userId = userInStorage
-        ? userInStorage.user._id
-        : state.user.user?._id;
-
-      await PlaceManager.Api.postVisitedPlaceAsync(userId, placeId);
+      await PlaceManager.Api.postVisitedPlaceAsync(placeId);
       return placeId;
     } catch (error: any) {
       console.error(error.message);
@@ -127,15 +97,9 @@ const visitPlaceAsync = createAsyncThunk(
 
 const unvisitPlaceAsync = createAsyncThunk(
   "places/unvisitPlaceAsync",
-  async (placeId: string, thunkAPI) => {
+  async (placeId: string) => {
     try {
-      const state = thunkAPI.getState() as AppState;
-      const userInStorage = await UserManager.Storage.get();
-      const userId = userInStorage
-        ? userInStorage.user._id
-        : state.user.user?._id;
-
-      await PlaceManager.Api.deleteVisitedPlaceAsync(userId, placeId);
+      await PlaceManager.Api.deleteVisitedPlaceAsync(placeId);
       return placeId;
     } catch (error: any) {
       console.error(error.message);
