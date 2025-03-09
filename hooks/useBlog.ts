@@ -12,7 +12,7 @@ import { blogsSelectors } from "@/states/redux/blogs/selectors";
 
 // Import types
 import type { AppState, AppDispatch } from "@/states/redux/type";
-import type { Blog, UploadBlog } from "@/objects/blog/type";
+import type { Blog, UploadBlog, BlogModel } from "@/objects/blog/type";
 
 export const { useBlogs, useBlogsActions, useBlogsState } = (function () {
   const createDispatchers = function (dispatch: AppDispatch) {
@@ -138,6 +138,13 @@ export const { useBlogDetails, useBlogDetailsActions, useBlogDetailsState } =
       return {
         fetchBlogDetail(id: string) {
           dispatch(blogsThunks.getBlogDetailAsync(id));
+        },
+
+        uploadBlog(value: {
+          metadata: Partial<BlogModel>;
+          completeBlog: FormData;
+        }) {
+          dispatch(blogsThunks.uploadBlogAsync(value));
         },
 
         likeBlog(placeId: string) {

@@ -7,6 +7,7 @@ import { UserManager } from "@/objects/user";
 // Import types
 import type { AppState } from "../type";
 import type { Blog } from "@/objects/blog/type";
+import { API } from "@/classes/API";
 
 // import { getBlogsAPI, getBlogDetailsWithPipelineAPI } from "apis/axios";
 
@@ -86,10 +87,29 @@ const unlikeBlogAsync = createAsyncThunk(
   }
 );
 
+const uploadBlogAsync = createAsyncThunk(
+  "places/uploadBlogAsync",
+  async (value: any) => {
+    try {
+      const { metadata, completeBlog } = value;
+
+      // Validate metadata before uploading
+      await BlogManager.Api.validateBlogMetadata(metadata);
+
+      // Upload blog
+      const result = await BlogManager.Api.postBlog(completeBlog);
+      return result;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
 export const blogsThunks = {
   getBlogsAsync,
   getBlogDetailAsync,
   getBlogTypesAsync,
   likeBlogAsync,
   unlikeBlogAsync,
+  uploadBlogAsync,
 };
