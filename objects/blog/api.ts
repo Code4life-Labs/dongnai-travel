@@ -321,4 +321,30 @@ export class BlogAPI {
       return null;
     }
   }
+
+  /**
+   * Validate blog metadata before uploading
+   * @param data
+   * @returns
+   */
+  async validateBlogMetadata(data: Blog) {
+    try {
+      const userId = API.getUser()?._id;
+
+      if (!userId) throw new Error("Unauthenticated");
+
+      const url = RouteUtils.getPath("blog", "check");
+
+      const response = await this.api.post(url, data, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
 }

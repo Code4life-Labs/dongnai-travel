@@ -25,7 +25,7 @@ import { createSearchWithResultList } from "@/hocs/create-result-list";
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/hooks/useAuth";
-import { useBlogs } from "@/hooks/useBlog";
+import { useBlogs, useBlogDetailsActions } from "@/hooks/useBlog";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useStatusActions } from "@/hooks/useStatus";
 import { usePlacesState } from "@/hooks/usePlace";
@@ -62,6 +62,7 @@ export default function PrepareToPublishBlogScreen() {
   const { user } = useAuth();
   const { language } = useLanguage();
   const { blogTypes, preparedPublishBlog } = useBlogs();
+  const blogDispatchers = useBlogDetailsActions();
   const statusDispatchers = useStatusActions();
   const [state, stateFns] = useStateManager(
     StateManager.getInitialState(),
@@ -93,6 +94,7 @@ export default function PrepareToPublishBlogScreen() {
     }
 
     const formData = new FormData();
+    const mentionedPlaceIds = state.mentionedPlaces.map((place) => place._id);
     let index = 0;
     for (const image of preparedPublishBlog.images!) {
       formData.append("images", {
@@ -109,7 +111,7 @@ export default function PrepareToPublishBlogScreen() {
     formData.append("content", preparedPublishBlog.content);
     formData.append(
       "mentionedPlaces",
-      JSON.stringify(state.mentionedPlaces.map((place) => place._id) as any)
+      JSON.stringify(mentionedPlaceIds as any)
     );
     formData.append("authorId", user._id);
     formData.append("coverImage", {
@@ -120,12 +122,15 @@ export default function PrepareToPublishBlogScreen() {
     } as any);
 
     // Upload blog here
-    BlogManager.Api.postBlog(formData).then((data) => {
-      console.log("Upload Blog:", data);
-
-      // Clear blog content
-
-      // Navigate to blogs screen
+    blogDispatchers.uploadBlog({
+      metadata: {
+        authorId: user._id,
+        typeId: state.type!,
+        name: data.name,
+        content: preparedPublishBlog.content,
+        mentionedPlaces: mentionedPlaceIds,
+      },
+      completeBlog: formData,
     });
   };
 

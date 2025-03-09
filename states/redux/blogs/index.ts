@@ -247,6 +247,12 @@ export const blogsSlice = createSlice({
         state.blogDict[action.payload].totalFavorites! -= 1;
       }
     });
+
+    builder.addCase(blogsThunks.uploadBlogAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      state.blogDict[action.payload._id] = action.payload;
+    });
   },
 });
 
