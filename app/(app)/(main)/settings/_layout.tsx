@@ -96,6 +96,14 @@ export default function SettingsLayout() {
             title: language.code === 'vi' ? "Thống Kê" : "View Stats",
           }}
         />
+
+        <Stack.Screen
+          name="profile/[id]/create-blog"
+          options={{
+            title: language.code === 'vi' ? "Tạo bài viết" : "Create Blog",
+            headerShown: false,
+          }}
+        />
       </Stack>
     </SafeAreaView>
   );

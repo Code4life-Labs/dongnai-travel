@@ -202,6 +202,36 @@ const styles = StyleSheet.create({
     justifyContent:"space-between",
     ...Styles.spacings.pt_12,
     flex: 1,
-  }
+  },
+  user_username: {
+    fontSize: 14,
+    marginTop: 4,
+  },
+  avatar_placeholder: {
+    fontSize: 40,
+    fontWeight: 'bold',
+  }, 
+  header_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    width: '100%',
+  },
+  
+  three_dot_button: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  }, 
+  edit_button: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+    zIndex: 1,
+    padding: 8,
+  },
 })
 export default styles

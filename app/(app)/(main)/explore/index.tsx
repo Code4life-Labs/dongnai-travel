@@ -122,7 +122,7 @@ export default function ExploreScreen() {
         ListEmptyComponent={
           <View style={[Styles.spacings.mh_18, Styles.spacings.mb_12]}>
             {[1, 2, 3, 4, 5].map((value, index) => (
-              <FC.Skeletons.HorizontalPlaceCard key={value + index} />
+              <FC.Skeletons.HorizontalPlaceCard key={`explore-skeleton-${index}`} />
             ))}
           </View>
         }
@@ -143,7 +143,7 @@ export default function ExploreScreen() {
             <FC.HorizontalPlaceCard data={item.item} type={state.currentType} />
           </View>
         )}
-        keyExtractor={(item) => item._id as string}
+        keyExtractor={(item) => item._id || Math.random().toString()}
         onRefresh={() => {
           placesDispatchers.clear();
         }}

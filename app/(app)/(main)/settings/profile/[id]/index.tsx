@@ -19,9 +19,9 @@ import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Feather from "react-native-vector-icons/Feather";
 import { useDispatch, useSelector } from "react-redux";
-// import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import { router } from 'expo-router';
 
-import styles from "@/screens/profile/styles";
 import { FC } from "@/components";
 import ModalShowImage from "@/components/modal_show_image/ModalShowImage";
 
@@ -30,6 +30,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
 
+import styles from "@/screens/profile/styles";
 import { Styles } from "@/styles";
 import { dimension } from "@/styles/dimension";
 import { theme as appTheme } from "@/styles/theme";
@@ -53,7 +54,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
   const _languageData = language.data.blogScreenSetting;
   
   const [currentUser, setCurrentUser] = useState<any>(currentAuthUser);
-  const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
+  const [isMyProfile, setIsMyProfile] = useState<boolean>(true);
   const [openTermCondition, setOpenTermCondition] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [uploadImageType, setUploadImageType] = useState<'UploadCoverPhoto' | 'UploadAvatar' | null>(null);
@@ -89,14 +90,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
 
   const pickImageFromLibrary = async () => {
     try {
-      const result = await ImagePicker.launchImageLibrary({
-        mediaType: 'photo',
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         quality: 0.8,
-        maxWidth: 2000,
-        maxHeight: 2000,
+        allowsEditing: true,
+        aspect: [4, 3],
       });
 
-      if (result.assets && result.assets[0]?.uri) {
+      if (!result.canceled && result.assets && result.assets[0]?.uri) {
         const imageUri = result.assets[0].uri;
         
         if (uploadImageType === 'UploadAvatar') {
@@ -158,6 +159,155 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
     </View>
   );
 
+  const renderUserInfo = () => (
+    <View style={styles.user_block}>
+      <View style={styles.header_container}>
+        
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <Text style={[styles.user_name, { color: theme.onBackground }]}>
+            {currentUser?.displayName || currentUser?.username}
+          </Text>
+          <Text style={[styles.user_username, { color: theme.onOutline }]}>
+            @{currentUser?.username}
+          </Text>
+        </View>
+      </View>
+      
+      {/* <TouchableOpacity 
+        style={styles.edit_button}
+        // onPress={() => {
+        //   // TODO: Navigate to edit profile screen
+        //   console.log('Navigate to edit profile');
+        // }}
+      >
+        <Entypo 
+          name="phosphor-dots-three-fill" 
+          size={24} 
+          color={theme.onPrimary}
+        />
+      </TouchableOpacity> */}
+        
+      <View style={styles.user_info_follow}>
+        <Text style={[styles.user_follower, { color: theme.onOutline }]}>
+          {currentUser?.followerIds?.length || 0} {_languageData.user_follower[language.code]}
+        </Text>
+        <Text>
+          <Entypo name="dot-single" size={20} color={theme.onBackground} />
+        </Text>
+        <Text style={[styles.user_following, { color: theme.onOutline }]}>
+          {currentUser?.followingIds?.length || 0} {_languageData.user_following[language.code]}
+        </Text>
+      </View>
+
+      {/* <View style={styles.round_rectang_button_container}>
+        <FC.RectangleButton
+          shape="rounded_8"
+          isActive
+          activeColor="type_1"
+          style={{
+            
+            backgroundColor: appTheme.colorNames.onPrimary
+          }}
+          onPress={() => navigation.navigate("view-stas")}
+        >
+          {(isActive, currentLabelStyle) => (
+            <Text style={currentLabelStyle}>{_languageData.view_stats[language.code]}</Text>
+          )}
+        </FC.RectangleButton>
+      </View> */}
+
+      <View style={styles.user_infos}>
+        <View style={styles.user_info_block}>
+          <Text style={[styles.user_info_title, { color: theme.onBackground }]}>
+            {_languageData.information[language.code]}
+          </Text>
+          
+          {(currentUser?.firstName || currentUser?.lastName) && (
+            <View style={styles.user_info_other}>
+              <AntDesign
+                style={[styles.user_info_other_icon, { color: theme.onBackground }]}
+                name="user"
+              />
+              <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
+                {[currentUser?.firstName, currentUser?.lastName].filter(Boolean).join(' ')}
+              </Text>
+            </View>
+          )}
+
+          <View style={styles.user_info_other}>
+            <AntDesign
+              style={[styles.user_info_other_icon, { color: theme.onBackground }]}
+              name="mail"
+            />
+            <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
+              {currentUser?.email}
+            </Text>
+          </View>
+
+          {currentUser?.birthday && (
+            <View style={styles.user_info_other}>
+              <AntDesign
+                style={[styles.user_info_other_icon, { color: theme.onBackground }]}
+                name="calendar"
+              />
+              <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
+                {new Date(currentUser.birthday).toLocaleDateString()}
+              </Text>
+            </View>
+          )}
+
+          {currentUser?.userInfo?.userAddress && (
+            <View style={styles.user_info_other}>
+              <AntDesign
+                style={[styles.user_info_other_icon, { color: theme.onBackground }]}
+                name="enviromento"
+              />
+              <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
+                <Text>{_languageData.live_in[language.code]} </Text>
+                <Text style={styles.user_info_address}>
+                  {currentUser.userInfo.userAddress}
+                </Text>
+              </Text>
+            </View>
+          )}
+
+          {currentUser?.userSocial?.userFacebook && (
+            <View style={styles.user_info_other}>
+              <MaterialCommunityIcons
+                style={[styles.user_info_other_icon, { color: theme.onBackground }]}
+                name="facebook"
+              />
+              <FC.AppText
+                key={1}
+                style={styles.user_info_other_content}
+                hyperLink={currentUser.userSocial.userFacebook}
+              >
+                {currentUser.userSocial.userFacebook}
+              </FC.AppText>
+            </View>
+          )}
+
+          {currentUser?.userSocial?.userInstagram && (
+            <View style={styles.user_info_other}>
+              <Entypo
+                style={[styles.user_info_other_icon, { color: theme.onBackground }]}
+                name="instagram"
+              />
+              <FC.AppText
+                key={2}
+                style={styles.user_info_other_content}
+                hyperLink={currentUser.userSocial.userInstagram}
+              >
+                {currentUser.userSocial.userInstagram}
+              </FC.AppText>
+            </View>
+          )}
+        </View>
+      </View>
+      <View style={[styles.line_horizontal, { borderBottomColor: theme.onBackground }]} />
+    </View>
+  );
+
   return (
     <>
       <ScrollView style={[styles.wrapper, { backgroundColor: theme.background }]}>
@@ -181,7 +331,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
 
           <View style={styles.profile_avatar}>
             <View style={styles.circle_avatar}>
-              {currentUser?.avatar && (
+              {currentUser?.avatar ? (
                 <Image
                   source={{ uri: currentUser.avatar }}
                   style={{
@@ -191,6 +341,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
                     resizeMode: 'cover'
                   }}
                 />
+              ) : (
+                <View style={[styles.circle_avatar, { backgroundColor: theme.onSecondary }]}>
+                  <Text style={[styles.avatar_placeholder, { color: theme.onBackground }]}>
+                    {currentUser?.username?.charAt(0).toUpperCase()}
+                  </Text>
+                </View>
               )}
               {isMyProfile && (
                 <TouchableOpacity
@@ -210,129 +366,18 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
             </View>
           </View>
 
-          <View style={styles.user_block}>
-            <View style={{ alignItems: "center" }}>
-              <Text style={[styles.user_name, { color: theme.onBackground }]}>
-                {currentUser?.username}
-              </Text>
-            </View>
-            <View style={styles.user_info_follow}>
-              <Text style={[styles.user_follower, { color: theme.onOutline }]}>
-                {currentUser?.followerIds?.length} {_languageData.user_follower[language.code]}
-              </Text>
-              <Text>
-                <Entypo name="dot-single" size={20} color={theme.onBackground} />
-              </Text>
-              <Text style={[styles.user_following, { color: theme.onOutline }]}>
-                {currentUser?.followingIds?.length} {_languageData.user_following[language.code]}
-              </Text>
-            </View>
-
-            <View style={styles.round_rectang_button_container}>
-              <FC.RectangleButton
-                shape="rounded_8"
-                isActive
-                activeColor="type_1"
-                style={{
-                  flex: 0.4,
-                  backgroundColor: appTheme.colorNames.onSecondary
-                }}
-                onPress={() => navigation.navigate("ViewStatsScreen")}
-              >
-                {(isActive, currentLabelStyle) => (
-                  <Text style={currentLabelStyle}>{_languageData.view_stats[language.code]}</Text>
-                )}
-              </FC.RectangleButton>
-
-              <FC.RectangleButton
-                shape="rounded_8"
-                onPress={() => navigation.navigate("EditProfileScreen")}
-                style={{
-                  flex: 0.4
-                }}
-              >
-                {(isActive, currentLabelStyle) => (
-                  <Text style={currentLabelStyle}>
-                    <Feather name="edit-2" /> {_languageData.edit_profile[language.code]}
-                  </Text>
-                )}
-              </FC.RectangleButton>
-
-              <FC.RectangleButton
-                shape="rounded_8"
-                style={{ flex: 0.05 }}
-              >
-                {(isActive, currentLabelStyle) => (
-                  <Text style={[currentLabelStyle, { marginLeft: -3 }]}>
-                    <Entypo name="dots-three-vertical" size={20} />
-                  </Text>
-                )}
-              </FC.RectangleButton>
-            </View>
-
-            <View style={styles.user_infos}>
-              <View style={styles.user_info_block}>
-                <Text style={[styles.user_info_title, { color: theme.onBackground }]}>
-                  {_languageData.bio[language.code]}
-                </Text>
-                <Text style={[styles.user_bio_content, { color: theme.onOutline }]}>
-                  {currentUser?.userBio}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.user_infos}>
-              <View style={styles.user_info_block}>
-                <Text style={[styles.user_info_title, { color: theme.onBackground }]}>
-                  {_languageData.information[language.code]}
-                </Text>
-                <View style={styles.user_info_other}>
-                  <AntDesign
-                    style={[styles.user_info_other_icon, { color: theme.onBackground }]}
-                    name="enviromento"
-                  />
-                  <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
-                    <Text>{_languageData.live_in[language.code]} </Text>
-                    <Text style={styles.user_info_address}>
-                      {currentUser?.userInfo?.userAddress}
-                    </Text>
-                  </Text>
-                </View>
-                <View style={styles.user_info_other}>
-                  <MaterialCommunityIcons
-                    style={[styles.user_info_other_icon, { color: theme.onBackground }]}
-                    name="facebook"
-                  />
-                  <FC.AppText
-                    key={1}
-                    style={styles.user_info_other_content}
-                    hyperLink={currentUser?.userSocial?.userFacebook}
-                  >
-                    {currentUser?.userSocial?.userFacebook}
-                  </FC.AppText>
-                </View>
-                <View style={styles.user_info_other}>
-                  <Entypo
-                    style={[styles.user_info_other_icon, { color: theme.onBackground }]}
-                    name="instagram"
-                  />
-                  <FC.AppText
-                    key={2}
-                    style={styles.user_info_other_content}
-                    hyperLink={currentUser?.userSocial?.userInstagram}
-                  >
-                    {currentUser?.userSocial?.userInstagram}
-                  </FC.AppText>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.line_horizontal, { borderBottomColor: theme.onBackground }]} />
+          {renderUserInfo()}
+          <View style = {styles.edit_button}>
+            <Entypo 
+              name="dots-three-vertical" 
+              size={24} 
+              color={theme.onPrimary}
+            />
           </View>
-
           <View style={styles.blog_block}>
             <TouchableOpacity
               style={[styles.btn_create_blog, { backgroundColor: theme.primary }]}
-              onPress={() => navigation.navigate("CreatePostScreen")}
+              onPress={() => router.push("/blogs/create")}
             >
               <MaterialCommunityIcons
                 style={{ color: theme.onPrimary, marginRight: 6 }}
@@ -363,7 +408,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
         haveBtn={false}
         isOpen={isBottomSheetOpen}
         close={handleCloseBottomSheet}
-        snapPoints={["30%", "50%", "74%"]}
+        snapPoints={["1000", "50%"]}
         haveOverlay
         bottomSheetScrollViewStyle={{ paddingHorizontal: 16 }}
         handleLabelBtn={() => {}}
