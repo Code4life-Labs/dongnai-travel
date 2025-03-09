@@ -22,6 +22,7 @@ import DropDown from "./drop_down";
 import NoData from "./no-data";
 import Search from "./search/search";
 import SearchResultList from "./search/search-result-list";
+import TypeScrollView from "./type_scroll_view/TypeScrollView";
 import { CachedImage } from "./cached_image";
 import VerticalPlaceCard from "./vertical_place_card/VerticalPlaceCard";
 import VerticalPlaceCardSkeleton from "./vertical_place_card/VerticalPlaceCardSkeleton";
@@ -63,6 +64,6 @@ export const FC = {
   CachedImage,
   VerticalPlaceCard,
   VerticalBlogCard,
-  VerticalPlaceCardSkeleton,
+  TypeScrollView
 
 };

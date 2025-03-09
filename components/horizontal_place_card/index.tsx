@@ -55,6 +55,8 @@ function _HorizontalPlaceCard({
   let presentationImage = data && data.photos ? { uri: data.photos[0] } : {};
 
   console.log("IsLiked:", data.isFavorited);
+  console.log("presentationImage", presentationImage);
+  console.log("data", data);
 
   return React.useMemo(
     () => (

@@ -1,20 +1,19 @@
-import { StyleSheet ,Platform} from "react-native"
-import { Styles } from "@/styles"
-
+import { StyleSheet, Platform } from "react-native";
+import { Styles } from "@/styles";
 
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    width: Styles.dimension.width * 0.5,
+    width: Styles.dimension.screenWidth * 0.5,
     aspectRatio: 180 / 235,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     backgroundColor: Styles.theme.data.light.primary,
     // borderWidth: 1.5,
     ...Styles.spacings.p_10,
     ...Styles.shapes.rounded_8,
     ...Platform.select({
       ios: {
-        shadowColor: Styles.theme.data.light.fourth,
+        shadowColor: Styles.theme.data.light.primary,
         shadowOffset: { width: 2, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 3.4,
@@ -30,14 +29,17 @@ const styles = StyleSheet.create({
 
   card_recommended: {
     borderWidth: 1.5,
-    borderColor: Styles.theme.data.light.third
+    borderColor: Styles.theme.data.light.primary,
   },
 
   card_image: {
-    width: '100%',
+    justifyContent: "flex-end",
+    alignItems: "center",
+    width: "100%",
     aspectRatio: 16 / 10,
-    backgroundColor: Styles.theme.data.light.ext_primary,
-    ...Styles.shapes.rounded_4
+    backgroundColor: Styles.theme.data.light.outline,
+    overflow: "hidden",
+    ...Styles.shapes.rounded_4,
   },
 
   card_mid: {
@@ -46,27 +48,27 @@ const styles = StyleSheet.create({
   },
 
   card_content_container: {
-    flex: 1
+    flex: 1,
   },
 
   card_content_sub_information_container: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
 
   card_buttons_container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    ...Styles.spacings.mt_12
+    flexDirection: "row",
+    justifyContent: "space-between",
+    ...Styles.spacings.mt_12,
   },
 
   card_button: {
-    justifyContent: 'flex-start',
-    paddingVertical: 0
+    justifyContent: "flex-start",
+    paddingVertical: 0,
   },
 
   card_ske_bg: {
-    backgroundColor: Styles.theme.data.light.ext_primary
-  }
+    backgroundColor: Styles.theme.data.light.primary,
+  },
 });
 
-export default styles
+export default styles;

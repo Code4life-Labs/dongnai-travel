@@ -71,72 +71,78 @@ export default function HomeScreen() {
             </FC.AppText>
             <Ionicons name="chevron-forward-outline" size={25} color="black" />
           </TouchableOpacity>
-          {/* <FC.TypeScrollView > */} {/* TODO: fix */}
-          {/* <FC.VerticalPlaceCardSkeleton /> */}
+          {/* <FC.TypeScrollView 
+           types={PLACE_QUALITIES[language.code].values}
+            labels={PLACE_QUALITIES[language.code].labels}
+            callBack={setTypePlace}
+            scrollStyle={[Styles.spacings.mb_12, Styles.spacings.ps_18]}
+            containerStyle={Styles.spacings.pv_10} /> 
+          <FC.VerticalPlaceCardSkeleton /> */}
           <ScrollView
             horizontal
             contentContainerStyle={[{ flexGrow: 1 }, Styles.spacings.pb_18]}
             showsHorizontalScrollIndicator={false}
           >
             {/* {!places || places.length === 0 ? ( */}
-            {!places
+            {!places || places.length === 0
               ? [1, 2, 3, 4, 5].map((value, index) => {
                   return (
-                    <FC.VerticalPlaceCardSkeleton
+                    <FC.Skeletons.VerticalPlaceCard
                       key={value + index}
+                      style={[
+                        Styles.spacings.me_10,
+                        index === 0 && Styles.spacings.ms_10,
+                      ]}
+                    />
+                  );
+                })
+              : places.map((place: any, index: number) => {
+                  return (
+                    <FC.VerticalPlaceCard
+                      place={place}
+                      placeIndex={index}
+                      key={place.place_id}
                       style={[
                         Styles.spacings.me_12,
                         index === 0 && Styles.spacings.ms_18,
                       ]}
+                      typeOfBriefPlace={typePlace}
                     />
                   );
-                }): <FC.VerticalPlaceCard place={places[0]} style={[Styles.spacings.me_12, Styles.spacings.ms_18]} height={150} width={130} />
-              // : places.map((place: any, index: number) => {
-              //     return (
-              //       <FC.VerticalPlaceCard
-              //         place={place}
-              //         key={index}
-              //         style={[
-              //           Styles.spacings.me_12,
-              //           index === 0 && Styles.spacings.ms_18,
-              //         ]}
-              //       />
-                  // );
-                // })}
-              }
+                })}
           </ScrollView>
           {/* </FC.TypeScrollView> */}
         </View>
         {/* end place */}
 
-
         {/* Blog */}
-        <View style={[{backgroundColor: theme.background}]}>
-        <TouchableOpacity style={styles.category_header} onPress={() => router.push("/blogs")}>
-          <FC.AppText>
-            {/* {_languageData["title_blog"][language.code]} */}
-            Blog
-          </FC.AppText>
-          <Ionicons name="chevron-forward-outline" size={25} color="black" />
-        </TouchableOpacity>
-        {/* <FC.TypeScrollView> */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}
-        style={[{backgroundColor: theme.background}]}
-        contentContainerStyle={[{flexGrow: 1}, Styles.spacings.pb_18]}
-        >
-        {
-          !blogs || blogs.length === 0 ? [1, 2, 3, 4, 5].map((value, index) => {
-            return (
-              <FC.Skeletons.VerticalBlogCard key={value + index} />
-            )
-          }) : blogs.map((blog: any, index: number) => {
-            return (
-              <FC.VerticalBlogCard blog={blog} key={index} />
-            )
-          })
-        }
-        </ScrollView>
-        {/* </FC.TypeScrollView> */}
+        <View style={[{ backgroundColor: theme.background }]}>
+          <TouchableOpacity
+            style={styles.category_header}
+            onPress={() => router.push("/blogs")}
+          >
+            <FC.AppText>
+              {/* {_languageData["title_blog"][language.code]} */}
+              Blog
+            </FC.AppText>
+            <Ionicons name="chevron-forward-outline" size={25} color="black" />
+          </TouchableOpacity>
+          {/* <FC.TypeScrollView> */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={[{ backgroundColor: theme.background }]}
+            contentContainerStyle={[{ flexGrow: 1 }, Styles.spacings.pb_18]}
+          >
+            {!blogs || blogs.length === 0
+              ? [1, 2, 3, 4, 5].map((value, index) => {
+                  return <FC.Skeletons.VerticalBlogCard key={value + index} />;
+                })
+              : blogs.map((blog: any, index: number) => {
+                  return <FC.VerticalBlogCard blog={blog} key={index} />;
+                })}
+          </ScrollView>
+          {/* </FC.TypeScrollView> */}
         </View>
         {/* end blog */}
       </View>
