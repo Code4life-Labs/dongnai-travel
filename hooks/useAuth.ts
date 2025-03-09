@@ -70,7 +70,10 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
             const responsePayload = await UserManager.Api.signIn(signInData);
             const responseData = responsePayload.data;
 
+            console.log("ResponseData:", responseData);
+
             dispatch(userActions.setUser(responseData.user));
+            dispatch(userActions.setToken(responseData.token));
             if (responseData.token) {
               dispatch(
                 userActions.setRememberedUserData({
@@ -97,6 +100,7 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
           const responseData = responsePayload.data;
 
           dispatch(userActions.setUser(responseData.user));
+          dispatch(userActions.setToken(responseData.token));
           dispatch(
             userActions.setRememberedUserData({
               user: responseData.user,

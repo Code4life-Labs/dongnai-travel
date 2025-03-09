@@ -18,6 +18,9 @@ type InitialState = {
     limit: number;
     skip: number;
     data: Array<Partial<Place>>;
+    status: {
+      isFetching: boolean;
+    };
   };
 };
 
@@ -33,6 +36,9 @@ function _createDefaultBriefPlace(limit = 5, skip = 0) {
     limit: limit,
     skip: skip,
     data: [] as Array<Partial<Place>>,
+    status: {
+      isFetching: false,
+    },
   };
 }
 
@@ -142,6 +148,10 @@ export const placesSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder.addCase(placesThunks.getPlacesAsync.pending, (state, action) => {
+      state.briefPlaceListInformation.status.isFetching = true;
+    });
+
     builder.addCase(placesThunks.getPlacesAsync.fulfilled, (state, action) => {
       if (!action.payload) return;
 
@@ -153,7 +163,9 @@ export const placesSlice = createSlice({
         state.briefPlaceListInformation.data =
           state.briefPlaceListInformation.data.concat(places);
         state.briefPlaceListInformation.skip += places.length;
+        state.briefPlaceListInformation.status.isFetching = false;
       } else {
+        state.briefPlaceListInformation = _createDefaultBriefPlace();
         state.briefPlaceListInformation.type = type;
         state.briefPlaceListInformation.data = places;
         state.briefPlaceListInformation.skip += places.length;

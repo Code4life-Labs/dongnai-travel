@@ -278,13 +278,13 @@
       "vi": "Địa điểm liên quan",
       "en": "Related Places"
     },
-    "review": {
+    "reviews": {
       "vi": "Nhận xét",
       "en": "Reviews"
     },
-    "review_texth3": {
-      "vi": "Xếp hạng và đánh giá",
-      "en": "Ratings & reviews"
+    "ratings": {
+      "vi": "Điểm",
+      "en": "Ratings"
     },
     "relatedPlacesDataMessage": {
       "vi": "Không có địa điểm nào giống với địa điểm này.",
@@ -303,6 +303,58 @@
     "banner_button": {
       "vi": "Viết và đăng bài viết của bạn",
       "en": "Write & publish your own blog"
+    }
+  },
+  "blogEditorScreen": {
+    "next_to_prepare": {
+      "vi": "Tiếp theo",
+      "en": "next"
+    },
+    "save_to_storage_button": {
+      "vi": "Lưu",
+      "en": "Save"
+    },
+    "clear_from_storage_button": {
+      "vi": "Dọn dẹp",
+      "en": "Clear"
+    },
+    "add_image_button": {
+      "vi": "+ Thêm ảnh",
+      "en": "+ Add image"
+    }
+  },
+  "prepareToPublishBlogScreen": {
+    "publish_button": {
+      "vi": "Đăng bài",
+      "en": "Publish blog"
+    },
+    "blog_name": {
+      "vi": "Tiêu đề bài viết",
+      "en": "Blog's title"
+    },
+    "input_blog_name": {
+      "vi": "Nhập title của bài viết ở đây",
+      "en": "Enter blog's title here"
+    },
+    "blog_cover": {
+      "vi": "Ảnh bìa của bài viết",
+      "en": "Blog's cover image"
+    },
+    "blog_cover_pick_image": {
+      "vi": "Chọn một tấm ảnh",
+      "en": "Choose an image"
+    },
+    "blog_cover_image_placeholder": {
+      "vi": "Ảnh bìa của bài viết sẽ được hiển thị ở đây",
+      "en": "Cover image of blog will be showed here"
+    },
+    "blog_type": {
+      "vi": "Loại bài viết",
+      "en": "Blog's type"
+    },
+    "mentioned_places": {
+      "vi": "Những địa điểm đã đề cập",
+      "en": "Mentioned places"
     }
   },
   "blogScreenSetting": {

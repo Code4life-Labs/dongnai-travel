@@ -29,7 +29,7 @@ export class TextAPI {
 
       const response = await api.post(url, data);
 
-      return response.data as Promise<Array<any>>;
+      return response.data.data as Promise<Array<any>>;
     } catch (error: any) {
       console.warn(error.message);
       return null;

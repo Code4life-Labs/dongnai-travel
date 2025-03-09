@@ -1,23 +1,28 @@
 // Import classes
 import { API } from "@/classes/API";
 
+// Import objects
+import { UserManager } from "../user";
+
 // Import utils
 import { RouteUtils } from "@/utils/route";
 
 // Import types
-import type { Blog, BlogType } from "./type";
+import type { AxiosRequestConfig } from "axios";
+import type { Blog, BlogComment, CreateBlogComment, BlogType } from "./type";
+import type { GetMultipleBaseOptions } from "@/types/api";
 
 type GetBlogsAsyncOptions = {
-  limit?: number | string;
-  skip?: number | string;
   type?: string;
-  userId?: string;
-};
+} & GetMultipleBaseOptions;
 
 type GetBlogAsyncOptions = {
   id: string;
-  userId?: string;
 };
+
+type GetBlogCommentsOptions = {
+  blogId: string;
+} & GetMultipleBaseOptions;
 
 export class BlogAPI {
   static Fields = "";
@@ -35,13 +40,14 @@ export class BlogAPI {
    */
   async getBlogsAsync(options: GetBlogsAsyncOptions) {
     try {
-      const { limit = 10, skip = 0, type = "all", userId } = options;
+      const { limit = 10, skip = 0, type = "all" } = options;
       const url = RouteUtils.getPath("blogs");
       let query = `limit=${limit}&skip=${skip}&types=${type}`;
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
-      if (userId) query += `&userId=${userId}`;
-
-      const response = await this.api.get(RouteUtils.mergeQuery(url, query));
+      const response = await this.api.get(RouteUtils.mergeQuery(url, query), {
+        headers,
+      });
 
       return response.data.data as Array<Blog>;
     } catch (error: any) {
@@ -57,13 +63,13 @@ export class BlogAPI {
    */
   async getBlogAsync(options: GetBlogAsyncOptions) {
     try {
-      const { id, userId } = options;
+      const { id } = options;
       const url = RouteUtils.getPath("blogs", id);
-      let params = new URLSearchParams();
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
-      if (userId) params.append("userId", userId);
-
-      const response = await this.api.get(url, { params });
+      const response = await this.api.get(url, {
+        headers,
+      });
       // const data = await import("@/assets/mock-data/blog/blog.json");
 
       return response.data.data as Blog;
@@ -91,13 +97,34 @@ export class BlogAPI {
   }
 
   /**
+   * Get blog's comments
+   * @param options
+   * @returns
+   */
+  async getBlogComments(options: GetBlogCommentsOptions) {
+    try {
+      const { limit = 10, skip = 0, blogId } = options;
+      const url = RouteUtils.getPath("blogs", blogId, "comments");
+      let query = `limit=${limit}&skip=${skip}`;
+
+      const response = await this.api.get(RouteUtils.mergeQuery(url, query));
+
+      return response.data.data as Array<BlogComment>;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
    * Mark `like` on a blog
    * @param userId
    * @param blogId
    * @returns
    */
-  async postLikedBlogAsync(userId: string, blogId: string) {
+  async postLikedBlogAsync(blogId: string) {
     try {
+      const userId = API.getUser()?._id;
       const url = RouteUtils.getPath(
         "users",
         `${userId}`,
@@ -105,7 +132,11 @@ export class BlogAPI {
         `${blogId}`
       );
 
-      await this.api.post(url, null);
+      await this.api.post(url, null, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
 
       return true;
     } catch (error: any) {
@@ -120,8 +151,9 @@ export class BlogAPI {
    * @param blogId
    * @returns
    */
-  async deleteLikedBlogAsync(userId: string, blogId: string) {
+  async deleteLikedBlogAsync(blogId: string) {
     try {
+      const userId = API.getUser()?._id;
       const url = RouteUtils.getPath(
         "users",
         `${userId}`,
@@ -129,7 +161,11 @@ export class BlogAPI {
         `${blogId}`
       );
 
-      await this.api.delete(url);
+      await this.api.delete(url, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
 
       return true;
     } catch (error: any) {
@@ -149,6 +185,135 @@ export class BlogAPI {
       const url = RouteUtils.getPath("blogs", "content", "sugggested-titles");
 
       const response = await this.api.post(url, data);
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Upload blog
+   * @param data
+   */
+  async postBlog(data: FormData, configs?: AxiosRequestConfig) {
+    try {
+      const userId = API.getUser()?._id;
+
+      if (!userId) throw new Error("Unauthenticated");
+
+      const url = RouteUtils.getPath("users", userId, "blog");
+
+      configs = Object.assign(
+        {},
+        {
+          headers: {
+            Authorization: API.generateBearerToken(),
+          },
+        },
+        configs
+      );
+
+      const response = await this.api.post(url, data, configs);
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Create new comment for blog
+   * @param data
+   * @returns
+   */
+  async postBlogComment(blogId: string, data: CreateBlogComment) {
+    try {
+      const userId = API.getUser()?._id;
+
+      if (!userId) throw new Error("Unauthenticated");
+
+      const url = RouteUtils.getPath(
+        "users",
+        userId,
+        "comments",
+        "blogs",
+        blogId
+      );
+
+      const response = await this.api.post(url, data, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
+
+      console.log("Data:", response.data.data);
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Delete new comment for blog
+   * @param data
+   * @returns
+   */
+  async deleteBlogComment(blogId: string) {
+    try {
+      const userId = API.getUser()?._id;
+
+      if (!userId) throw new Error("Unauthenticated");
+
+      const url = RouteUtils.getPath(
+        "users",
+        userId,
+        "comments",
+        "blogs",
+        blogId
+      );
+
+      const response = await this.api.delete(url, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Update new comment for blog
+   * @param data
+   * @returns
+   */
+  async editBlogComment(blogId: string, data: CreateBlogComment) {
+    try {
+      const userId = API.getUser()?._id;
+
+      if (!userId) throw new Error("Unauthenticated");
+
+      const url = RouteUtils.getPath(
+        "users",
+        userId,
+        "comments",
+        "blogs",
+        blogId
+      );
+
+      const response = await this.api.patch(url, data, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
 
       return response.data.data;
     } catch (error: any) {

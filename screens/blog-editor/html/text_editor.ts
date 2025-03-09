@@ -62,11 +62,9 @@ export const editorHtmlSource = (props: EditorHtmlOptionsProps) => `
   <script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
   <script>
     let toolbarOptions = [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['image', 'link'],
+      ['bold', 'italic', 'underline', 'strike', 'link'],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'header': [3, 4, 5, 6, false] }],
-      ['clean']
+      [{ 'header': [3, 4, 5, 6, false] }]
     ];
 
     let MAX_IMAGE_SIZE = 2 * 1024 * 1024;

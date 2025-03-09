@@ -47,7 +47,7 @@ export default function PlaceDetailsScreen() {
   const bottomSheetRef = React.useRef(null);
   const opacityValue = React.useRef(new Animated.Value(0)).current;
 
-  const animFade = React.useCallback(
+  const animateFade = React.useCallback(
     (toValue: number) => {
       Animated.timing(opacityValue, {
         toValue: toValue,
@@ -60,20 +60,18 @@ export default function PlaceDetailsScreen() {
 
   const handleChangeBottomSheet = (index: number) => {
     if (index === 1) {
-      animFade(1);
+      animateFade(1);
     } else {
-      animFade(0);
+      animateFade(0);
     }
   };
 
   React.useEffect(() => {
     if (place) navigation.setOptions({ title: place.name });
-    if (!place || (place && place._id !== id)) {
-      placeDetailsDispatchers.fetchPlaceDetail(id);
-      return () => {
-        placeDetailsDispatchers.remove(id);
-      };
-    }
+    placeDetailsDispatchers.fetchPlaceDetail(id);
+    return () => {
+      placeDetailsDispatchers.remove(id);
+    };
   }, [id, language.code]);
 
   if (!place) return <PlaceDetailsSkeletonScreen />;
@@ -103,14 +101,6 @@ export default function PlaceDetailsScreen() {
 
   return (
     <View style={{ backgroundColor: theme.background, flex: 1 }}>
-      <Animated.View
-        style={{
-          opacity: opacityValue,
-          backgroundColor: theme.background,
-          height: HEADER_HEIGHT,
-          zIndex: 999,
-        }}
-      />
       <Image
         source={presentationImageUrl ? { uri: presentationImageUrl } : {}}
         style={styles.pd_background_image}

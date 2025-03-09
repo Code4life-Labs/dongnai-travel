@@ -5,11 +5,27 @@ export const placesSelectors = {
   /**
    * Get current places in store
    * @param state
-   * @param typeOfBriefPlaces
    * @returns
    */
   selectCurrentPlaces(state: AppState) {
     return state.places.briefPlaceListInformation.data;
+  },
+
+  /**
+   * Get current type of places
+   * @param state
+   */
+  selectCurrentPlacesType(state: AppState) {
+    return state.places.briefPlaceListInformation.type;
+  },
+
+  /**
+   * Get current status of current brief place
+   * @param state
+   * @returns
+   */
+  selectCurrentPlacesStatus(state: AppState) {
+    return state.places.briefPlaceListInformation.status;
   },
 
   /**

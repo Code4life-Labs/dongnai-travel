@@ -15,6 +15,9 @@ import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
 
+// Import objects
+import { UserManager } from "@/objects/user";
+
 // Import from styles
 import { Styles } from "@/styles";
 
@@ -167,18 +170,22 @@ export default function SignInScreen() {
         </View>
       </TouchableWithoutFeedback>
       <View style={styles.footer}>
-        <Link
-          href={"/home"}
+        <FC.AppText
+          size="h5"
+          color="secondary"
           style={[
             Styles.spacings.mt_6,
             Styles.spacings.mb_12,
             { alignSelf: "center" },
           ]}
+          onPress={() => {
+            UserManager.Storage.remove().then(() => {
+              router.navigate("/home");
+            });
+          }}
         >
-          <FC.AppText size="h5" color="secondary">
-            {_languageData.sign_in_as_gest[language.code]}
-          </FC.AppText>
-        </Link>
+          {_languageData.sign_in_as_gest[language.code]}
+        </FC.AppText>
         <FC.AppText style={styles.labelSocial}>
           {_languageData.or_signin_with[language.code]}
         </FC.AppText>
