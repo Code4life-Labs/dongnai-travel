@@ -41,6 +41,8 @@ type Response<Data> = {
   code: number;
 };
 
+let store: any;
+
 export class API {
   private _http!: Axios;
 
@@ -48,10 +50,50 @@ export class API {
     this._http = axios.create(config);
   }
 
-  static generateBearerToken(token: string, isHTTPHeader: boolean = false) {
+  /**
+   * Use to get user from state store
+   * @returns
+   */
+  static getUser() {
+    return store.getState().user.user;
+  }
+
+  /**
+   * Use to generate a Bearer token
+   * @param isHTTPHeader
+   * @returns
+   */
+  static generateBearerToken(isHTTPHeader: boolean = false) {
+    const token = store.getState().user.token;
+
+    if (!token) return null;
+
     const result = `Bearer ${token}`;
     if (isHTTPHeader) return { Authorization: result };
     return result;
+  }
+
+  /**
+   * Use to add Authorization to Header
+   * @param headers
+   * @returns
+   */
+  static addAuthorizationToHeader(headers: Record<string, any>) {
+    const token = API.generateBearerToken();
+
+    if (token) {
+      headers.Authorization = token;
+    }
+
+    return headers;
+  }
+
+  /**
+   * Use to inject Redux store
+   * @param _store
+   */
+  static injectStore(_store: any) {
+    store = _store;
   }
 
   /**

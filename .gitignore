@@ -22,3 +22,4 @@ pnpm-lock.yaml
 
 expo-env.d.ts
 # @end expo-cli
+.env

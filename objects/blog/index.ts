@@ -1,5 +1,8 @@
 import { debounce } from "lodash";
 
+// Import utils
+import { StringUtils } from "@/utils/string";
+
 import { BlogAPI } from "./api";
 import { BlogValidator } from "./validator";
 import { BlogStorage } from "./storage";
@@ -15,20 +18,20 @@ export class BlogManager {
   private constructor() {}
 
   /**
-   * Toggle favorite a blog
+   * Toggle like a blog
    * @param blog
-   * @param favoritePlace
-   * @param unfavoritePlace
+   * @param likeBlog
+   * @param unlikeBlog
    */
   static toggleLike = debounce(function (
     blog: Blog,
-    favoriteBlog: (blogId: string) => void,
-    unfavoriteBlog: (blogId: string) => void
+    likeBlog: (blogId: string) => void,
+    unlikeBlog: (blogId: string) => void
   ) {
     if (blog.isLiked) {
-      unfavoriteBlog(blog._id);
+      unlikeBlog(blog._id);
     } else {
-      favoriteBlog(blog._id);
+      likeBlog(blog._id);
     }
   }, parseInt(process.env.EXPO_PUBLIC_BUTTON_DEBOUNCE_TIME!));
 }

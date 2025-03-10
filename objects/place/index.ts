@@ -28,7 +28,9 @@ export class PlaceManager {
 
     while (i < place.addressComponents!.length) {
       if (
-        !this.Validator.canShowAddressComponent(place.addressComponents![i])
+        !PlaceManager.Validator.canShowAddressComponent(
+          place.addressComponents![i]
+        )
       ) {
         i++;
         continue;

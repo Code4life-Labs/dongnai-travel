@@ -132,9 +132,7 @@ export class DatetimeUtils {
     }
 
     const distanceInYear = parseInt((distanceInMonth / 12) as any);
-    if (distanceInMonth > 12) {
-      return { type: "year", distance: distanceInYear };
-    }
+    return { type: "year", distance: distanceInYear };
   }
 
   static getShortDateStr(

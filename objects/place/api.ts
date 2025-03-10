@@ -5,20 +5,21 @@ import { API } from "@/classes/API";
 import { RouteUtils } from "@/utils/route";
 
 // Import types
-import type { Place, PlaceType } from "./type";
+import type { Place, PlaceReview, CreatePlaceReview, PlaceType } from "./type";
+import type { GetMultipleBaseOptions } from "@/types/api";
 
 type GetPlacesAsyncOptions = {
-  limit?: number | string;
-  skip?: number | string;
   name?: string;
   type?: string;
-  userId?: string;
-};
+} & GetMultipleBaseOptions;
 
 type GetPlaceAsyncOptions = {
   id: string;
-  userId?: string;
 };
+
+type GetPlaceReviewsOptions = {
+  placeId: string;
+} & GetMultipleBaseOptions;
 
 export class PlaceAPI {
   static Fields =
@@ -37,14 +38,16 @@ export class PlaceAPI {
    */
   async getPlacesAsync(options: GetPlacesAsyncOptions) {
     try {
-      const { limit = 10, skip = 0, type = "all", name, userId } = options;
+      const { limit = 10, skip = 0, type = "all", name } = options;
       const url = RouteUtils.getPath("places");
       let query = `limit=${limit}&skip=${skip}&types=${type}`;
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
-      if (userId) query += `&userId=${userId}`;
       if (name) query += `&name=${name}`;
 
-      const response = await this.api.get(RouteUtils.mergeQuery(url, query));
+      const response = await this.api.get(RouteUtils.mergeQuery(url, query), {
+        headers,
+      });
 
       return response.data.data as Array<Place>;
     } catch (error: any) {
@@ -60,13 +63,13 @@ export class PlaceAPI {
    */
   async getPlaceAsync(options: GetPlaceAsyncOptions) {
     try {
-      const { id, userId } = options;
-      const url = RouteUtils.getPath("place");
-      let query = `id=${id}`;
+      const { id } = options;
+      const url = RouteUtils.getPath("places", id);
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
-      if (userId) query += `&userId=${userId}`;
-
-      const response = await this.api.get(RouteUtils.mergeQuery(url, query));
+      const response = await this.api.get(url, {
+        headers,
+      });
       // const data = await import("@/assets/mock-data/place/place.json");
 
       return response.data.data as Place;
@@ -94,21 +97,66 @@ export class PlaceAPI {
   }
 
   /**
+   * Get place's reviews
+   * @param options
+   * @returns
+   */
+  async getPlaceReviews(options: GetPlaceReviewsOptions) {
+    try {
+      const { limit = 10, skip = 0, placeId } = options;
+      const url = RouteUtils.getPath("places", placeId, "reviews");
+      let query = `limit=${limit}&skip=${skip}`;
+
+      const response = await this.api.get(RouteUtils.mergeQuery(url, query));
+
+      return response.data.data as Array<PlaceReview>;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   *  Get total review of a place
+   * @param placeId
+   * @returns
+   */
+  async getTotalReviewsOfPlace(placeId: string) {
+    try {
+      const url = RouteUtils.getPath("places", placeId, "total-reviews");
+
+      const response = await this.api.get(url);
+
+      return response.data.data as { count: number };
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
    * Mark `favorite` on a place
    * @param userId
    * @param placeId
    * @returns
    */
-  async postFavoritedPlaceAsync(userId: string, placeId: string) {
+  async postFavoritedPlaceAsync(placeId: string) {
     try {
+      const userId = API.getUser()?._id;
       const url = RouteUtils.getPath(
         "users",
         `${userId}`,
         "favorites/places",
         `${placeId}`
       );
-      console.log("URL:", url);
-      await this.api.post(url, null);
+
+      console.log("postFavoritedPlace URL:", url);
+
+      await this.api.post(url, null, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
 
       return true;
     } catch (error: any) {
@@ -123,8 +171,9 @@ export class PlaceAPI {
    * @param placeId
    * @returns
    */
-  async deleteFavoritedPlaceAsync(userId: string, placeId: string) {
+  async deleteFavoritedPlaceAsync(placeId: string) {
     try {
+      const userId = API.getUser()?._id;
       const url = RouteUtils.getPath(
         "users",
         `${userId}`,
@@ -132,7 +181,11 @@ export class PlaceAPI {
         `${placeId}`
       );
 
-      await this.api.delete(url);
+      await this.api.delete(url, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
 
       return true;
     } catch (error: any) {
@@ -147,8 +200,9 @@ export class PlaceAPI {
    * @param placeId
    * @returns
    */
-  async postVisitedPlaceAsync(userId: string, placeId: string) {
+  async postVisitedPlaceAsync(placeId: string) {
     try {
+      const userId = API.getUser()?._id;
       const url = RouteUtils.getPath(
         "users",
         `${userId}`,
@@ -156,7 +210,11 @@ export class PlaceAPI {
         `${placeId}`
       );
 
-      await this.api.post(url, null);
+      await this.api.post(url, null, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
 
       return true;
     } catch (error: any) {
@@ -171,8 +229,9 @@ export class PlaceAPI {
    * @param placeId
    * @returns
    */
-  async deleteVisitedPlaceAsync(userId: string, placeId: string) {
+  async deleteVisitedPlaceAsync(placeId: string) {
     try {
+      const userId = API.getUser()?._id;
       const url = RouteUtils.getPath(
         "users",
         `${userId}`,
@@ -180,12 +239,112 @@ export class PlaceAPI {
         `${placeId}`
       );
 
-      await this.api.delete(url);
+      await this.api.delete(url, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
 
       return true;
     } catch (error: any) {
       console.warn(error.message);
       return false;
+    }
+  }
+
+  /**
+   * Create new review for place
+   * @param data
+   * @returns
+   */
+  async postPlaceReview(placeId: string, data: CreatePlaceReview) {
+    try {
+      const userId = API.getUser()?._id;
+
+      if (!userId) throw new Error("Unauthenticated");
+
+      const url = RouteUtils.getPath(
+        "users",
+        userId,
+        "reviews",
+        "places",
+        placeId
+      );
+
+      const response = await this.api.post(url, data, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Delete new review for place
+   * @param data
+   * @returns
+   */
+  async deletePlaceReview(placeId: string) {
+    try {
+      const userId = API.getUser()?._id;
+
+      if (!userId) throw new Error("Unauthenticated");
+
+      const url = RouteUtils.getPath(
+        "users",
+        userId,
+        "reviews",
+        "places",
+        placeId
+      );
+
+      const response = await this.api.delete(url, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
+  /**
+   * Update new review for place
+   * @param data
+   * @returns
+   */
+  async editPlaceReview(placeId: string, data: CreatePlaceReview) {
+    try {
+      const userId = API.getUser()?._id;
+
+      if (!userId) throw new Error("Unauthenticated");
+
+      const url = RouteUtils.getPath(
+        "users",
+        userId,
+        "reviews",
+        "places",
+        placeId
+      );
+
+      const response = await this.api.patch(url, data, {
+        headers: {
+          Authorization: API.generateBearerToken() as string,
+        },
+      });
+
+      return response.data.data;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
     }
   }
 }

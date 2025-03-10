@@ -6,18 +6,22 @@ import { BooleanUtils } from "@/utils/boolean";
 import { NumberUtils } from "@/utils/number";
 
 // Import types
-import type { Blog, BlogType } from "@/objects/blog/type";
+import type { Blog, BlogType, UploadBlog } from "@/objects/blog/type";
 
 import { blogsThunks } from "./middlewares";
 
 type InitialState = {
   types: Array<BlogType>;
   blogDict: Record<string, Blog>;
+  preparedPublishBlog: UploadBlog | null;
   briefBlogListInformation: {
     type: string;
     limit: number;
     skip: number;
     data: Array<Partial<Blog>>;
+    status: {
+      isFetching: boolean;
+    };
   };
 };
 
@@ -33,6 +37,9 @@ function _createDefaultBriefBlog(limit = 5, skip = 0) {
     limit: limit,
     skip: skip,
     data: [] as Array<Partial<Blog>>,
+    status: {
+      isFetching: false,
+    },
   };
 }
 
@@ -45,6 +52,7 @@ const _DefaultTypes = [
 
 const initialState: InitialState = {
   types: [],
+  preparedPublishBlog: null,
   blogDict: Object(),
   briefBlogListInformation: _createDefaultBriefBlog(),
 };
@@ -129,15 +137,41 @@ export const blogsSlice = createSlice({
     },
 
     /**
-     * Use to refresh current blogs
+     * Use to refresh current publish blogs
      * @param state
      * @param action
      */
     clearBriefBlogInformation(state) {
       state.briefBlogListInformation = _createDefaultBriefBlog();
     },
+
+    /**
+     * Use to set data of blog
+     * @param state
+     * @param action
+     */
+    setPreparedPublishBlog(state, action) {
+      state.preparedPublishBlog = action.payload;
+    },
+
+    /**
+     * Use to update data of publish blog
+     * @param state
+     * @param action
+     */
+    updatePreparedPublishBlog(state, action) {
+      state.preparedPublishBlog = Object.assign(
+        {},
+        state.preparedPublishBlog,
+        action.payload
+      );
+    },
   },
   extraReducers(builder) {
+    builder.addCase(blogsThunks.getBlogsAsync.pending, (state, action) => {
+      state.briefBlogListInformation.status.isFetching = false;
+    });
+
     builder.addCase(blogsThunks.getBlogsAsync.fulfilled, (state, action) => {
       if (!action.payload) return;
 
@@ -149,7 +183,9 @@ export const blogsSlice = createSlice({
         state.briefBlogListInformation.data =
           state.briefBlogListInformation.data.concat(blogs);
         state.briefBlogListInformation.skip += blogs.length;
+        state.briefBlogListInformation.status.isFetching = false;
       } else {
+        state.briefBlogListInformation = _createDefaultBriefBlog();
         state.briefBlogListInformation.type = type;
         state.briefBlogListInformation.data = blogs;
         state.briefBlogListInformation.skip += blogs.length;
@@ -210,6 +246,12 @@ export const blogsSlice = createSlice({
         state.blogDict[action.payload].isLiked = false;
         state.blogDict[action.payload].totalFavorites! -= 1;
       }
+    });
+
+    builder.addCase(blogsThunks.uploadBlogAsync.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      state.blogDict[action.payload._id] = action.payload;
     });
   },
 });

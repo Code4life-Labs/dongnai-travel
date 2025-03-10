@@ -48,7 +48,7 @@ export class ExploreScreenUtils {
   }
 
   /**
-   * When
+   * When user stops scrolling and scroll is completed, this function will be called.
    * @param localData
    */
   static handleOnMomentumScrollEnd(

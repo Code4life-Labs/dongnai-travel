@@ -69,7 +69,12 @@ export function withBlogActions<T extends object>(
        */
       navigate() {
         blogDetailsActions.add(data);
-        router.push("/blogs");
+        router.navigate({
+          pathname: "/blogs/[id]",
+          params: {
+            id: data._id,
+          },
+        });
       },
       toggleLike() {
         BlogManager.toggleLike(

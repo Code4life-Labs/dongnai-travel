@@ -61,7 +61,6 @@ export const styles = StyleSheet.create({
 
   pd_content_rr_stats_container: {
     flexDirection: "row",
-    borderBottomWidth: 0.75,
     ...Styles.spacings.pb_12,
   },
 
