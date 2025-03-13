@@ -16,8 +16,8 @@ export const styles = StyleSheet.create({
   },
   home_temperature: {
     width: "100%",
-    paddingHorizontal: 10,
     ...Styles.spacings.mt_18,
+    ...Styles.spacings.ph_18,
     // ...Styles.boxShadows.type_4,
     borderRadius: 20,
     // backgroundColor: "gray",
@@ -29,7 +29,6 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     // ...Styles.boxShadows.type_4,
     justifyContent: "center",
-    gap: 20,
     alignItems: "center",
   },
   temperature_degrees: {
@@ -70,10 +69,10 @@ export const styles = StyleSheet.create({
     ...Styles.boxShadows.type_1,
   },
   item: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -84,8 +83,6 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // paddingHorizontal:16,
-    paddingLeft: 16,
   },
   category_name: {
     ...Styles.typography.size.sz_12,

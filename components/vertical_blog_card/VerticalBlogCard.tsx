@@ -152,7 +152,9 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
           {/* Sub-information */}
           <View style={styles.card_content_sub_information_container}>
             <FC.AppText size="body2">
-              {blog.createdAt ? DatetimeUtils.getShortDateStr(blog.createdAt) : ""}
+              {blog.createdAt
+                ? DatetimeUtils.getShortDateStr(blog.createdAt)
+                : ""}
             </FC.AppText>
             <FC.AppText numberOfLines={1} size="body2">
               {blog.readTime ? DatetimeUtils.toMinute(blog.readTime) : 0} min
@@ -164,7 +166,10 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
         <View
           style={[
             styles.card_buttons_container,
-            { borderTopColor: theme.outline, borderTopWidth: 1 },
+            {
+              borderTopColor: theme.outline,
+              borderTopWidth: 1,
+            },
           ]}
         >
           <RectangleButton
@@ -175,16 +180,18 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
             onPress={handleLikeButton}
           >
             {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (
-              <FC.AppText size="body2" style={currentLabelStyle}>
+              <>
                 <Ionicons
                   name={isActive ? "heart" : "heart-outline"}
-                  style={currentLabelStyle as any}
+                  style={[currentLabelStyle as any, Styles.spacings.me_6]}
                   size={14}
                 />{" "}
-                {!isActive
-                  ? _languageData["like"][language.code]
-                  : _languageData["liked"][language.code]}
-              </FC.AppText>
+                <FC.AppText size="body2" style={currentLabelStyle}>
+                  {!isActive
+                    ? _languageData["like"][language.code]
+                    : _languageData["liked"][language.code]}
+                </FC.AppText>
+              </>
             )}
           </RectangleButton>
 
@@ -194,14 +201,16 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
             style={styles.card_button}
           >
             {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (
-              <FC.AppText size="body2" style={currentLabelStyle}>
+              <>
                 <Ionicons
                   name={isActive ? "flag" : "flag-outline"}
-                  style={currentLabelStyle as any}
+                  style={[currentLabelStyle as any, Styles.spacings.me_6]}
                   size={14}
                 />{" "}
-                {_languageData["report"][language.code]}
-              </FC.AppText>
+                <FC.AppText size="body2" style={currentLabelStyle}>
+                  {_languageData["report"][language.code]}
+                </FC.AppText>
+              </>
             )}
           </RectangleButton>
         </View>
