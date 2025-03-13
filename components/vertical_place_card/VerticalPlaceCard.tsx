@@ -9,17 +9,26 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import RectangleButton from "@/components/buttons/RectangleButton";
-
-import styles from "./VerticalPlaceCardStyles";
-
-import { useTheme } from "@/hooks/useTheme";
-import { Styles } from "@/styles";
+// Import components
 import { FC } from "..";
+
+// Import hooks
+import { useTheme } from "@/hooks/useTheme";
+import { useLanguage } from "@/hooks/useLanguage";
+
+// Import objects
+import { PlaceManager } from "@/objects/place";
+
+// Import utils
 import { ComponentUtils } from "@/utils/component";
 import { StringUtils } from "@/utils/string";
-import { useLanguage } from "@/hooks/useLanguage";
-import { PlaceManager } from "@/objects/place";
+import { NumberUtils } from "@/utils/number";
+
+// Import styles
+import { Styles } from "@/styles";
+import styles from "./VerticalPlaceCardStyles";
+
+// Import types
 import { Place } from "@/objects/place/type";
 
 // Định nghĩa kiểu dữ liệu cho Place
@@ -100,8 +109,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
   //theme
   const { theme } = useTheme();
   const { language } = useLanguage();
-  const _languageData = (language.data as any)["exploreScreen"] as any;
-  console.log("🚀 ~ place:", place);
+  const _languageData = (language.data as any)["homeScreen"] as any;
 
   let presentationImage = place && place.photos ? { uri: place.photos[0] } : {};
   return React.useMemo(
@@ -116,7 +124,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
         }
       >
         {/* Image */}
-        <RectangleButton
+        <FC.RectangleButton
           isOnlyContent
           type="none"
           shape="rounded_4"
@@ -126,12 +134,12 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
             source={presentationImage}
             style={[styles.card_image]}
           />
-        </RectangleButton>
+        </FC.RectangleButton>
         {/* Button & Recommended tag */}
         <View style={styles.card_mid}>
           {place.isRecommended && (
             <FC.AppText size="sub1" color="onSubBackground">
-              {_languageData.place_card_recommended[language.code]}
+              {_languageData.recommended[language.code]}
             </FC.AppText>
           )}
         </View>
@@ -144,10 +152,36 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
 
           {/* Sub-information */}
           <View style={styles.card_content_sub_information_container}>
-            <FC.AppText size="body2">
-              <Ionicons name="star-outline" />
-              {place.rating}
-            </FC.AppText>
+            <View>
+              <View style={{ flexDirection: "row" }}>
+                <View style={[{ flexDirection: "row" }, Styles.spacings.me_6]}>
+                  <Ionicons name="star-outline" />
+                  <FC.AppText size="body2">{place.rating || 0}</FC.AppText>
+                </View>
+
+                <View style={{ flexDirection: "row" }}>
+                  <Ionicons name="chatbubble-outline" />
+                  <FC.AppText size="body2">
+                    {NumberUtils.toMetricNumber(place.totalReviews || 0)}
+                  </FC.AppText>
+                </View>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <View style={[{ flexDirection: "row" }, Styles.spacings.me_6]}>
+                  <Ionicons name="heart-outline" />
+                  <FC.AppText size="body2">
+                    {NumberUtils.toMetricNumber(place.totalFavorites || 0)}
+                  </FC.AppText>
+                </View>
+
+                <View style={{ flexDirection: "row" }}>
+                  <Ionicons name="compass-outline" />
+                  <FC.AppText size="body2">
+                    {NumberUtils.toMetricNumber(place.totalVisits || 0)}
+                  </FC.AppText>
+                </View>
+              </View>
+            </View>
             <FC.AppText numberOfLines={1} size="body2">
               <Ionicons name="location-outline" />{" "}
               {PlaceManager.getAddressShort(place)}
@@ -158,7 +192,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
         {/* Like button */}
         {isChatBotScreen ? (
           <>
-            <RectangleButton
+            <FC.RectangleButton
               // isActive={extendedPlaceInfo.isVisited}
               // type="highlight"
               shape="capsule"
@@ -172,7 +206,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
                   Khám phá ngay
                 </FC.AppText>
               )}
-            </RectangleButton>
+            </FC.RectangleButton>
           </>
         ) : (
           <View
@@ -181,7 +215,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
               { borderTopColor: theme.outline, borderTopWidth: 1 },
             ]}
           >
-            <RectangleButton
+            <FC.RectangleButton
               isActive={extendedPlaceInfo.isLiked}
               isTransparent
               type="opacity"
@@ -189,45 +223,44 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
               onPress={handleLikeButton}
             >
               {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (
-                <FC.AppText size="body2" style={currentLabelStyle}>
+                <>
                   <Ionicons
                     name={isActive ? "heart" : "heart-outline"}
-                    style={currentLabelStyle as any}
+                    style={[currentLabelStyle as any, Styles.spacings.me_6]}
                     size={14}
                   />{" "}
-                  {/* {langData.like[langCode]} */}
-                  Like
-                </FC.AppText>
+                  <FC.AppText size="body2" style={currentLabelStyle}>
+                    {!isActive
+                      ? _languageData["like"][language.code]
+                      : _languageData["liked"][language.code]}
+                  </FC.AppText>
+                </>
               )}
-            </RectangleButton>
+            </FC.RectangleButton>
 
-            <RectangleButton
+            <FC.RectangleButton
               isTransparent
               type="opacity"
               style={styles.card_button}
             >
               {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (
-                <FC.AppText size="body2" style={currentLabelStyle}>
+                <>
                   <Ionicons
                     name={isActive ? "flag" : "flag-outline"}
-                    style={currentLabelStyle as any}
+                    style={[currentLabelStyle as any, Styles.spacings.me_6]}
                     size={14}
-                  />
-                  {/* {langData.report[langCode]} */}
-                  Report
-                </FC.AppText>
+                  />{" "}
+                  <FC.AppText size="body2" style={currentLabelStyle}>
+                    {_languageData["report"][language.code]}
+                  </FC.AppText>
+                </>
               )}
-            </RectangleButton>
+            </FC.RectangleButton>
           </View>
         )}
       </View>
     ),
-    [
-      extendedPlaceInfo.isLiked,
-      place.rating,
-      place,
-      theme,
-    ]
+    [extendedPlaceInfo.isLiked, place.rating, place, theme]
   );
 };
 

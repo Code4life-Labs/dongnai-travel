@@ -17,7 +17,6 @@ import { styles } from "@/screens/home/styles";
 import { Styles } from "@/styles";
 import HomeBannerSlider from "@/screens/home/components/HomeBannerSlider";
 
-
 export default function HomeScreen() {
   const { theme } = useTheme();
   const router = useRouter();
@@ -59,15 +58,14 @@ export default function HomeScreen() {
         {/* Weather */}
         <View style={[styles.home_temperature]}>
           <View style={[styles.temperature]}>
-            <FC.Skeleton width="60%" height="65%" />
-            <FC.Skeleton width="20%" height="65%" />
+            <FC.Skeleton height="65%" />
           </View>
         </View>
         {/*  end weather */}
         {/* Place */}
         <View style={[{ backgroundColor: theme.background }]}>
           <TouchableOpacity
-            style={styles.category_header}
+            style={[styles.category_header, Styles.spacings.ph_18]}
             onPress={() => router.push("/explore")}
           >
             <FC.AppText size="h2">
@@ -120,7 +118,7 @@ export default function HomeScreen() {
         {/* Blog */}
         <View style={[{ backgroundColor: theme.background }]}>
           <TouchableOpacity
-            style={styles.category_header}
+            style={[styles.category_header, Styles.spacings.ph_18]}
             onPress={() => router.push("/blogs")}
           >
             <FC.AppText size="h2">

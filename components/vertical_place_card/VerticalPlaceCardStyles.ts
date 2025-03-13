@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
   card_buttons_container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    ...Styles.spacings.mt_12,
   },
 
   card_button: {
