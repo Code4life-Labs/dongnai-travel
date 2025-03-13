@@ -162,8 +162,7 @@ export default function BlogDetailScreen() {
               shape="capsule"
               style={Styles.spacings.pv_0}
             >
-              {/* {blog.isLiked ? 'Following' : 'Follow'} */}
-              Follow
+              {blog.isLiked ? 'Following' : 'Follow'}
             </FC.RectangleButton>
           </View>
 

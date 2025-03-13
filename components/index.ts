@@ -25,6 +25,12 @@ import Search from "./search/search";
 import SearchResultList from "./search/search-result-list";
 import { SimpleBarChart } from "./app_chart/app_bar_chart";
 import PlaceReview from "./place-review";
+import TypeScrollView from "./type_scroll_view/TypeScrollView";
+import { CachedImage } from "./cached_image";
+import VerticalPlaceCard from "./vertical_place_card/VerticalPlaceCard";
+import VerticalPlaceCardSkeleton from "./vertical_place_card/VerticalPlaceCardSkeleton";
+import VerticalBlogCard from "./vertical_blog_card/VerticalBlogCard";
+import VerticalBlogCardSkeleton from "./vertical_blog_card/VerticalBlogCardSkeleton";
 
 export const FC = {
   AppText,
@@ -49,6 +55,8 @@ export const FC = {
   Skeletons: {
     HorizontalPlaceCard: HorizontalPlaceCardSkeleton,
     HorizontalBlogCard: HorizontalBlogCardSkeleton,
+    VerticalPlaceCard: VerticalPlaceCardSkeleton,
+    VerticalBlogCard: VerticalBlogCardSkeleton,
   },
   Input,
   ReviewSectionPromise,
@@ -59,4 +67,8 @@ export const FC = {
   Search,
   SearchResultList,
   PlaceReview,
+  CachedImage,
+  VerticalPlaceCard,
+  VerticalBlogCard,
+  TypeScrollView,
 };

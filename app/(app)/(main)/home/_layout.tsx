@@ -4,14 +4,24 @@ import { Stack } from "expo-router";
 
 // Import from hooks
 import { useTheme } from "@/hooks/useTheme";
+import { FC } from "@/components";
 
 export default function HomeLayout() {
   const { theme } = useTheme();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
+      <Stack
+        screenOptions={{
+          header: (props) => <FC.AppHeader {...props} />,
+        }}
+      >
+        <Stack.Screen
+          name="index"
+          options={{
+            title: "Home",
+          }}
+        />
       </Stack>
     </SafeAreaView>
   );

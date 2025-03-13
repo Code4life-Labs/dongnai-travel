@@ -45,6 +45,28 @@ export class PlaceManager {
     return result;
   }
 
+   static getAddressShort(place: Partial<Place>) {
+
+    let result = "",
+      i = 1;
+
+    while (i < 3) {
+      if (
+        !this.Validator.canShowAddressComponent(place.addressComponents![i])
+      ) {
+        i++;
+        continue;
+      }
+
+      if (i > 1) result += " - " + place.addressComponents![i].shortName;
+      else result += place.addressComponents![i].shortName;
+
+      i++;
+    }
+
+    return result;
+  }
+
   /**
    * Toggle favorite a place
    * @param place

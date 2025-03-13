@@ -1,27 +1,25 @@
-import { StyleSheet ,Platform} from "react-native"
+import { Styles } from "@/styles";
+import { Platform, StyleSheet } from "react-native"
 
-import { app_c, app_sh, app_shdw, app_sp, app_dms } from "globals/styles"
 
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    width: app_dms.screenWidth * 0.5,
-    aspectRatio: 180 / 235,
+    width: Styles.dimension.screenWidth * 0.5,
+    aspectRatio: 180 / 239,
     alignSelf: 'flex-start',
-    backgroundColor: app_c.HEX.primary,
-    // borderWidth: 1.5,
-    // borderColor: app_c.HEX.ext_primary,
-    ...app_sp.p_10,
-    ...app_sh.rounded_8,
+    backgroundColor: Styles.theme.data.light.onSubBackground,
+    ...Styles.spacings.p_10,
+    ...Styles.shapes.rounded_8,
     ...Platform.select({
       ios: {
-        shadowColor: app_c.HEX.fourth,
+        shadowColor: Styles.theme.data.light.primary,
         shadowOffset: { width: 2, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 3.4,
       },
       android: {
-        elevation: 4,
+        elevation: 2,
         // borderWidth: 0.2, // Thêm borderWidth để hỗ trợ đổ bóng trên Android
         // borderColor:  app_c.HEX.ext_second, // Màu sắc của đường viền
         // shadowOpacity: 0.15,
@@ -31,19 +29,23 @@ const styles = StyleSheet.create({
 
   card_recommended: {
     borderWidth: 1.5,
-    borderColor: app_c.HEX.third
+    borderColor: Styles.theme.data.light.tertiary
   },
 
   card_image: {
     width: '100%',
     aspectRatio: 16 / 10,
-    backgroundColor: app_c.HEX.ext_primary,
-    ...app_sh.rounded_4
+    backgroundColor: Styles.theme.data.light.background,
+    ...Styles.shapes.rounded_4,
+    ...Styles.spacings.mb_6,
+    ...Styles.spacings.mt_6
   },
 
   card_mid: {
     minHeight: 18,
-    ...app_sp.mt_6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    ...Styles.spacings.mt_6,
   },
 
   card_content_container: {
@@ -51,13 +53,15 @@ const styles = StyleSheet.create({
   },
 
   card_content_sub_information_container: {
-    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   card_buttons_container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    ...app_sp.mt_12
+    ...Styles.spacings.mt_12,
+    ...Styles.spacings.mb_10
   },
 
   card_button: {
@@ -66,7 +70,13 @@ const styles = StyleSheet.create({
   },
 
   card_ske_bg: {
-    backgroundColor: app_c.HEX.ext_primary
+    backgroundColor: Styles.theme.data.light.background
+  },
+
+  card_user_avatar: {
+    width: 14,
+    ...Styles.shapes.circle,
+    aspectRatio: 1,
   }
 });
 
