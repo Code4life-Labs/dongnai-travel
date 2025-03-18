@@ -39,7 +39,6 @@ export default function BlogDetailScreen() {
   const { blog, blogDispatchers } = useBlogDetails(id);
 
   const [relatedBlogs, setRelatedBlogs] = React.useState<Array<Blog>>([]);
-  const [content, setContent] = React.useState("");
 
   // Dành để tranform thằng Float Buttons
   const floatButtonTranslateYAnim = React.useRef(new Animated.Value(0)).current;
@@ -56,7 +55,13 @@ export default function BlogDetailScreen() {
     offSetY.current = contentOffset.y;
   };
 
-  const handleLikeButton = function () {};
+  const handleLikeButton = function () {
+    BlogManager.toggleLike(
+      blog,
+      blogDispatchers.likeBlog,
+      blogDispatchers.unlikeBlog
+    );
+  };
 
   const toggleFloatButtonsVisible = (value: number) => {
     Animated.spring(floatButtonTranslateYAnim, {
@@ -67,27 +72,25 @@ export default function BlogDetailScreen() {
 
   React.useEffect(() => {
     if (blog) navigation.setOptions({ title: blog.name });
-    if (!blog || (blog && blog._id !== id)) {
-      console.log("Go here?");
-      blogDispatchers.fetchBlogDetail(id);
-      import("@/assets/mock-data/blog/content.json").then((data) => {
-        setContent(data.data);
-      });
+    console.log("Id:", id);
+    console.log("Blog:", blog);
+    blogDispatchers.fetchBlogDetail(id);
+    // import("@/assets/mock-data/blog/content.json").then((data) => {
+    //   setContent(data.data);
+    // });
 
-      if (relatedBlogs.length === 0) {
-        // BlogManager.Api.getBlogsAsync({
-        //   limit: 5,
-        //   skip: 0,
-        //   type,
-        //   userId: user ? user._id : undefined,
-        // })
-        //   .then((data) => {
-        //     setRelatedBlogs(data);
-        //   })
-        //   .catch(console.error);
-      }
+    if (relatedBlogs.length === 0) {
+      BlogManager.Api.getBlogsAsync({
+        limit: 5,
+        skip: 0,
+        type: blog.type._id,
+      })
+        .then((data) => {
+          if (!data || data.length === 0) return;
+          setRelatedBlogs(data);
+        })
+        .catch(console.error);
     }
-
     return function () {
       // clearBlogDetails(id);
     };
@@ -149,7 +152,7 @@ export default function BlogDetailScreen() {
               {/* Author name and other information  */}
               <View style={Styles.spacings.ms_12}>
                 <FC.AppText size="h5">{displayAuthorName}</FC.AppText>
-                <FC.AppText size="sub1">{`${DatetimeUtils.getShortDateStr(blog.createdAt!)} ${DatetimeUtils.toMinute(blog.readTime!)} min read.`}</FC.AppText>
+                <FC.AppText size="sub1">{`${DatetimeUtils.getShortDateStr(blog.createdAt!)} - ${DatetimeUtils.toMinute(blog.readTime!)} min read`}</FC.AppText>
               </View>
             </View>
 
@@ -159,8 +162,7 @@ export default function BlogDetailScreen() {
               shape="capsule"
               style={Styles.spacings.pv_0}
             >
-              {/* {blog.isLiked ? 'Following' : 'Follow'} */}
-              Follow
+              {blog.isLiked ? 'Following' : 'Follow'}
             </FC.RectangleButton>
           </View>
 
@@ -215,11 +217,43 @@ export default function BlogDetailScreen() {
           />
         </View>
 
-        {/* Blog Content */}
+        {/* Blog content */}
         <View style={styles.bd_content_container}>
-          {content && <Markdown>{content}</Markdown>}
+          {blog.content && <Markdown>{blog.content}</Markdown>}
         </View>
 
+        {/* Blog images */}
+        <View style={styles.bd_content_container}>
+          <ScrollView
+            style={Styles.spacings.mb_12}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {blog.images &&
+              blog.images.map((url, index) => {
+                let actualStyle: Array<any> = [
+                  styles.bd_content_image_button,
+                  Styles.spacings.me_18,
+                ];
+                return (
+                  <FC.RectangleButton
+                    isOnlyContent
+                    type="highlight"
+                    shape="rounded_8"
+                    style={actualStyle}
+                    key={url}
+                  >
+                    <Image
+                      source={{ uri: url }}
+                      style={{ width: "100%", aspectRatio: 1 }}
+                    />
+                  </FC.RectangleButton>
+                );
+              })}
+          </ScrollView>
+        </View>
+
+        {/* Related blogs */}
         <View
           style={[
             styles.bd_content_container,
@@ -310,7 +344,10 @@ export default function BlogDetailScreen() {
             style={Styles.spacings.me_6}
             type="highlight"
             onPress={() => {
-              router.navigate("/blogs/[id]/comments");
+              router.navigate({
+                pathname: "/blogs/[id]/comments",
+                params: { id: blog._id },
+              });
             }}
             setIcon={<Ionicons name="chatbox-outline" size={14} />}
           />

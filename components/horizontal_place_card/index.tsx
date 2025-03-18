@@ -54,8 +54,6 @@ function _HorizontalPlaceCard({
 
   let presentationImage = data && data.photos ? { uri: data.photos[0] } : {};
 
-  console.log("IsLiked:", data.isFavorited);
-
   return React.useMemo(
     () => (
       <View style={[styles.card, { backgroundColor: theme.subBackground }]}>
@@ -112,7 +110,7 @@ function _HorizontalPlaceCard({
                 <View style={styles.card_information_cell}>
                   <Ionicons name="star-outline" style={Styles.spacings.me_6} />
                   <AppText size="body2">
-                    {NumberUtils.toMetricNumber(data.rating!)}
+                    {NumberUtils.toMetricNumber(data.rating || 0)}
                   </AppText>
                 </View>
                 <View style={styles.card_information_cell}>
@@ -121,7 +119,7 @@ function _HorizontalPlaceCard({
                     style={Styles.spacings.me_6}
                   />
                   <AppText size="body2">
-                    {NumberUtils.toMetricNumber(data.totalReviews!)}
+                    {NumberUtils.toMetricNumber(data.totalReviews || 0)}
                   </AppText>
                 </View>
               </View>
@@ -129,7 +127,7 @@ function _HorizontalPlaceCard({
                 <View style={styles.card_information_cell}>
                   <Ionicons name="heart-outline" style={Styles.spacings.me_6} />
                   <AppText size="body2">
-                    {NumberUtils.toMetricNumber(data.totalFavorites!)}
+                    {NumberUtils.toMetricNumber(data.totalFavorites || 0)}
                   </AppText>
                 </View>
                 <View style={styles.card_information_cell}>
@@ -138,7 +136,7 @@ function _HorizontalPlaceCard({
                     style={Styles.spacings.me_6}
                   />
                   <AppText size="body2">
-                    {NumberUtils.toMetricNumber(data.totalVisits!)}
+                    {NumberUtils.toMetricNumber(data.totalVisits || 0)}
                   </AppText>
                 </View>
               </View>

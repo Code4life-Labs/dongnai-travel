@@ -1,4 +1,5 @@
 // Import types
+import type { ImagePickerAsset } from "expo-image-picker";
 import type { ChangeStateFn } from "@/hooks/useStateManager";
 
 export type PrepareToPublishBlogScreenStateType = ReturnType<
@@ -7,7 +8,7 @@ export type PrepareToPublishBlogScreenStateType = ReturnType<
 
 function getInitialState() {
   return {
-    presentationImage: null as string | null,
+    presentationImage: null as ImagePickerAsset | null,
     type: null as string | null,
     mentionedPlaces: [] as Array<any>,
     content: null as string | null,
@@ -24,7 +25,7 @@ function getStateFns(
   changeState: ChangeStateFn<PrepareToPublishBlogScreenStateType>
 ) {
   return {
-    setPresentationImage(image: string | null) {
+    setPresentationImage(image: ImagePickerAsset | null) {
       changeState("presentationImage", function () {
         return image;
       });

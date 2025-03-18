@@ -54,7 +54,7 @@ export class StringUtils {
    * Một chữ "sạch" được truyền vào function này sẽ nhận về một chữ "sạch" đã được ghi hoa chữ cái đầu.
    * Nếu như `text` là một __câu__ thì nó sẽ trả về lại câu đó mà không làm gì cả.
    *
-   * @param text - Chhữ cần ghi hoa.
+   * @param text - Chữ cần ghi hoa.
    * @returns Chuỗi ban đầu đã được loại bỏ `separator`.
    */
   static upperCaseFirstLetter(text: string) {

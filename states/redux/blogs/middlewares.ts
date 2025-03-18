@@ -7,6 +7,7 @@ import { UserManager } from "@/objects/user";
 // Import types
 import type { AppState } from "../type";
 import type { Blog } from "@/objects/blog/type";
+import { API } from "@/classes/API";
 
 // import { getBlogsAPI, getBlogDetailsWithPipelineAPI } from "apis/axios";
 
@@ -19,13 +20,11 @@ const getBlogsAsync = createAsyncThunk(
         blogs = state.blogs.briefBlogListInformation,
         limit = blogs ? blogs.limit : 5,
         skip = blogs ? blogs.skip : 0;
-      const userId = state.user.user?._id;
 
       const data = await BlogManager.Api.getBlogsAsync({
         limit,
         skip,
         type,
-        userId,
       });
       return [type, data] as [string, Array<Blog>];
     } catch (error: any) {
@@ -40,9 +39,8 @@ const getBlogDetailAsync = createAsyncThunk(
   async (payload: string, thunkAPI) => {
     try {
       const state = thunkAPI.getState() as AppState;
-      const userId = state.user.user?._id;
 
-      const data = await BlogManager.Api.getBlogAsync({ id: payload, userId });
+      const data = await BlogManager.Api.getBlogAsync({ id: payload });
 
       return [payload, data] as [string, Blog];
     } catch (error: any) {
@@ -67,15 +65,9 @@ const getBlogTypesAsync = createAsyncThunk(
 
 const likeBlogAsync = createAsyncThunk(
   "places/likeBlogAsync",
-  async (placeId: string, thunkAPI) => {
+  async (placeId: string) => {
     try {
-      const state = thunkAPI.getState() as AppState;
-      const userInStorage = await UserManager.Storage.get();
-      const userId = userInStorage
-        ? userInStorage.user._id
-        : state.user.user?._id;
-
-      await BlogManager.Api.postLikedBlogAsync(userId, placeId);
+      await BlogManager.Api.postLikedBlogAsync(placeId);
       return placeId;
     } catch (error: any) {
       console.error(error.message);
@@ -85,16 +77,28 @@ const likeBlogAsync = createAsyncThunk(
 
 const unlikeBlogAsync = createAsyncThunk(
   "places/unlikeBlogAsync",
-  async (placeId: string, thunkAPI) => {
+  async (placeId: string) => {
     try {
-      const state = thunkAPI.getState() as AppState;
-      const userInStorage = await UserManager.Storage.get();
-      const userId = userInStorage
-        ? userInStorage.user._id
-        : state.user.user?._id;
-
-      await BlogManager.Api.deleteLikedBlogAsync(userId, placeId);
+      await BlogManager.Api.deleteLikedBlogAsync(placeId);
       return placeId;
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  }
+);
+
+const uploadBlogAsync = createAsyncThunk(
+  "places/uploadBlogAsync",
+  async (value: any) => {
+    try {
+      const { metadata, completeBlog } = value;
+
+      // Validate metadata before uploading
+      await BlogManager.Api.validateBlogMetadata(metadata);
+
+      // Upload blog
+      const result = await BlogManager.Api.postBlog(completeBlog);
+      return result;
     } catch (error: any) {
       console.error(error.message);
     }
@@ -107,4 +111,5 @@ export const blogsThunks = {
   getBlogTypesAsync,
   likeBlogAsync,
   unlikeBlogAsync,
+  uploadBlogAsync,
 };

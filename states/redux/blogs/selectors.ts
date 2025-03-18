@@ -13,6 +13,23 @@ export const blogsSelectors = {
   },
 
   /**
+   * Get current type of blogs
+   * @param state
+   */
+  selectCurrentBlogsType(state: AppState) {
+    return state.blogs.briefBlogListInformation.type;
+  },
+
+  /**
+   * Get current status of current brief blog
+   * @param state
+   * @returns
+   */
+  selectCurrentBlogsStatus(state: AppState) {
+    return state.blogs.briefBlogListInformation.status;
+  },
+
+  /**
    * Get blog details in redux store by id
    * @param state
    * @returns
@@ -21,7 +38,21 @@ export const blogsSelectors = {
     return state.blogs.blogDict[blogId];
   },
 
+  /**
+   * Get types of blog
+   * @param state
+   * @returns
+   */
   selectBlogTypes(state: AppState) {
     return state.blogs.types;
+  },
+
+  /**
+   * Get blog data which is prepared to publish
+   * @param state
+   * @returns
+   */
+  selectPreparedPublishBlog(state: AppState) {
+    return state.blogs.preparedPublishBlog;
   },
 };
