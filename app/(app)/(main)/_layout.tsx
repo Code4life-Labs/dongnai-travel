@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { Tabs, Redirect, useSegments } from "expo-router";
 
 // Import from components
@@ -9,6 +9,7 @@ import { FC } from "@/components";
 import { useTheme } from "@/hooks/useTheme";
 import { useStatusActions } from "@/hooks/useStatus";
 import { useAuth } from "@/hooks/useAuth";
+import { useSafeAreaConfig } from "@/hooks/useSafeArea";
 
 // Import utils
 import { StorageUtils } from "@/utils/storage";
@@ -17,6 +18,7 @@ export default function TabLayout() {
   const { theme } = useTheme();
   const statusDispatchers = useStatusActions();
   const segments = useSegments();
+  const { useSafeArea } = useSafeAreaConfig();
 
   React.useEffect(() => {
     let hide = true;
@@ -57,8 +59,11 @@ export default function TabLayout() {
     statusDispatchers.setIsBottomTabShown(true);
   }, [segments, segments.length]);
 
+  // Kiểm tra xem có nên sử dụng SafeAreaView hay không
+  const Container = useSafeArea ? SafeAreaView : View;
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+    <Container style={{ flex: 1, backgroundColor: theme.background }}>
       <Tabs
         tabBar={(props) => <FC.BottomTabBar {...props} />}
         screenOptions={{
@@ -102,6 +107,6 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </SafeAreaView>
+    </Container>
   );
 }
