@@ -1,0 +1,32 @@
+{
+  "name": "react-native-maps-line-arrow",
+  "version": "0.2.1",
+  "description": "Add-on to react-native-maps to add arrow or any other component to the end of the Polyline component",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vvivan89/react-native-maps-arrow-line.git"
+  },
+  "keywords": [
+    "map",
+    "arrow",
+    "polyline",
+    "react-native",
+    "react",
+    "android",
+    "ios"
+  ],
+  "author": "vvivan89",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vvivan89/react-native-maps-arrow-line/issues"
+  },
+  "homepage": "https://github.com/vvivan89/react-native-maps-arrow-line#readme",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-maps": "*"
+  },
+  "types": "./index.d.ts"
+}
