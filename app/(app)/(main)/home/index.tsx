@@ -12,10 +12,19 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { usePlaces } from "@/hooks/usePlace";
 import { useBlogs } from "@/hooks/useBlog";
 
+// Import from objects
+import { WeatherAPI } from "@/objects/weather/api";
+
 // Import from styles
 import { styles } from "@/screens/home/styles";
 import { Styles } from "@/styles";
 import HomeBannerSlider from "@/screens/home/components/HomeBannerSlider";
+
+// Import component mới
+import { HomeWeather } from "@/components/home_weather";
+
+// Import from utils
+import { translateWeatherCondition } from "@/utils/locationData";
 
 export default function HomeScreen() {
   const { theme } = useTheme();
@@ -23,7 +32,8 @@ export default function HomeScreen() {
   const { language } = useLanguage();
 
   const _languageData = (language.data as any)["homeScreen"] as any;
-  // const [weather, setWeather] = React.useState<any>(null);
+  const [weather, setWeather] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
   const [typePlace, setTypePlace] = React.useState("all");
   const [typeBlog, setTypeBlog] = React.useState("all");
 
@@ -42,9 +52,24 @@ export default function HomeScreen() {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  const fetchWeather = async () => {
+    try {
+      setLoading(true);
+      const response = await WeatherAPI.getDongNaiWeather();
+      if (response?.data?.data?.data) {
+        setWeather(response.data.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching weather:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   React.useEffect(() => {
     placesDispatchers.fetchPlaces();
     blogsDispatchers.fetchBlogs();
+    fetchWeather();
   }, []);
 
   return (
@@ -57,11 +82,9 @@ export default function HomeScreen() {
         {/* end header  */}
         {/* Weather */}
         <View style={[styles.home_temperature]}>
-          <View style={[styles.temperature]}>
-            <FC.Skeleton height="65%" />
-          </View>
+          <HomeWeather />
         </View>
-        {/*  end weather */}
+        {/* end weather */}
         {/* Place */}
         <View style={[{ backgroundColor: theme.background }]}>
           <TouchableOpacity

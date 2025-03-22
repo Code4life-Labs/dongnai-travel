@@ -22,6 +22,12 @@ export default function HomeLayout() {
             title: "Home",
           }}
         />
+        <Stack.Screen
+          name="weather"
+          options={{
+            title: "Weather",
+          }}
+        />
       </Stack>
     </SafeAreaView>
   );
