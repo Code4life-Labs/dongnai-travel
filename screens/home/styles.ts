@@ -22,6 +22,7 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     // backgroundColor: "gray",
     // elevation: 3,
+    paddingBottom:16
   },
   temperature: {
     width: "100%",
@@ -117,5 +118,35 @@ export const styles = StyleSheet.create({
   place_list_item: {
     width: 130,
     height: 150,
+  },
+  temperature_banner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  
+  temperature_left: {
+    alignItems: 'flex-start',
+  },
+  
+  temperature_right: {
+    alignItems: 'flex-end',
+  },
+  
+  temperature_details: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 4,
   },
 });
