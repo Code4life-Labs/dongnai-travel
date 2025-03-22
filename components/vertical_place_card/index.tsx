@@ -7,6 +7,7 @@ import {
   TextStyle,
   Image,
 } from "react-native";
+import { router } from "expo-router";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Import components
@@ -26,7 +27,7 @@ import { NumberUtils } from "@/utils/number";
 
 // Import styles
 import { Styles } from "@/styles";
-import styles from "./VerticalPlaceCardStyles";
+import styles from "./styles";
 
 // Import types
 import { Place } from "@/objects/place/type";
@@ -242,6 +243,9 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
               isTransparent
               type="opacity"
               style={styles.card_button}
+              onPress={() => {
+                router.navigate({ pathname: "/reports" });
+              }}
             >
               {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (
                 <>

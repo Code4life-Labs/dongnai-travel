@@ -1,19 +1,25 @@
 import { Image, View, ViewProps, StyleProp, TextStyle } from "react-native";
 import React from "react";
-
-import { useNavigation } from "@react-navigation/native";
-
-import { useTheme } from "@/hooks/useTheme";
-
+import { router } from "expo-router";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import styles from "./VerticalBlogCardStyles";
-import { Styles } from "@/styles";
+// Import hooks
+import { useTheme } from "@/hooks/useTheme";
+import { useLanguage } from "@/hooks/useLanguage";
+
+// Import components
 import { FC } from "..";
 import { RectangleButton } from "../buttons";
+
+// Import utils
 import { ComponentUtils } from "@/utils/component";
 import { DatetimeUtils } from "@/utils/datetime";
-import { useLanguage } from "@/hooks/useLanguage";
+
+// Import styles
+import styles from "./styles";
+import { Styles } from "@/styles";
+
+// Import types
 import { Blog } from "@/objects/blog/type";
 
 // Định nghĩa kiểu dữ liệu cho Blog
@@ -94,8 +100,6 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
   ...props
 }) => {
   const containerStyle = ComponentUtils.mergeStyle(styles.card, props.style);
-  //Đức useNavagation to make when onPress Image of Blog => toScreen BlogDetailScreen
-  const navigation = useNavigation();
 
   //theme
   const { theme } = useTheme();
@@ -199,6 +203,9 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
             isTransparent
             type="opacity"
             style={styles.card_button}
+            onPress={() => {
+              router.navigate({ pathname: "/reports" });
+            }}
           >
             {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (
               <>

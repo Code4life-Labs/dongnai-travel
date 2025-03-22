@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import React from "react";
 
-import styles from "./VerticalPlaceCardStyles";
+import styles from "./styles";
 import { ComponentUtils } from "@/utils/component";
 
 import { useTheme } from "@/hooks/useTheme";
@@ -13,7 +13,7 @@ import { Styles } from "@/styles";
  * @param {ViewProps} props Props của component. Chình là props của View.
  * @returns
  */
-const VerticalPlaceCardSkeleton = (props) => {
+const VerticalPlaceCardSkeleton = (props: any) => {
   const containerStyle = ComponentUtils.mergeStyle(styles.card, props.style);
   //theme
   const { theme } = useTheme();
@@ -31,25 +31,23 @@ const VerticalPlaceCardSkeleton = (props) => {
       />
       {/* Button & Recommended tag */}
       <Skeleton
-        skeletonStyle={[
+        style={[
+          {
+            marginBottom: 3,
+          },
           styles.card_mid,
           styles.card_ske_bg,
           Styles.shapes.rounded_4,
         ]}
-        style={{
-          marginBottom: 3,
-        }}
         height={15}
         width={"50%"}
       />
       {/* Content */}
       <View style={styles.card_content_container}>
         <Skeleton
-          skeletonStyle={[styles.card_ske_bg, Styles.shapes.rounded_4]}
-          backgroundColor={theme.outline}
+          style={[styles.card_ske_bg, Styles.shapes.rounded_4]}
           height={59}
           width={"100%"}
-          marginBottom={3}
         />
 
         {/* Sub-information */}

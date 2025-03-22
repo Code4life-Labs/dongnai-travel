@@ -1,7 +1,7 @@
 // Import types
 import type { User } from "../user/type";
 
-type AddressComoponent = {
+export type AddressComoponent = {
   shortName: string;
   longName: string;
   types: Array<string>;

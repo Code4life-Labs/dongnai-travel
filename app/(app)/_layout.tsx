@@ -20,11 +20,15 @@ import { StorageUtils } from "@/utils/storage";
 SplashScreen.preventAutoHideAsync();
 
 // Component to conditionally apply SafeAreaView
-const ConditionalSafeAreaView = ({ children }: { children: React.ReactNode }) => {
+const ConditionalSafeAreaView = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const { useSafeArea } = useSafeAreaConfig();
   const { theme } = useTheme();
 
-  console.log('SafeArea status:', useSafeArea); // Add logging to debug
+  console.log("SafeArea status:", useSafeArea); // Add logging to debug
 
   if (useSafeArea) {
     return (
@@ -35,7 +39,11 @@ const ConditionalSafeAreaView = ({ children }: { children: React.ReactNode }) =>
   }
 
   // When useSafeArea is false, return only View without SafeAreaView
-  return <View style={{ flex: 1, backgroundColor: theme.background }}>{children}</View>;
+  return (
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
+      {children}
+    </View>
+  );
 };
 
 export default function AppLayout() {
@@ -93,67 +101,74 @@ export default function AppLayout() {
           <FC.GlobalLoading />
           <GestureHandlerRootView style={{ flex: 1 }}>
             <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen 
-                name="(main)" 
-                options={{ 
+              <Stack.Screen
+                name="(main)"
+                options={{
                   headerShown: false,
-                }} 
+                }}
               />
-              <Stack.Screen 
-                name="(sub)" 
-                options={{ 
+              <Stack.Screen
+                name="(sub)"
+                options={{
                   headerShown: false,
-                  animation: 'slide_from_right'
-                }} 
+                  animation: "slide_from_right",
+                }}
               />
-              <Stack.Screen 
-                name="index" 
-                options={{ 
+              <Stack.Screen
+                name="index"
+                options={{
                   headerShown: false,
-                  animation: 'fade'
-                }} 
+                  animation: "fade",
+                }}
               />
-              <Stack.Screen 
-                name="sign-up" 
-                options={{ 
-                  headerShown: false,
-                  animation: 'slide_from_right'
-                }} 
+              <Stack.Screen
+                name="reports"
+                options={{
+                  animation: "slide_from_bottom",
+                  presentation: "formSheet",
+                }}
               />
-              <Stack.Screen 
-                name="otp" 
-                options={{ 
+              <Stack.Screen
+                name="sign-up"
+                options={{
                   headerShown: false,
-                  animation: 'slide_from_right'
-                }} 
+                  animation: "slide_from_right",
+                }}
               />
-              <Stack.Screen 
-                name="forgot-password" 
-                options={{ 
+              <Stack.Screen
+                name="otp"
+                options={{
                   headerShown: false,
-                  animation: 'slide_from_right'
-                }} 
+                  animation: "slide_from_right",
+                }}
               />
-              <Stack.Screen 
-                name="reset-password" 
-                options={{ 
+              <Stack.Screen
+                name="forgot-password"
+                options={{
                   headerShown: false,
-                  animation: 'slide_from_right'
-                }} 
+                  animation: "slide_from_right",
+                }}
               />
-              <Stack.Screen 
-                name="html" 
-                options={{ 
+              <Stack.Screen
+                name="reset-password"
+                options={{
                   headerShown: false,
-                  animation: 'slide_from_right'
-                }} 
+                  animation: "slide_from_right",
+                }}
               />
-              <Stack.Screen 
-                name="not-found" 
-                options={{ 
+              <Stack.Screen
+                name="html"
+                options={{
                   headerShown: false,
-                  animation: 'fade'
-                }} 
+                  animation: "slide_from_right",
+                }}
+              />
+              <Stack.Screen
+                name="not-found"
+                options={{
+                  headerShown: false,
+                  animation: "fade",
+                }}
               />
             </Stack>
           </GestureHandlerRootView>
