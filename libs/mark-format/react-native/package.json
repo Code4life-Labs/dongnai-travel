@@ -1,0 +1,14 @@
+{
+  "name": "mark-format-react-native",
+  "version": "1.0.0",
+  "description": "Day la package dung de hien thi dinh dang van ban cho React Native",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mark-format-react-mative"
+  ],
+  "author": "Nguyen Anh Tuan",
+  "license": "ISC"
+}

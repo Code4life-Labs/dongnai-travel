@@ -76,6 +76,10 @@ export default function BottomTabBar(props: BottomTabBarProps) {
     >
       <View style={styles.tab_bottom_buttons_container}>
         {props.state.routes.map((route, index) => {
+          if (!(route.name in TabButtonsData)) {
+            return null;
+          }
+          
           const tabBottomProps: TabButtonProps = {
             data: (TabButtonsData as any)[route.name],
             index,

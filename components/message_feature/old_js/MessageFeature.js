@@ -1,10 +1,10 @@
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Image, Platform, ActivityIndicator } from 'react-native'
-import React, { Component, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { View, Text, TouchableOpacity, ScrollView, Image, Platform, ActivityIndicator } from 'react-native'
+import React, { Component, memo, useEffect, useMemo, useRef, useState } from 'react'
 // import styles from './ChatBotScreenStyles'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentLanguage } from '../../redux/language/LanguageSlice'
 // import useTheme from 'customHooks/useTheme'
-import { getMorePlacesTextSearchAPI, getPlacesTextSearchAPI, getPlacesTextSearchAPIWithoutLoading, getRouteDirectionAPI, getRouteDirectionAPIWithoutLoading, getTextChatBotAPI } from 'apis/axios'
+import { getMorePlacesTextSearchAPI, getPlacesTextSearchAPIWithoutLoading, getRouteDirectionAPIWithoutLoading } from 'apis/axios'
 import { selectCurrentUser } from 'redux/user/UserSlice'
 import { selectTemporaryUserId } from 'redux/user/UserSlice'
 import { app_c, app_dms, app_sh, app_shdw, app_sp, app_typo } from 'globals/styles';
@@ -23,7 +23,7 @@ import moment from 'moment/moment'
 import { BRIEF_PLACE_DATA_FIELDS } from 'utilities/constants';
 import { WebView } from 'react-native-webview';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import { styles } from './MessageFeatureStyles'
+import { styles } from '../message-feature-styles'
 import StarRating from 'components/star_rating/StarRating'
 import ImagePromise from 'components/image_promise/ImagePromise'
 import { useNavigation } from '@react-navigation/native'

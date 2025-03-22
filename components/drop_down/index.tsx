@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux"
 
 // Import styles
 import { Styles } from "@/styles";
-import styles from "./type"
+import styles from "./styles"
 
 // Import hooks
 import { useStateManager } from "@/hooks/useStateManager";

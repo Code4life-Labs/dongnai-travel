@@ -1,9 +1,9 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
+import { View, SafeAreaView } from "react-native";
 import { Stack, router, SplashScreen, Slot } from "expo-router";
 import { useFonts } from "expo-font";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider as RNSafeAreaProvider } from "react-native-safe-area-context";
 
 // Import components
 import { FC } from "@/components";
@@ -11,12 +11,32 @@ import { FC } from "@/components";
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/hooks/useAuth";
+import { SafeAreaProvider, useSafeAreaConfig } from "@/hooks/useSafeArea";
 
 // Import utils
 import { StorageUtils } from "@/utils/storage";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+// Component to conditionally apply SafeAreaView
+const ConditionalSafeAreaView = ({ children }: { children: React.ReactNode }) => {
+  const { useSafeArea } = useSafeAreaConfig();
+  const { theme } = useTheme();
+
+  console.log('SafeArea status:', useSafeArea); // Add logging to debug
+
+  if (useSafeArea) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+        {children}
+      </SafeAreaView>
+    );
+  }
+
+  // When useSafeArea is false, return only View without SafeAreaView
+  return <View style={{ flex: 1, backgroundColor: theme.background }}>{children}</View>;
+};
 
 export default function AppLayout() {
   const { theme } = useTheme();
@@ -67,21 +87,78 @@ export default function AppLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
-        <FC.GlobalLoading />
-        <GestureHandlerRootView>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(main)" />
-            <Stack.Screen name="index" />
-            <Stack.Screen name="sign-up" />
-            <Stack.Screen name="reset-password" />
-            <Stack.Screen name="forgot-password" />
-            <Stack.Screen name="otp" />
-            <Stack.Screen name="not-found" />
-          </Stack>
-        </GestureHandlerRootView>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <RNSafeAreaProvider>
+      <SafeAreaProvider>
+        <ConditionalSafeAreaView>
+          <FC.GlobalLoading />
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen 
+                name="(main)" 
+                options={{ 
+                  headerShown: false,
+                }} 
+              />
+              <Stack.Screen 
+                name="(sub)" 
+                options={{ 
+                  headerShown: false,
+                  animation: 'slide_from_right'
+                }} 
+              />
+              <Stack.Screen 
+                name="index" 
+                options={{ 
+                  headerShown: false,
+                  animation: 'fade'
+                }} 
+              />
+              <Stack.Screen 
+                name="sign-up" 
+                options={{ 
+                  headerShown: false,
+                  animation: 'slide_from_right'
+                }} 
+              />
+              <Stack.Screen 
+                name="otp" 
+                options={{ 
+                  headerShown: false,
+                  animation: 'slide_from_right'
+                }} 
+              />
+              <Stack.Screen 
+                name="forgot-password" 
+                options={{ 
+                  headerShown: false,
+                  animation: 'slide_from_right'
+                }} 
+              />
+              <Stack.Screen 
+                name="reset-password" 
+                options={{ 
+                  headerShown: false,
+                  animation: 'slide_from_right'
+                }} 
+              />
+              <Stack.Screen 
+                name="html" 
+                options={{ 
+                  headerShown: false,
+                  animation: 'slide_from_right'
+                }} 
+              />
+              <Stack.Screen 
+                name="not-found" 
+                options={{ 
+                  headerShown: false,
+                  animation: 'fade'
+                }} 
+              />
+            </Stack>
+          </GestureHandlerRootView>
+        </ConditionalSafeAreaView>
+      </SafeAreaProvider>
+    </RNSafeAreaProvider>
   );
 }
