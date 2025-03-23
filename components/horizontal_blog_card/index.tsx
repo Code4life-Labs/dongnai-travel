@@ -9,6 +9,7 @@ import CircleButton from "../buttons/CircleButton";
 
 // import hocs
 import { withBlogActions } from "@/hocs/with-blog-actions";
+import { useReportSection } from "@/hooks/useReport";
 
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
@@ -45,6 +46,7 @@ function _HorizontalBlogCard({
       : data.author.displayName;
 
   const { theme, currentScheme } = useTheme();
+  const { reportSectionDispatchers } = useReportSection();
 
   return React.useMemo(
     () => (
@@ -138,6 +140,9 @@ function _HorizontalBlogCard({
               activeColor="type_1"
               style={Styles.spacings.me_8}
               type="highlight"
+              onPress={() => {
+                reportSectionDispatchers.openReportSection(data._id!, "blog");
+              }}
               setIcon={<Ionicons name="flag" size={14} />}
             />
           </View>

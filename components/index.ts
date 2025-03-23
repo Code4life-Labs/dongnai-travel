@@ -31,6 +31,9 @@ import VerticalPlaceCard from "./vertical_place_card";
 import VerticalPlaceCardSkeleton from "./vertical_place_card/skeleton";
 import VerticalBlogCard from "./vertical_blog_card";
 import VerticalBlogCardSkeleton from "./vertical_blog_card/skeleton";
+import ReportCard from "./report-card";
+import ReportCardSkeleton from "./report-card/skeleton";
+import ReportSection from "./report-section";
 
 export const FC = {
   AppText,
@@ -57,6 +60,7 @@ export const FC = {
     HorizontalBlogCard: HorizontalBlogCardSkeleton,
     VerticalPlaceCard: VerticalPlaceCardSkeleton,
     VerticalBlogCard: VerticalBlogCardSkeleton,
+    ReportCard: ReportCardSkeleton,
   },
   Input,
   ReviewSectionPromise,
@@ -71,4 +75,6 @@ export const FC = {
   VerticalPlaceCard,
   VerticalBlogCard,
   TypeScrollView,
+  ReportCard,
+  ReportSection,
 };

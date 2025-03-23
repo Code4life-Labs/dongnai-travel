@@ -4,6 +4,7 @@ import { Stack, router, SplashScreen, Slot } from "expo-router";
 import { useFonts } from "expo-font";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider as RNSafeAreaProvider } from "react-native-safe-area-context";
+import "react-native-gesture-handler";
 
 // Import components
 import { FC } from "@/components";
@@ -97,9 +98,9 @@ export default function AppLayout() {
   return (
     <RNSafeAreaProvider>
       <SafeAreaProvider>
-        <ConditionalSafeAreaView>
-          <FC.GlobalLoading />
-          <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <ConditionalSafeAreaView>
+            <FC.GlobalLoading />
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen
                 name="(main)"
@@ -119,13 +120,6 @@ export default function AppLayout() {
                 options={{
                   headerShown: false,
                   animation: "fade",
-                }}
-              />
-              <Stack.Screen
-                name="reports"
-                options={{
-                  animation: "slide_from_bottom",
-                  presentation: "formSheet",
                 }}
               />
               <Stack.Screen
@@ -171,8 +165,9 @@ export default function AppLayout() {
                 }}
               />
             </Stack>
-          </GestureHandlerRootView>
-        </ConditionalSafeAreaView>
+            <FC.ReportSection />
+          </ConditionalSafeAreaView>
+        </GestureHandlerRootView>
       </SafeAreaProvider>
     </RNSafeAreaProvider>
   );

@@ -1,0 +1,342 @@
+{
+  "spam": {
+    "place": {
+      "title": {
+        "vi": "Địa điểm spam",
+        "en": "Spam place"
+      },
+      "description": {
+        "vi": [
+          "Địa điểm này có thông tin bị lặp hoặc không hợp lệ.",
+          "Địa điểm chứa thông tin không chính xác hoặc giả mạo.",
+          "Thông tin về địa điểm này được sao chép từ nguồn khác mà không có sự cho phép.",
+          "Địa điểm này được tạo ra với mục đích spam hoặc quảng cáo không phù hợp.",
+          "Thông tin địa điểm không rõ ràng hoặc không có giá trị tham khảo."
+        ],
+        "en": [
+          "This place contains duplicate or invalid information.",
+          "The place contains inaccurate or falsified information.",
+          "Information about this place is copied from another source without permission.",
+          "This place was created for spamming or inappropriate advertising purposes.",
+          "The place information is unclear or lacks reference value."
+        ]
+      }
+    },
+    "blog": {
+      "title": {
+        "vi": "Bài viết spam",
+        "en": "Spam blog"
+      },
+      "description": {
+        "vi": [
+          "Bài viết chứa nội dung lặp đi lặp lại hoặc không liên quan.",
+          "Bài viết được sao chép từ nguồn khác mà không có sự cho phép.",
+          "Bài viết chứa quá nhiều liên kết hoặc quảng cáo không phù hợp.",
+          "Nội dung bài viết không có giá trị thông tin hoặc gây nhiễu.",
+          "Bài viết được tạo ra với mục đích spam hoặc lừa đảo."
+        ],
+        "en": [
+          "This blog contains repetitive or irrelevant content.",
+          "The blog is copied from another source without permission.",
+          "The blog contains too many links or inappropriate advertisements.",
+          "The content of the blog lacks informational value or is distracting.",
+          "The blog was created for spamming or fraudulent purposes."
+        ]
+      }
+    },
+    "user": {
+      "title": {
+        "vi": "Người dùng spam",
+        "en": "Spam user"
+      },
+      "description": {
+        "vi": [
+          "Người dùng này gửi quá nhiều nội dung spam.",
+          "Người dùng này tạo nhiều tài khoản để spam hoặc quảng cáo.",
+          "Người dùng này chia sẻ liên kết không liên quan hoặc độc hại.",
+          "Người dùng này có hành vi gửi tin nhắn rác hoặc bình luận spam.",
+          "Người dùng này vi phạm chính sách chống spam của cộng đồng."
+        ],
+        "en": [
+          "This user is posting excessive spam content.",
+          "This user creates multiple accounts for spamming or advertising.",
+          "This user shares irrelevant or harmful links.",
+          "This user engages in sending spam messages or comments.",
+          "This user violates the community's anti-spam policy."
+        ]
+      }
+    }
+  },
+  "harassment": {
+    "place": {
+      "title": {
+        "vi": "Quấy rối liên quan đến địa điểm",
+        "en": "Place-related harassment"
+      },
+      "description": {
+        "vi": [
+          "Thông tin về địa điểm chứa nội dung quấy rối hoặc xúc phạm.",
+          "Địa điểm này được sử dụng để nhắm mục tiêu hoặc làm phiền người khác.",
+          "Bình luận hoặc đánh giá về địa điểm chứa ngôn từ xúc phạm.",
+          "Địa điểm này được tạo ra với mục đích quấy rối hoặc gây hấn.",
+          "Thông tin địa điểm chứa nội dung phân biệt đối xử hoặc kỳ thị."
+        ],
+        "en": [
+          "Place information contains harassing or offensive content.",
+          "This place is used to target or bother others.",
+          "Comments or reviews about the place contain offensive language.",
+          "This place was created for harassment or aggression purposes.",
+          "Place information contains discriminatory or prejudiced content."
+        ]
+      }
+    },
+    "blog": {
+      "title": {
+        "vi": "Bài viết quấy rối",
+        "en": "Harassment blog"
+      },
+      "description": {
+        "vi": [
+          "Bài viết chứa lời lẽ xúc phạm hoặc tấn công cá nhân.",
+          "Bài viết này nhắm mục tiêu vào một cá nhân hoặc nhóm người.",
+          "Nội dung bài viết chứa ngôn từ kích động hoặc gây hấn.",
+          "Bài viết này được sử dụng để quấy rối hoặc đe dọa người khác.",
+          "Bài viết chứa nội dung phân biệt đối xử hoặc kỳ thị."
+        ],
+        "en": [
+          "This blog contains offensive or abusive language.",
+          "This blog targets an individual or group of people.",
+          "The blog content contains inflammatory or aggressive language.",
+          "This blog is used to harass or threaten others.",
+          "The blog contains discriminatory or prejudiced content."
+        ]
+      }
+    },
+    "user": {
+      "title": {
+        "vi": "Người dùng quấy rối",
+        "en": "Harassing user"
+      },
+      "description": {
+        "vi": [
+          "Người dùng này có hành vi quấy rối hoặc xúc phạm người khác.",
+          "Người dùng này gửi tin nhắn hoặc bình luận xúc phạm.",
+          "Người dùng này nhắm mục tiêu vào một cá nhân hoặc nhóm người.",
+          "Người dùng này có hành vi đe dọa hoặc gây hấn với người khác.",
+          "Người dùng này vi phạm chính sách chống quấy rối của cộng đồng."
+        ],
+        "en": [
+          "This user has harassed or insulted others.",
+          "This user sends offensive messages or comments.",
+          "This user targets an individual or group of people.",
+          "This user engages in threatening or aggressive behavior towards others.",
+          "This user violates the community's anti-harassment policy."
+        ]
+      }
+    }
+  },
+  "misinformation": {
+    "place": {
+      "title": {
+        "vi": "Địa điểm sai lệch thông tin",
+        "en": "Misinformation place"
+      },
+      "description": {
+        "vi": [
+          "Địa điểm cung cấp thông tin sai lệch hoặc gây hiểu nhầm.",
+          "Thông tin về địa điểm này không được kiểm chứng hoặc xác thực.",
+          "Địa điểm này được sử dụng để lan truyền tin giả hoặc thông tin sai lệch.",
+          "Thông tin địa điểm chứa nội dung gây hiểu lầm hoặc lừa đảo.",
+          "Địa điểm này được tạo ra với mục đích lan truyền thông tin sai lệch."
+        ],
+        "en": [
+          "This place provides false or misleading information.",
+          "Information about this place is unverified or unsubstantiated.",
+          "This place is used to spread fake news or misinformation.",
+          "Place information contains misleading or fraudulent content.",
+          "This place was created to disseminate false information."
+        ]
+      }
+    },
+    "blog": {
+      "title": {
+        "vi": "Bài viết sai sự thật",
+        "en": "Misinformation blog"
+      },
+      "description": {
+        "vi": [
+          "Bài viết chứa nội dung không chính xác hoặc gây hiểu nhầm.",
+          "Bài viết này lan truyền tin giả hoặc thông tin sai lệch.",
+          "Nội dung bài viết không được kiểm chứng hoặc xác thực.",
+          "Bài viết này được sử dụng để lừa đảo hoặc gây hiểu lầm.",
+          "Bài viết chứa thông tin sai lệch có chủ đích hoặc vô ý."
+        ],
+        "en": [
+          "This blog contains inaccurate or misleading content.",
+          "This blog spreads fake news or misinformation.",
+          "The blog content is unverified or unsubstantiated.",
+          "This blog is used to deceive or mislead.",
+          "The blog contains intentionally or unintentionally false information."
+        ]
+      }
+    },
+    "user": {
+      "title": {
+        "vi": "Người dùng tung tin sai",
+        "en": "Misinforming user"
+      },
+      "description": {
+        "vi": [
+          "Người dùng này chia sẻ thông tin sai lệch hoặc chưa xác thực.",
+          "Người dùng này lan truyền tin giả hoặc thông tin sai lệch.",
+          "Người dùng này có hành vi cố ý chia sẻ thông tin không chính xác.",
+          "Người dùng này vi phạm chính sách chống tin giả của cộng đồng.",
+          "Người dùng này chia sẻ thông tin gây hiểu lầm hoặc lừa đảo."
+        ],
+        "en": [
+          "This user shares false or unverified information.",
+          "This user spreads fake news or misinformation.",
+          "This user intentionally shares inaccurate information.",
+          "This user violates the community's anti-fake news policy.",
+          "This user shares misleading or fraudulent information."
+        ]
+      }
+    }
+  },
+  "inappropriate_content": {
+    "place": {
+      "title": {
+        "vi": "Nội dung không phù hợp về địa điểm",
+        "en": "Inappropriate place content"
+      },
+      "description": {
+        "vi": [
+          "Địa điểm chứa hình ảnh hoặc nội dung không phù hợp.",
+          "Thông tin về địa điểm này chứa nội dung phản cảm hoặc cấm.",
+          "Địa điểm này được sử dụng để chia sẻ nội dung không phù hợp với cộng đồng.",
+          "Hình ảnh hoặc mô tả về địa điểm này vi phạm quy định cộng đồng.",
+          "Địa điểm này chứa nội dung không phù hợp với lứa tuổi hoặc văn hóa."
+        ],
+        "en": [
+          "Place contains inappropriate images or content.",
+          "Information about this place contains offensive or prohibited content.",
+          "This place is used to share content inappropriate for the community.",
+          "Images or descriptions of this place violate community guidelines.",
+          "This place contains content unsuitable for certain ages or cultures."
+        ]
+      }
+    },
+    "blog": {
+      "title": {
+        "vi": "Bài viết không phù hợp",
+        "en": "Inappropriate blog"
+      },
+      "description": {
+        "vi": [
+          "Bài viết chứa nội dung phản cảm hoặc cấm.",
+          "Bài viết này chia sẻ nội dung không phù hợp với cộng đồng.",
+          "Nội dung bài viết vi phạm quy định cộng đồng hoặc pháp luật.",
+          "Bài viết chứa hình ảnh hoặc ngôn từ không phù hợp với lứa tuổi.",
+          "Bài viết này được sử dụng để chia sẻ nội dung không phù hợp."
+        ],
+        "en": [
+          "The blog contains offensive or prohibited content.",
+          "This blog shares content inappropriate for the community.",
+          "The blog content violates community guidelines or laws.",
+          "The blog contains images or language unsuitable for certain ages.",
+          "This blog is used to share inappropriate content."
+        ]
+      }
+    },
+    "user": {
+      "title": {
+        "vi": "Người dùng không phù hợp",
+        "en": "Inappropriate user"
+      },
+      "description": {
+        "vi": [
+          "Hành vi của người dùng không phù hợp với cộng đồng.",
+          "Người dùng này chia sẻ nội dung phản cảm hoặc cấm.",
+          "Người dùng này có hành vi vi phạm quy định cộng đồng.",
+          "Người dùng này chia sẻ nội dung không phù hợp với lứa tuổi.",
+          "Người dùng này có hành vi không phù hợp trong giao tiếp hoặc chia sẻ."
+        ],
+        "en": [
+          "This user’s behavior is inappropriate for the community.",
+          "This user shares offensive or prohibited content.",
+          "This user violates community guidelines.",
+          "This user shares content unsuitable for certain ages.",
+          "This user engages in inappropriate behavior in communication or sharing."
+        ]
+      }
+    }
+  },
+  "other": {
+    "place": {
+      "title": {
+        "vi": "Vấn đề khác về địa điểm",
+        "en": "Other issues with place"
+      },
+      "description": {
+        "vi": [
+          "Vấn đề khác liên quan đến địa điểm không thuộc các danh mục trên.",
+          "Địa điểm này gặp vấn đề kỹ thuật hoặc lỗi hệ thống.",
+          "Thông tin về địa điểm này không rõ ràng hoặc không đầy đủ.",
+          "Địa điểm này có vấn đề về quyền riêng tư hoặc bảo mật.",
+          "Địa điểm này cần được kiểm tra hoặc xem xét thêm."
+        ],
+        "en": [
+          "Other issues related to the place not covered above.",
+          "This place has technical issues or system errors.",
+          "Information about this place is unclear or incomplete.",
+          "This place has privacy or security concerns.",
+          "This place requires further inspection or review."
+        ]
+      }
+    },
+    "blog": {
+      "title": {
+        "vi": "Vấn đề khác về bài viết",
+        "en": "Other blog issue"
+      },
+      "description": {
+        "vi": [
+          "Bài viết gặp vấn đề khác không nằm trong danh mục trên.",
+          "Bài viết này có vấn đề về định dạng hoặc hiển thị.",
+          "Nội dung bài viết không rõ ràng hoặc khó hiểu.",
+          "Bài viết này có vấn đề về quyền riêng tư hoặc bảo mật.",
+          "Bài viết này cần được kiểm tra hoặc xem xét thêm."
+        ],
+        "en": [
+          "The blog has an issue not covered in the categories above.",
+          "This blog has formatting or display issues.",
+          "The blog content is unclear or difficult to understand.",
+          "This blog has privacy or security concerns.",
+          "This blog requires further inspection or review."
+        ]
+      }
+    },
+    "user": {
+      "title": {
+        "vi": "Vấn đề khác về người dùng",
+        "en": "Other user issue"
+      },
+      "description": {
+        "vi": [
+          "Người dùng có vấn đề khác không thuộc các lý do trên.",
+          "Người dùng này gặp vấn đề về tài khoản hoặc đăng nhập.",
+          "Người dùng này có hành vi không rõ ràng hoặc khó hiểu.",
+          "Người dùng này có vấn đề về quyền riêng tư hoặc bảo mật.",
+          "Người dùng này cần được kiểm tra hoặc xem xét thêm."
+        ],
+        "en": [
+          "The user has an issue not covered in the categories above.",
+          "This user has account or login issues.",
+          "This user exhibits unclear or confusing behavior.",
+          "This user has privacy or security concerns.",
+          "This user requires further inspection or review."
+        ]
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useReportSection } from "@/hooks/useReport";
 
 // Import components
 import { FC } from "..";
@@ -104,6 +105,7 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
   //theme
   const { theme } = useTheme();
   const { language } = useLanguage();
+  const { reportSectionDispatchers } = useReportSection();
   const _languageData = (language.data as any)["homeScreen"] as any;
 
   let displayAuthorName =
@@ -204,7 +206,7 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
             type="opacity"
             style={styles.card_button}
             onPress={() => {
-              router.navigate({ pathname: "/reports" });
+              reportSectionDispatchers.openReportSection(blog._id!, "blog");
             }}
           >
             {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (

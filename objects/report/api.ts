@@ -5,7 +5,7 @@ import { API } from "@/classes/API";
 import { RouteUtils } from "@/utils/route";
 
 // Import types
-import type { Report } from "./type";
+import type { Report, ReportReason, ReportStatus } from "./type";
 import type { GetMultipleBaseOptions } from "@/types/api";
 
 type GetReportsAsyncOptions = {} & GetMultipleBaseOptions;
@@ -33,7 +33,9 @@ export class ReportAPI {
   async getReportsAsync(options: GetReportsAsyncOptions) {
     try {
       const { limit = 10, skip = 0 } = options;
-      const url = RouteUtils.getPath("reports");
+      const user = API.getUser();
+      const url = RouteUtils.getPath("users", user._id, "reports");
+      console.log("URL:", url);
       let query = `limit=${limit}&skip=${skip}`;
       let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
@@ -53,18 +55,16 @@ export class ReportAPI {
    * @param options
    * @returns
    */
-  async getReportReasonsAsync(options: GetReportsAsyncOptions) {
+  async getReportReasonsAsync() {
     try {
-      const { limit = 10, skip = 0 } = options;
-      const url = RouteUtils.getPath("reports/statuses");
-      let query = `limit=${limit}&skip=${skip}`;
+      const url = RouteUtils.getPath("reports/reasons");
       let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
-      const response = await this.api.get(RouteUtils.mergeQuery(url, query), {
+      const response = await this.api.get(url, {
         headers,
       });
 
-      return response.data.data as Array<Report>;
+      return response.data.data as Array<ReportReason>;
     } catch (error: any) {
       console.warn(error.message);
       return null;
@@ -76,18 +76,16 @@ export class ReportAPI {
    * @param options
    * @returns
    */
-  async getReportStatusesAsync(options: GetReportsAsyncOptions) {
+  async getReportStatusesAsync() {
     try {
-      const { limit = 10, skip = 0 } = options;
       const url = RouteUtils.getPath("reports/statuses");
-      let query = `limit=${limit}&skip=${skip}`;
       let headers: Record<string, any> = API.addAuthorizationToHeader({});
 
-      const response = await this.api.get(RouteUtils.mergeQuery(url, query), {
+      const response = await this.api.get(url, {
         headers,
       });
 
-      return response.data.data as Array<Report>;
+      return response.data.data as Array<ReportStatus>;
     } catch (error: any) {
       console.warn(error.message);
       return null;
@@ -115,13 +113,15 @@ export class ReportAPI {
         [`${item.type}Id`]: item.id,
       };
 
+      console.log("Body:", body);
+
       const response = await this.api.post(url, body, {
         headers,
       });
 
-      return response.data.data as Array<Report>;
+      return response.data.data as Report;
     } catch (error: any) {
-      console.warn(error.message);
+      console.warn("Error - Create report async", error.message);
       return null;
     }
   }
