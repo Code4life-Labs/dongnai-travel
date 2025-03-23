@@ -16,6 +16,7 @@ import PlaceDetailsSkeletonScreen from "@/screens/place-detail/components/skelet
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "@/hooks/useTheme";
 import { usePlaceDetails } from "@/hooks/usePlace";
+import { useReportSection } from "@/hooks/useReport";
 
 // Import objects
 import { PlaceManager } from "@/objects/place";
@@ -36,6 +37,7 @@ export default function PlaceDetailsScreen() {
   const { language } = useLanguage();
   const { theme } = useTheme();
   const { place, placeDetailsDispatchers } = usePlaceDetails(id);
+  const { reportSectionDispatchers } = useReportSection();
 
   const screenHeight =
     Styles.dimension.screenHeight - insets.bottom - insets.top;
@@ -198,6 +200,18 @@ export default function PlaceDetailsScreen() {
                 type="highlight"
                 setIcon={<Ionicons name="share-outline" size={14} />}
                 onPress={() => {}}
+              />
+              <FC.CircleButton
+                defaultColor="type_5"
+                style={Styles.spacings.me_8}
+                type="highlight"
+                onPress={() => {
+                  reportSectionDispatchers.openReportSection(
+                    place._id,
+                    "place"
+                  );
+                }}
+                setIcon={<Ionicons name="flag" size={14} />}
               />
             </View>
 

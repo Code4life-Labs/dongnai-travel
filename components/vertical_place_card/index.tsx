@@ -16,6 +16,7 @@ import { FC } from "..";
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useReportSection } from "@/hooks/useReport";
 
 // Import objects
 import { PlaceManager } from "@/objects/place";
@@ -108,6 +109,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
     props.style
   );
   //theme
+  const { reportSectionDispatchers } = useReportSection();
   const { theme } = useTheme();
   const { language } = useLanguage();
   const _languageData = (language.data as any)["homeScreen"] as any;
@@ -244,7 +246,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
               type="opacity"
               style={styles.card_button}
               onPress={() => {
-                router.navigate({ pathname: "/reports" });
+                reportSectionDispatchers.openReportSection(place._id!, "place");
               }}
             >
               {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (

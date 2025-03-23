@@ -13,6 +13,7 @@ import BlogDetailSkeleton from "@/screens/blog-detail/components/skeleton";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuthState } from "@/hooks/useAuth";
 import { useBlogDetails } from "@/hooks/useBlog";
+import { useReportSection } from "@/hooks/useReport";
 
 // Import objects
 import { BlogManager } from "@/objects/blog";
@@ -37,6 +38,7 @@ export default function BlogDetailScreen() {
   const { user } = useAuthState();
   const { theme } = useTheme();
   const { blog, blogDispatchers } = useBlogDetails(id);
+  const { reportSectionDispatchers } = useReportSection();
 
   const [relatedBlogs, setRelatedBlogs] = React.useState<Array<Blog>>([]);
 
@@ -72,8 +74,6 @@ export default function BlogDetailScreen() {
 
   React.useEffect(() => {
     if (blog) navigation.setOptions({ title: blog.name });
-    console.log("Id:", id);
-    console.log("Blog:", blog);
     blogDispatchers.fetchBlogDetail(id);
     // import("@/assets/mock-data/blog/content.json").then((data) => {
     //   setContent(data.data);
@@ -162,7 +162,7 @@ export default function BlogDetailScreen() {
               shape="capsule"
               style={Styles.spacings.pv_0}
             >
-              {blog.isLiked ? 'Following' : 'Follow'}
+              {blog.isLiked ? "Following" : "Follow"}
             </FC.RectangleButton>
           </View>
 
@@ -182,6 +182,9 @@ export default function BlogDetailScreen() {
               defaultColor="type_5"
               style={Styles.spacings.me_8}
               type="highlight"
+              onPress={() => {
+                reportSectionDispatchers.openReportSection(blog._id, "blog");
+              }}
               setIcon={<Ionicons name="flag" size={14} />}
             />
           </View>

@@ -16,6 +16,7 @@ import { styles } from "./styles";
 
 // Import types
 import { BottomSheetScrollProps } from "./type";
+import { pad } from "lodash";
 
 const BottomSheetScroll = ({
   haveHeader = false,
@@ -27,6 +28,8 @@ const BottomSheetScroll = ({
   snapPoints,
   labelBtn,
   handleLabelBtn,
+  handleStyle,
+  bottomSheetStyle,
   bottomSheetScrollViewStyle,
   labelBtnStyle,
   childHeader,
@@ -47,12 +50,15 @@ const BottomSheetScroll = ({
         )}
         <BottomSheet
           ref={bottomSheetRef}
+          index={0}
           snapPoints={snapPoints}
           enablePanDownToClose={true}
           onClose={() => close()}
           backgroundStyle={styles.bottomSheetContainer}
-          handleStyle={{ backgroundColor: theme.background }}
+          handleStyle={[{ backgroundColor: theme.background }, handleStyle]}
+          style={bottomSheetStyle}
           handleIndicatorStyle={{ backgroundColor: theme.onBackground }}
+          enableDynamicSizing
         >
           {haveHeader && (
             <BottomSheetView style={{ backgroundColor: theme.background }}>
