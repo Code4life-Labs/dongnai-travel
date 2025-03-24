@@ -55,7 +55,7 @@ export default function SearchResultList(props: SearchResultListProps) {
     <View
       style={[
         {
-          backgroundColor: theme.primary,
+          backgroundColor: theme.background,
           width: "100%",
           zIndex: 10,
         },

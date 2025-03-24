@@ -39,6 +39,6 @@ export type RectangleButtonProps = {
     | ((
         isActive: boolean,
         currentLabelStyle: StyleProp<TextStyle>
-      ) => JSX.Element);
+      ) => Array<JSX.Element> | JSX.Element);
   shape?: UShapes;
 } & $ExtendableButtonProps;

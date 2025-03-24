@@ -233,6 +233,10 @@
     "recommended": {
       "vi": "Đề xuất",
       "en": "Recommended"
+    },
+    "weather_error": {
+      "vi": "Không thể tải dữ liệu thời tiết.",
+      "en": "Can't load weather data."
     }
   },
   "exploreScreen": {

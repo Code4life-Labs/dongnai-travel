@@ -43,10 +43,7 @@ export default function HomeScreen() {
   });
 
   const { places, placeTypes, placesDispatchers } = usePlaces();
-  console.log("🚀 ~ HomeScreen ~ places:", places);
-
   const { blogs, blogTypes, blogsDispatchers } = useBlogs();
-  console.log("🚀 ~ HomeScreen ~ blogs:", blogs);
 
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -60,7 +57,7 @@ export default function HomeScreen() {
         setWeather(response.data.data.data);
       }
     } catch (error) {
-      console.error('Error fetching weather:', error);
+      console.error("Error fetching weather:", error);
     } finally {
       setLoading(false);
     }
@@ -123,14 +120,13 @@ export default function HomeScreen() {
               : places.map((place: any, index: number) => {
                   return (
                     <FC.VerticalPlaceCard
-                      place={place}
-                      placeIndex={index}
-                      key={place.place_id}
+                      data={place}
+                      key={place._id}
                       style={[
                         Styles.spacings.me_12,
                         index === 0 && Styles.spacings.ms_18,
                       ]}
-                      typeOfBriefPlace={typePlace}
+                      type={typePlace}
                     />
                   );
                 })}
@@ -170,12 +166,13 @@ export default function HomeScreen() {
               : blogs.map((blog: any, index: number) => {
                   return (
                     <FC.VerticalBlogCard
-                      blog={blog}
+                      data={blog}
                       key={index}
                       style={{
                         marginLeft: index === 0 ? 16 : 0,
                         marginRight: 16,
                       }}
+                      type={typeBlog}
                     />
                   );
                 })}

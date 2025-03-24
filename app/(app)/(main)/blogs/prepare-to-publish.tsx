@@ -302,6 +302,11 @@ export default function PrepareToPublishBlogScreen() {
           <View style={{ flexDirection: "row" }}>
             {blogTypes.map((type) => {
               let isActive = type._id === state.type;
+
+              if (type.value === "all") {
+                return;
+              }
+
               return (
                 <FC.RectangleButton
                   key={type._id}
@@ -375,6 +380,7 @@ export default function PrepareToPublishBlogScreen() {
                   },
                   Styles.shapes.capsule,
                   Styles.spacings.ps_18,
+                  Styles.spacings.mb_12,
                 ]}
               >
                 <FC.AppText>{StringUtils.toTitleCase(place.name)}</FC.AppText>

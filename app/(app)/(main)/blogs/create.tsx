@@ -172,6 +172,8 @@ export default function EditBlogScreen(props: any) {
     // });
   `;
 
+  console.log("State:", state);
+
   React.useEffect(() => {
     // If content is got from Storage and Webview is loaded
     // Set content to Quill Editor
@@ -214,7 +216,7 @@ export default function EditBlogScreen(props: any) {
         if (data) {
           const [content, images] = data;
           stateFns.setContent(content);
-          stateFns.setImages(images);
+          stateFns.setImages(images || []);
           stateFns.setIsContentFromStorage(true);
         }
       });
