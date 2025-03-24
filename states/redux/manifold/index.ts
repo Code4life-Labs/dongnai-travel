@@ -5,6 +5,7 @@ export const manifoldSlice = createSlice({
   initialState: {
     settings: {},
     status: {
+      isFirstTimeLaunch: true,
       isBottomTabShown: true,
       isLoading: false,
       isMaintaining: false,
@@ -30,6 +31,10 @@ export const manifoldSlice = createSlice({
 
     setIsBottomTabShown(state, action) {
       state.status.isBottomTabShown = Boolean(action.payload);
+    },
+
+    setIsFirstTimeLaunch(state, action) {
+      state.status.isFirstTimeLaunch = Boolean(action.payload);
     },
 
     setHasNetworkConnection(state, action) {

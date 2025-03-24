@@ -12,6 +12,7 @@ import { FC } from "@/components";
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/hooks/useAuth";
+import { useStatus } from "@/hooks/useStatus";
 import { SafeAreaProvider, useSafeAreaConfig } from "@/hooks/useSafeArea";
 
 // Import utils
@@ -50,6 +51,7 @@ const ConditionalSafeAreaView = ({
 export default function AppLayout() {
   const { theme } = useTheme();
   const { user, canRemember, authDispatchers } = useAuth();
+  const { status } = useStatus();
 
   const [fontsLoaded] = useFonts({
     "Roboto-Black": require("@/assets/fonts/Roboto-Black.ttf"),
@@ -68,11 +70,14 @@ export default function AppLayout() {
 
   // Check user
   React.useEffect(() => {
+    if (status.isFirstTimeLaunch) {
+      setTimeout(() => router.replace("/onboarding"), 0);
+    }
+
     if (user) {
-      console.log("User:", user);
       setTimeout(() => router.replace("/home"), 0);
     }
-  }, [user]);
+  }, [user, status.isFirstTimeLaunch]);
 
   // Load token
   React.useEffect(() => {
@@ -148,6 +153,12 @@ export default function AppLayout() {
                 options={{
                   headerShown: false,
                   animation: "slide_from_right",
+                }}
+              />
+              <Stack.Screen
+                name="onboarding"
+                options={{
+                  headerShown: false,
                 }}
               />
               <Stack.Screen
