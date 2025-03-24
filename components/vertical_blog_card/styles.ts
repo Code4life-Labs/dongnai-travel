@@ -36,8 +36,6 @@ const styles = StyleSheet.create({
     aspectRatio: 16 / 10,
     backgroundColor: Styles.theme.data.light.background,
     ...Styles.shapes.rounded_4,
-    ...Styles.spacings.mb_6,
-    ...Styles.spacings.mt_6,
   },
 
   card_mid: {
@@ -54,6 +52,7 @@ const styles = StyleSheet.create({
   card_content_sub_information_container: {
     flexDirection: "row",
     justifyContent: "space-between",
+    // ...Styles.spacings.mt_12,
   },
 
   card_buttons_container: {
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
   },
 
   card_ske_bg: {
-    backgroundColor: Styles.theme.data.light.background,
+    backgroundColor: Styles.theme.data.light.subBackground,
   },
 
   card_user_avatar: {

@@ -74,9 +74,9 @@ export default function Search(props: SearchProps) {
         Styles.spacings.pv_12,
         {
           position: "relative",
-          borderColor: theme.outline,
+          borderColor: theme.onBackground,
           borderWidth: 1,
-          flex: 1,
+          // flex: 1,
           zIndex: 10,
         },
       ]}
@@ -84,7 +84,7 @@ export default function Search(props: SearchProps) {
       <Ionicons
         name="search-outline"
         style={Styles.spacings.me_12}
-        color={theme.outline}
+        color={theme.onBackground}
         size={20}
       />
       <TextInput
@@ -94,7 +94,7 @@ export default function Search(props: SearchProps) {
           color: theme.onBackground,
           backgroundColor: theme.background,
         }}
-        placeholderTextColor={theme.outline}
+        placeholderTextColor={theme.primary}
         placeholder={props.placeHolder}
         onChangeText={(text) => {
           search(text, () => {
@@ -124,5 +124,7 @@ export default function Search(props: SearchProps) {
 export const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

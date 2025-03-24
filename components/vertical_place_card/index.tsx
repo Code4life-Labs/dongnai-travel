@@ -155,36 +155,11 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
 
           {/* Sub-information */}
           <View style={styles.card_content_sub_information_container}>
-            <View>
-              <View style={{ flexDirection: "row" }}>
-                <View style={[{ flexDirection: "row" }, Styles.spacings.me_6]}>
-                  <Ionicons name="star-outline" />
-                  <FC.AppText size="body2">{place.rating || 0}</FC.AppText>
-                </View>
+            <FC.AppText size="body2">
+              <Ionicons name="star-outline" />
+              {place.rating || 0}
+            </FC.AppText>
 
-                <View style={{ flexDirection: "row" }}>
-                  <Ionicons name="chatbubble-outline" />
-                  <FC.AppText size="body2">
-                    {NumberUtils.toMetricNumber(place.totalReviews || 0)}
-                  </FC.AppText>
-                </View>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <View style={[{ flexDirection: "row" }, Styles.spacings.me_6]}>
-                  <Ionicons name="heart-outline" />
-                  <FC.AppText size="body2">
-                    {NumberUtils.toMetricNumber(place.totalFavorites || 0)}
-                  </FC.AppText>
-                </View>
-
-                <View style={{ flexDirection: "row" }}>
-                  <Ionicons name="compass-outline" />
-                  <FC.AppText size="body2">
-                    {NumberUtils.toMetricNumber(place.totalVisits || 0)}
-                  </FC.AppText>
-                </View>
-              </View>
-            </View>
             <FC.AppText numberOfLines={1} size="body2">
               <Ionicons name="location-outline" />{" "}
               {PlaceManager.getAddressShort(place)}
@@ -215,14 +190,14 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
           <View
             style={[
               styles.card_buttons_container,
-              { borderTopColor: theme.outline, borderTopWidth: 1 },
+              { borderTopColor: theme.onBackground, borderTopWidth: 1 },
             ]}
           >
             <FC.RectangleButton
               isActive={extendedPlaceInfo.isLiked}
               isTransparent
               type="opacity"
-              style={styles.card_button}
+              style={[styles.card_button]}
               onPress={handleLikeButton}
             >
               {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (
@@ -231,7 +206,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
                     name={isActive ? "heart" : "heart-outline"}
                     style={[currentLabelStyle as any, Styles.spacings.me_6]}
                     size={14}
-                  />{" "}
+                  />
                   <FC.AppText size="body2" style={currentLabelStyle}>
                     {!isActive
                       ? _languageData["like"][language.code]
