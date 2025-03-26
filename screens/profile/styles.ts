@@ -4,12 +4,10 @@ import { Styles } from "@/styles";
 const styles = StyleSheet.create({
  
   wrapper: {
-    width: Styles.dimension.screenWidth,
-    height: Styles.dimension.screenHeight,
+    flex: 1,
   },
   container: {
-    width: Styles.dimension.screenWidth,
-    paddingBottom:200,
+    paddingBottom: 130,
   },
   imageCover: {
     width: '100%',
@@ -38,6 +36,7 @@ const styles = StyleSheet.create({
     width: 130,
     height: 130,
     justifyContent: 'center',
+    alignSelf: 'center',
     alignItems: "center",
     marginTop: -65,
     borderRadius: 65,
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
   },
   // start blog block
   blog_block:{
-    
+    ...Styles.spacings.ph_16,
   },
   btn_create_blog:{
     width:'100%',
@@ -159,11 +158,12 @@ const styles = StyleSheet.create({
     ...Styles.spacings.ph_16
   }, 
   blog_title_container:{
-    ...Styles.spacings.mt_22,
-    paddingHorizontal:16
+    
   },
   blog_title:{
-    ...Styles.typography.size.sz_18,
+    ...Styles.typography.size.sz_20,
+    ...Styles.spacings.mb_10,
+
     fontWeight: 'bold',
     color:Styles.theme.colorNames.onTertiary
   },
@@ -284,6 +284,44 @@ const styles = StyleSheet.create({
   },
   empty_blog_text: {
     fontSize: 14,
+  },
+  blog_header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  sortButton: {
+    padding: 8,
+  },
+  sortOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
+  },
+  selectedSort: {
+    backgroundColor: 'rgba(0,0,0,0.05)',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenImage: {
+    width: Styles.dimension.screenWidth,
+    height: Styles.dimension.screenWidth * 1.5,
+    maxHeight: Styles.dimension.screenHeight * 0.8,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
+    padding: 10,
   },
 })
 export default styles

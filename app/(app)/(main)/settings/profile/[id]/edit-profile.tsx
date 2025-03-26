@@ -28,11 +28,6 @@ export default function EditProfileScreen() {
     firstName: '',
     lastName: '',
     displayName: '',
-    bio: '',
-    phoneNumber: '',
-    address: '',
-    birthday: null as Date | null,
-    username: '',
   });
   
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -47,11 +42,6 @@ export default function EditProfileScreen() {
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         displayName: user.displayName || '',
-        bio: user.bio || '',
-        phoneNumber: user.phoneNumber || '',
-        address: user.address || '',
-        birthday: user.birthday ? new Date(user.birthday) : null,
-        username: user.username || '',
       });
       setAvatar(user.avatar || null);
       setCoverPhoto(user.coverPhoto || null);
@@ -105,6 +95,21 @@ export default function EditProfileScreen() {
     }
   };
 
+  // Thêm hàm kiểm tra thay đổi
+  const hasChanges = () => {
+    // Kiểm tra thay đổi trong text fields
+    const hasTextChanges = 
+      profileData.firstName !== (user?.firstName || '') ||
+      profileData.lastName !== (user?.lastName || '') ||
+      profileData.displayName !== (user?.displayName || '');
+
+    // Kiểm tra thay đổi ảnh
+    const hasAvatarChange = newAvatar !== null;
+    const hasCoverChange = newCoverPhoto !== null;
+
+    return hasTextChanges || hasAvatarChange || hasCoverChange;
+  };
+
   // Submit form
   const handleSubmit = async () => {
     if (!user || !token) {
@@ -112,82 +117,128 @@ export default function EditProfileScreen() {
       return;
     }
 
+    // Kiểm tra có thay đổi không
+    if (!hasChanges()) {
+      Alert.alert(
+        language.code === 'vi' ? 'Thông báo' : 'Notice',
+        language.code === 'vi' 
+          ? 'Không phát hiện thay đổi nào. Bạn có muốn quay lại?' 
+          : 'No changes detected. Do you want to go back?',
+        [
+          {
+            text: language.code === 'vi' ? 'Ở lại' : 'Stay',
+            style: 'cancel',
+          },
+          {
+            text: language.code === 'vi' ? 'Quay lại' : 'Go back',
+            onPress: () => router.back(),
+          },
+        ]
+      );
+      return;
+    }
+
     try {
       setLoading(true);
 
-      // Create FormData for file uploads
+      // Log current user and token for debugging
+      console.log('Current user:', user._id);
+      console.log('Token:', token.substring(0, 20) + '...');
+
+      // Create FormData object
       const formData = new FormData();
       
-      // Add only non-empty fields to formData
+      // Add basic profile data with detailed logging
       Object.keys(profileData).forEach(key => {
         const value = profileData[key as keyof typeof profileData];
-        // Only append if value exists and is not an empty string
-        if (value && value.toString().trim() !== '') {
-          const formValue = value instanceof Date ? value.toISOString() : value;
-          formData.append(key, formValue as string);
+        console.log(`Processing field ${key}:`, value);
+        
+        if (value !== null && value !== undefined && value !== '') {
+          if (key === 'birthday' && typeof value === 'object' && value !== null && 'toISOString' in value) {
+            formData.append(key, (value as any).toISOString());
+          } else {
+            formData.append(key, String(value));
+          }
         }
       });
-      
-      // Add avatar if changed
+
+      // Handle avatar upload with detailed logging
       if (newAvatar) {
-        // Log để kiểm tra thông tin tệp
-        console.log('Avatar file info:', {
+        console.log('Processing avatar:', {
           uri: newAvatar.uri,
-          type: newAvatar.type || 'image/jpeg',
-          name: newAvatar.fileName || 'avatar.jpg'
+          type: newAvatar.type,
+          name: newAvatar.fileName
         });
+
+        const fileExtension = newAvatar.uri.split('.').pop() || 'jpg';
+        const fileName = `avatar-${Date.now()}.${fileExtension}`;
         
-        formData.append('newAvatar', {
+        const avatarFile = {
           uri: newAvatar.uri,
-          type: newAvatar.type || 'image/jpeg',
-          name: newAvatar.fileName || 'avatar.jpg',
-        } as any);
-        
-        // If replacing an existing avatar, send the old one for deletion
-        if (user?.avatar && user.avatar !== newAvatar.uri) {
-          formData.append('deletedAvatar', user.avatar);
-        }
+          type: `image/${fileExtension}`,
+          name: fileName,
+        };
+
+        console.log('Prepared avatar file:', avatarFile);
+        formData.append('avatar', avatarFile as any);
       }
-      
-      // Add cover photo if changed
+
+      // Handle cover photo upload with detailed logging
       if (newCoverPhoto) {
-        formData.append('newCoverPhoto', {
+        console.log('Processing cover photo:', {
           uri: newCoverPhoto.uri,
-          type: 'image/jpeg',
-          name: 'cover.jpg',
-        } as any);
+          type: newCoverPhoto.type,
+          name: newCoverPhoto.fileName
+        });
+
+        const fileExtension = newCoverPhoto.uri.split('.').pop() || 'jpg';
+        const fileName = `cover-${Date.now()}.${fileExtension}`;
         
-        // If replacing an existing cover photo, send the old one for deletion
-        if (user?.coverPhoto && user.coverPhoto !== newCoverPhoto.uri) {
-          formData.append('deletedCoverPhoto', user.coverPhoto);
+        const coverFile = {
+          uri: newCoverPhoto.uri,
+          type: `image/${fileExtension}`,
+          name: fileName,
+        };
+
+        console.log('Prepared cover file:', coverFile);
+        formData.append('coverPhoto', coverFile as any);
+      }
+
+      // Log final FormData content
+      console.log('Final FormData entries:');
+      for (let pair of (formData as any).entries()) {
+        console.log(pair[0], ':', typeof pair[1] === 'object' ? 'File' : pair[1]);
+      }
+
+      // Make API call with detailed error handling
+      try {
+        const response = await UserManager.Api.updateProfile(id as string, formData, token);
+        console.log('API Response:', response);
+
+        if (response?.data) {
+          authDispatchers.setUser(response.data);
+          Alert.alert(
+            'Success', 
+            language.code === 'vi' ? 'Cập nhật thông tin thành công' : 'Profile updated successfully'
+          );
         }
+      } catch (apiError: any) {
+        console.error('API Error Details:', {
+          status: apiError.response?.status,
+          data: apiError.response?.data,
+          message: apiError.message,
+        });
+        throw apiError;
       }
-      
-      // Kiểm tra FormData trước khi gửi
-      const formDataEntries = [];
-      for (let [key, value] of (formData as any).entries()) {
-        formDataEntries.push({ key, value: typeof value === 'object' ? 'File object' : value });
-      }
-      console.log('FormData entries:', formDataEntries);
-      
-      const response = await UserManager.Api.updateProfile(id as string, formData, token);
-      
-      // Log phản hồi đầy đủ để kiểm tra
-      console.log('Full API response:', response);
-      
-      // Update user in state
-      if (response && response.data) {
-        console.log('User data from response:', response.data);
-        authDispatchers.setUser(response.data);
-        
-        // Navigate back
-        // Alert.alert('Success', 'Profile updated successfully', [
-        //   { text: 'OK', onPress: () => router.back() }
-        // ]);
-      }
+
     } catch (error: any) {
       console.error('Error updating profile:', error);
-      Alert.alert('Error', error.message || 'Failed to update profile');
+      Alert.alert(
+        'Error',
+        language.code === 'vi' 
+          ? `Không thể cập nhật thông tin: ${error.response?.data?.message || error.message}`
+          : `Could not update profile: ${error.response?.data?.message || error.message}`
+      );
     } finally {
       setLoading(false);
     }
