@@ -474,6 +474,10 @@
       "vi": "Đăng xuất",
       "en": "Log out"
     },
+    "login": {
+      "vi": "Đăng nhập",
+      "en": "Login"
+    },
     "open_dropdown": {
       "vi": "Mở",
       "en": "On"

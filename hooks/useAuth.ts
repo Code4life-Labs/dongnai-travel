@@ -14,7 +14,7 @@ import { OtherUtils } from "@/utils/other";
 import { ValidatorUtils } from "@/utils/validators";
 
 // Import types
-import type { UserDataForAuthentication, NewUser } from "@/objects/user/type";
+import type { UserDataForAuthentication, NewUser, User } from "@/objects/user/type";
 import type { Dispatch } from "@reduxjs/toolkit";
 
 export const { useAuth, useAuthState, useAuthActions } = (function () {
@@ -122,6 +122,10 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
       signOut() {
         dispatch(userActions.reset());
       },
+
+      setUser: (userData: User) => {
+        dispatch(userActions.setUser(userData));
+      },
     };
 
     OtherUtils.autoBind(actions);
@@ -140,6 +144,12 @@ export const { useAuth, useAuthState, useAuthActions } = (function () {
       const dispatch = useDispatch();
 
       const actions = React.useMemo(() => createAuthActions(dispatch), []);
+
+      console.log('Auth state:', {
+        'User available': !!all.user,
+        'Token available': !!all.token,
+        'User ID': all.user?._id
+      });
 
       return {
         ...all,
