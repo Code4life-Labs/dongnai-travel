@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   user_block: {
     ...Styles.spacings.ph_16,
     ...Styles.spacings.pt_6,
-    alignItems: "center"
+    alignItems: "center",
   },
   user_name: {
     fontSize: 26,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   // start blog block
   blog_block:{
-    paddingHorizontal: 18
+    
   },
   btn_create_blog:{
     width:'100%',
@@ -227,11 +227,63 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   }, 
   edit_button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 20,
     position: 'absolute',
     right: 16,
-    top: 16,
-    zIndex: 1,
-    padding: 8,
+    top: 160,
+  },
+  edit_button_icon: {
+    marginRight: 5,
+  },
+  edit_button_text: {
+    color: '#fff',
+    fontWeight: '500',
+  },
+  menu_item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
+  },
+  info_row: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+
+  },
+  blog_meta: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  blog_date: {
+    fontSize: 12,
+  },
+  blogStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  blogStatText: {
+    fontSize: 12,
+    marginLeft: 4,
+    marginRight: 12,
+  },
+  loading_container: {
+    padding: 16,
+  },
+  blog_list: {
+    padding: 16,
+  },
+  empty_blog_container: {
+    padding: 16,
+    alignItems: 'center',
+  },
+  empty_blog_text: {
+    fontSize: 14,
   },
 })
 export default styles

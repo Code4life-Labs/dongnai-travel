@@ -31,6 +31,36 @@ export default function SettingsLayout() {
           name="profile/[id]/index"
           options={{
             title: language.code === 'vi' ? "Trang cá nhân" : "Profile",
+            
+          }}
+        />
+
+        <Stack.Screen
+          name="profile/[id]/edit-profile"
+          options={{
+            title: language.code === 'vi' ? "Chỉnh sửa hồ sơ" : "Edit Profile",
+          }}
+        />
+
+        <Stack.Screen
+          name="profile/[id]/saved-places"
+          options={{
+            title: language.code === 'vi' ? "Địa điểm đã lưu" : "Saved Places",
+          }}
+        />
+
+        <Stack.Screen
+          name="profile/[id]/saved-blogs"
+          options={{
+            title: language.code === 'vi' ? "Bài viết đã lưu" : "Saved Blogs",
+          }}
+        />
+
+        <Stack.Screen
+          name="profile/[id]/create-blog"
+          options={{
+            title: language.code === 'vi' ? "Tạo bài viết" : "Create Blog",
+            headerShown: false,
           }}
         />
 
@@ -63,45 +93,9 @@ export default function SettingsLayout() {
         />
 
         <Stack.Screen
-          name="profile/[id]/saved-places"
-          options={{
-            title: language.code === 'vi' ? "Địa điểm đã lưu" : "Saved places",
-          }}
-        />
-
-        <Stack.Screen
-          name="profile/[id]/saved-blogs"
-          options={{
-            title: language.code === 'vi' ? "Bài viết đã lưu" : "Saved blogs",
-          }}
-        />
-
-        <Stack.Screen
-          name="profile/[id]/edit-profile"
-          options={{
-            title: language.code === 'vi' ? "Chỉnh sửa hồ sơ" : "Edit Profile",
-          }}
-        />
-
-        <Stack.Screen
-          name="profile/[id]/create-post"
-          options={{
-            title: language.code === 'vi' ? "Tạo bài viết" : "Create Post",
-          }}
-        />
-
-        <Stack.Screen
           name="view-stats"
           options={{
             title: language.code === 'vi' ? "Thống Kê" : "View Stats",
-          }}
-        />
-
-        <Stack.Screen
-          name="profile/[id]/create-blog"
-          options={{
-            title: language.code === 'vi' ? "Tạo bài viết" : "Create Blog",
-            headerShown: false,
           }}
         />
       </Stack>

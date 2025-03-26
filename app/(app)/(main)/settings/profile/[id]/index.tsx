@@ -12,7 +12,9 @@ import {
   LayoutChangeEvent,
   Button,
   Animated,
-  Dimensions
+  Dimensions,
+  Alert,
+  FlatList
 } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -20,7 +22,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Feather from "react-native-vector-icons/Feather";
 import { useDispatch, useSelector } from "react-redux";
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { FC } from "@/components";
 import ModalShowImage from "@/components/modal_show_image/ModalShowImage";
@@ -29,6 +32,7 @@ import ModalShowImage from "@/components/modal_show_image/ModalShowImage";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useBlogs } from "@/hooks/useBlog";
 
 import styles from "@/screens/profile/styles";
 import { Styles } from "@/styles";
@@ -59,8 +63,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [uploadImageType, setUploadImageType] = useState<'UploadCoverPhoto' | 'UploadAvatar' | null>(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const dispatch = useDispatch();
+  const { id } = useLocalSearchParams();
+
+  // Add these new hooks and states
+  const { blogs, status, blogsDispatchers } = useBlogs();
+  const [userBlogs, setUserBlogs] = useState<any[]>([]);
 
   /**
    * Check if this is the current user's profile and set appropriate data
@@ -87,6 +97,32 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
       //   .catch(error => console.error('Error fetching user profile:', error));
     }
   }, [currentAuthUser, route?.params?.id]);
+
+  // Add this useEffect to fetch user's blogs
+  useEffect(() => {
+    if (currentUser?._id) {
+      console.log('Fetching blogs for user:', currentUser._id);
+      blogsDispatchers.fetchBlogs(currentUser._id);
+    }
+  }, [currentUser?._id]);
+
+  // Add this useEffect to update userBlogs when blogs changes
+  useEffect(() => {
+    if (blogs) {
+      console.log('Blogs data:', {
+        total: blogs.length,
+        blogs: blogs.map(blog => ({
+          id: blog._id,
+          name: blog.name,  // Use name instead of title
+          author: blog.author?.username || blog.author?._id,
+          createdAt: blog.createdAt,
+          content: blog.content,
+          coverImage: blog.coverImage
+        }))
+      });
+      setUserBlogs(blogs);
+    }
+  }, [blogs]);
 
   const pickImageFromLibrary = async () => {
     try {
@@ -167,7 +203,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
           <Text style={[styles.user_name, { color: theme.onBackground }]}>
             {currentUser?.displayName || currentUser?.username}
           </Text>
-          <Text style={[styles.user_username, { color: theme.onOutline }]}>
+          <Text style={[styles.user_username, { color: theme.onBackground }]}>
             @{currentUser?.username}
           </Text>
         </View>
@@ -188,33 +224,16 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
       </TouchableOpacity> */}
         
       <View style={styles.user_info_follow}>
-        <Text style={[styles.user_follower, { color: theme.onOutline }]}>
+        <Text style={[styles.user_follower, { color: theme.onBackground }]}>
           {currentUser?.followerIds?.length || 0} {_languageData.user_follower[language.code]}
         </Text>
         <Text>
           <Entypo name="dot-single" size={20} color={theme.onBackground} />
         </Text>
-        <Text style={[styles.user_following, { color: theme.onOutline }]}>
+        <Text style={[styles.user_following, { color: theme.onBackground }]}>
           {currentUser?.followingIds?.length || 0} {_languageData.user_following[language.code]}
         </Text>
       </View>
-
-      {/* <View style={styles.round_rectang_button_container}>
-        <FC.RectangleButton
-          shape="rounded_8"
-          isActive
-          activeColor="type_1"
-          style={{
-            
-            backgroundColor: appTheme.colorNames.onPrimary
-          }}
-          onPress={() => navigation.navigate("view-stas")}
-        >
-          {(isActive, currentLabelStyle) => (
-            <Text style={currentLabelStyle}>{_languageData.view_stats[language.code]}</Text>
-          )}
-        </FC.RectangleButton>
-      </View> */}
 
       <View style={styles.user_infos}>
         <View style={styles.user_info_block}>
@@ -228,7 +247,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
                 name="user"
               />
-              <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
+              <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
                 {[currentUser?.firstName, currentUser?.lastName].filter(Boolean).join(' ')}
               </Text>
             </View>
@@ -239,7 +258,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
               style={[styles.user_info_other_icon, { color: theme.onBackground }]}
               name="mail"
             />
-            <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
+            <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
               {currentUser?.email}
             </Text>
           </View>
@@ -250,7 +269,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
                 name="calendar"
               />
-              <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
+              <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
                 {new Date(currentUser.birthday).toLocaleDateString()}
               </Text>
             </View>
@@ -262,7 +281,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
                 name="enviromento"
               />
-              <Text style={[styles.user_info_other_content, { color: theme.onOutline }]}>
+              <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
                 <Text>{_languageData.live_in[language.code]} </Text>
                 <Text style={styles.user_info_address}>
                   {currentUser.userInfo.userAddress}
@@ -305,8 +324,193 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
         </View>
       </View>
       <View style={[styles.line_horizontal, { borderBottomColor: theme.onBackground }]} />
+      <TouchableOpacity 
+        style={[styles.info_row, { alignSelf: 'flex-start' }]}
+        onPress={handleEditProfile}
+      >
+        <Entypo
+          name="dots-three-vertical"
+          size={16}
+          style={{ marginRight: 10, color: theme.onBackground }}
+        />
+        <Text style={{ color: theme.onBackground }}>
+          {language.code === 'vi' ? 'Chỉnh sửa thông tin cá nhân' : 'Edit your profile information'}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
+
+  const handleEditProfile = () => {
+    if (!currentAuthUser) {
+      Alert.alert('Error', 'You must be logged in to edit your profile');
+      return;
+    }
+    
+    const profileId = String(currentAuthUser._id);
+    router.push(`/settings/profile/${profileId}/edit-profile`);
+  };
+
+  const handleThreeDotsPress = () => {
+    if (isMyProfile) {
+      setMenuVisible(true);
+    }
+  };
+
+  // Add this render function for blog items
+  const renderBlogItem = ({ item }: { item: any }) => (
+    <View style={Styles.spacings.mb_12}>
+      <FC.HorizontalBlogCard 
+        data={{
+          _id: item._id,
+          name: item.name,
+          content: item.content,
+          coverImage: item.coverImage,
+          createdAt: item.createdAt,
+          readTime: item.readTime,
+          isLiked: item.isLiked,
+          totalFavorites: item.totalFavorites,
+          author: {
+            _id: item.author._id,
+            firstName: item.author.firstName,
+            lastName: item.author.lastName,
+            displayName: item.author.displayName,
+            avatar: item.author.avatar
+          },
+          type: item.type?.value || 'review'
+        }}
+        type={item.type?.value || 'review'}
+      />
+    </View>
+  );
+
+  // Modify the blog_block section in renderUserInfo
+  const renderBlogSection = () => (
+    <View style={styles.blog_block}>
+      {isMyProfile && (
+        <>
+          <TouchableOpacity
+            style={[styles.btn_create_blog, { backgroundColor: theme.primary }]}
+            onPress={() => router.push("/blogs/create")}
+          >
+            <MaterialCommunityIcons
+              style={{ color: theme.onPrimary, marginRight: 6 }}
+              name="pencil-outline"
+              size={18}
+            />
+            <Text style={[styles.btn_create_blog_name, { color: theme.onPrimary }]}>
+              {_languageData.write_new_blog[language.code]}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.btn_manage_blog, { backgroundColor: theme.primary }]}
+            onPress={() => router.push("/blogs/manage")}
+          >
+            <Text style={[styles.btn_manage_blog_name, { color: theme.onPrimary }]}>
+              {_languageData.manage_blogs[language.code]}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
+
+      <View>
+        <View style={styles.blog_title_container}>
+          <Text style={[styles.blog_title, { color: theme.onBackground }]}>
+            {isMyProfile ? _languageData.blog_list[language.code] : `${currentUser?.username}'s blogs`}
+          </Text>
+        </View>
+        
+        {status.isFetching ? (
+          <View style={styles.loading_container}>
+            {[1, 2, 3].map((_, index) => (
+              <FC.Skeletons.HorizontalBlogCard key={index} />
+            ))}
+          </View>
+        ) : userBlogs.length > 0 ? (
+          <FlatList
+            data={userBlogs}
+            renderItem={renderBlogItem}
+            keyExtractor={(item) => item._id}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.blog_list}
+            onEndReached={() => {
+              if (!status.isFetching) {
+                blogsDispatchers.fetchBlogs(currentUser._id);
+              }
+            }}
+            onEndReachedThreshold={0.5}
+          />
+        ) : (
+          <View style={styles.empty_blog_container}>
+            <Text style={[styles.empty_blog_text, { color: theme.onBackground }]}>
+              {isMyProfile 
+                ? "You haven't created any blogs yet"
+                : `${currentUser?.username} hasn't created any blogs yet`}
+            </Text>
+          </View>
+        )}
+      </View>
+    </View>
+  );
+
+  // Add these styles to your existing styles
+  const localStyles = StyleSheet.create({
+    blogItem: {
+      marginBottom: 16,
+      borderRadius: 8,
+      overflow: 'hidden',
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    blogCoverImage: {
+      width: '100%',
+      height: 150,
+    },
+    blogContent: {
+      padding: 12,
+    },
+    blogTitle: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginBottom: 8,
+    },
+    blogDescription: {
+      fontSize: 14,
+      marginBottom: 8,
+    },
+    blogMeta: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    blogDate: {
+      fontSize: 12,
+    },
+    blogStats: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    blogStatText: {
+      fontSize: 12,
+      marginLeft: 4,
+      marginRight: 12,
+    },
+    loadingContainer: {
+      padding: 16,
+    },
+    blogList: {
+      padding: 16,
+    },
+    emptyBlogContainer: {
+      padding: 16,
+      alignItems: 'center',
+    },
+    emptyBlogText: {
+      fontSize: 14,
+    },
+  });
 
   return (
     <>
@@ -367,40 +571,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
           </View>
 
           {renderUserInfo()}
-          <View style = {styles.edit_button}>
-            <Entypo 
-              name="dots-three-vertical" 
-              size={24} 
-              color={theme.onPrimary}
-            />
-          </View>
-          <View style={styles.blog_block}>
-            <TouchableOpacity
-              style={[styles.btn_create_blog, { backgroundColor: theme.primary }]}
-              onPress={() => router.push("/blogs/create")}
-            >
-              <MaterialCommunityIcons
-                style={{ color: theme.onPrimary, marginRight: 6 }}
-                name="pencil-outline"
-                size={18}
-              />
-              <Text style={[styles.btn_create_blog_name, { color: theme.onPrimary }]}>
-                {_languageData.write_new_blog[language.code]}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.btn_manage_blog, { backgroundColor: theme.primary }]}>
-              <Text style={[styles.btn_manage_blog_name, { color: theme.onPrimary }]}>
-                {_languageData.manage_blogs[language.code]}
-              </Text>
-            </TouchableOpacity>
-            <View>
-              <View style={styles.blog_title_container}>
-                <Text style={[styles.blog_title, { color: theme.onPrimary }]}>
-                  {_languageData.blog_list[language.code]}
-                </Text>
-              </View>
-            </View>
-          </View>
+          {renderBlogSection()}
         </View>
       </ScrollView>
 
@@ -435,6 +606,36 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
         imageUrl={selectedImage}
         onClose={() => setOpenTermCondition(false)}
       />
+
+      <FC.BottomSheetScroll
+        haveBtn={false}
+        isOpen={menuVisible}
+        close={() => setMenuVisible(false)}
+        snapPoints={["25%", "25%"]}
+        haveOverlay
+        bottomSheetScrollViewStyle={{ paddingHorizontal: 16 }}
+        handleLabelBtn={() => {}}
+      >
+        <View>
+          <TouchableOpacity
+            style={styles.menu_item}
+            onPress={() => {
+              setMenuVisible(false);
+              handleEditProfile();
+            }}
+          >
+            <Ionicons
+              name="pencil"
+              size={20}
+              style={{ marginRight: 10 }}
+              color={theme.onBackground}
+            />
+            <Text style={{ color: theme.onBackground }}>Edit Profile</Text>
+          </TouchableOpacity>
+          
+          {/* Add other menu items as needed */}
+        </View>
+      </FC.BottomSheetScroll>
     </>
   );
 };

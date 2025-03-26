@@ -36,4 +36,7 @@ export type UserModel = $Extendable & {
 
 export type User = $Extendable & {
   role: UserRoleModel;
+  bio?: string;
+  phoneNumber?: string;
+  address?: string;
 };
