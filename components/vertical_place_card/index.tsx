@@ -7,6 +7,7 @@ import {
   TextStyle,
   Image,
 } from "react-native";
+import { router } from "expo-router";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 // Import components
@@ -15,6 +16,7 @@ import { FC } from "..";
 // Import hooks
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useReportSection } from "@/hooks/useReport";
 
 // Import objects
 import { PlaceManager } from "@/objects/place";
@@ -26,7 +28,7 @@ import { NumberUtils } from "@/utils/number";
 
 // Import styles
 import { Styles } from "@/styles";
-import styles from "./VerticalPlaceCardStyles";
+import styles from "./styles";
 
 // Import types
 import { Place } from "@/objects/place/type";
@@ -107,6 +109,7 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
     props.style
   );
   //theme
+  const { reportSectionDispatchers } = useReportSection();
   const { theme } = useTheme();
   const { language } = useLanguage();
   const _languageData = (language.data as any)["homeScreen"] as any;
@@ -242,6 +245,9 @@ const VerticalPlaceCard: React.FC<VerticalPlaceCardProps> = ({
               isTransparent
               type="opacity"
               style={styles.card_button}
+              onPress={() => {
+                reportSectionDispatchers.openReportSection(place._id!, "place");
+              }}
             >
               {(isActive: boolean, currentLabelStyle: StyleProp<TextStyle>) => (
                 <>

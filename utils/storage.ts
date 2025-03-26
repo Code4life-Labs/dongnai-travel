@@ -6,6 +6,8 @@ const ASYNC_STORAGE_CONSTANT_KEYS = {
   SAVED_BLOG_METADATA_KEY: "_bmeta",
   USER: "_usr",
   REMEMBERED_USER: "_rmb_usr",
+  REPORT_REASONS_KEY: "_rprsn",
+  REPORT_STATUSES_KEY: "_rpstt",
 };
 
 export class StorageUtils {

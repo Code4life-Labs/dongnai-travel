@@ -34,6 +34,7 @@ export type CircleButtonProps = {
 export type RectangleButtonProps = {
   children?:
     | string
+    | Array<JSX.Element>
     | JSX.Element
     | ((
         isActive: boolean,

@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import React from "react";
 
-import styles from "./VerticalBlogCardStyles";
+import styles from "./styles";
 
 // import { ViewProps } from 'types/index.d'
 
@@ -49,7 +49,7 @@ const VerticalBlogCardSkeleton = ({ ...props }) => {
             styles.card_ske_bg,
             Styles.spacings.mb_6,
             Styles.shapes.rounded_4,
-            { height: 38, width: "100%", backgroundColor: theme.theme.outline},
+            { height: 38, width: "100%", backgroundColor: theme.theme.outline },
           ]}
         />
       </View>

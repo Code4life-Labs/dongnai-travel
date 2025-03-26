@@ -20,7 +20,8 @@ import { manifoldSlice } from "./manifold";
 import { languageSlice } from "./language";
 // import { itinerarySlice } from "./itinerary";
 import { settingSlice } from "./settings";
-import { profileSlice} from "./profile"
+import { profileSlice } from "./profile";
+import { reportsSlice } from "./reports";
 
 // Central Reducer.
 const reducers = combineReducers({
@@ -38,6 +39,7 @@ const reducers = combineReducers({
   [languageSlice.name]: languageSlice.reducer,
   // [itinerarySlice.name]: itinerarySlice.reducer,
   [settingSlice.name]: settingSlice.reducer,
+  [reportsSlice.name]: reportsSlice.reducer,
 });
 
 const persistConfig = {
