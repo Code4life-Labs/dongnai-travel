@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 // Import from components
@@ -17,6 +17,7 @@ import { AppHeaderUtils } from "./utils";
 
 // Import types
 import type { AppStackHeaderProps, AppTabHeaderProps } from "./type";
+import { useRouter } from "expo-router";
 
 /**
  * __Creator__: @NguyenAnhTuan1912
@@ -28,6 +29,7 @@ import type { AppStackHeaderProps, AppTabHeaderProps } from "./type";
 export default function RightPart(
   props: AppStackHeaderProps | AppTabHeaderProps
 ) {
+  const router = useRouter();
   let child = (
     <CircleButton
       defaultColor="type_5"
@@ -35,9 +37,7 @@ export default function RightPart(
       type="opacity"
       setIcon={<Ionicons name="search-outline" size={18} />}
       onPress={() => {
-        props.navigation.navigate("GlobalNavigator", {
-          screen: "SearchScreen",
-        });
+        router.push("/(app)/search");
       }}
     />
   );

@@ -123,6 +123,13 @@ export default function AppLayout() {
                 }}
               />
               <Stack.Screen
+                name="search"
+                options={{
+                  headerShown: false,
+                  animation: "fade",
+                }}
+              />
+              <Stack.Screen
                 name="sign-up"
                 options={{
                   headerShown: false,

@@ -40,7 +40,7 @@ export default function AppHeader(
   props: AppStackHeaderProps | AppTabHeaderProps
 ) {
   const { language } = useLanguage();
-  const { theme, currentScheme } = useTheme();
+  const { theme } = useTheme();
 
   const headerStyle = [
     styles.container,

@@ -25,6 +25,7 @@ import { HomeWeather } from "@/components/home_weather";
 
 // Import from utils
 import { translateWeatherCondition } from "@/utils/locationData";
+import { useStateManager } from "@/hooks/useStateManager";
 
 export default function HomeScreen() {
   const { theme } = useTheme();
@@ -73,7 +74,7 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={[styles.container]}>
+    <ScrollView showsVerticalScrollIndicator={false} style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[styles.home_content]}>
         {/* Header home */}
         <View style={[styles.home_banner]}>
@@ -82,7 +83,7 @@ export default function HomeScreen() {
         {/* end header  */}
         {/* Weather */}
         <View style={[styles.home_temperature]}>
-          <HomeWeather />
+          {/* <HomeWeather /> */}
         </View>
         {/* end weather */}
         {/* Place */}

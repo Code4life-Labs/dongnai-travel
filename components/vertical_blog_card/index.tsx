@@ -133,17 +133,17 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
         >
           <Image
             source={{ uri: blog.coverImage ? blog.coverImage : undefined }}
-            style={[styles.card_image, { backgroundColor: theme.subOutline }]}
+            style={[styles.card_image, { backgroundColor: theme.subBackground }]}
           />
         </RectangleButton>
         {/* Button & Recommended tag */}
         <View style={styles.card_mid}>
           {!blog.author.avatar ? (
-            <Ionicons name="person-circle" size={14} color={theme.outline} />
+            <Ionicons name="person-circle" size={14} color={theme.onBackground} />
           ) : (
             <Image
               source={{ uri: blog.coverImage }}
-              style={styles.card_user_avatar}
+              style={[styles.card_user_avatar, { backgroundColor: theme.subBackground }]}
             />
           )}
           <FC.AppText size="body2">{" " + displayAuthorName}</FC.AppText>
@@ -173,7 +173,7 @@ const VerticalBlogCard: React.FC<VerticalBlogCardProps> = ({
           style={[
             styles.card_buttons_container,
             {
-              borderTopColor: theme.outline,
+              borderTopColor: theme.onBackground,
               borderTopWidth: 1,
             },
           ]}
