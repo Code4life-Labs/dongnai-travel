@@ -1,8 +1,16 @@
 // Import API
 import { API } from "@/classes/API";
 
+// Import utils
+import { RouteUtils } from "@/utils/route";
+
 // Import types
-import type { NewUser, UserDataForAuthentication } from "./type";
+import type { User, NewUser, UserDataForAuthentication } from "./type";
+import type { GetMultipleBaseOptions } from "@/types/api";
+
+type GetUsersAsyncOptions = {
+  name?: string;
+} & GetMultipleBaseOptions;
 
 export class UserAPI {
   api!: API;
@@ -29,6 +37,29 @@ export class UserAPI {
     }
   }
 
+  async getUsersAsync(options: GetUsersAsyncOptions) {
+    try {
+      const { limit = 10, skip = 0, name } = options;
+      const url = RouteUtils.getPath("users");
+      let query = `limit=${limit}&skip=${skip}`;
+      let headers: Record<string, any> = API.addAuthorizationToHeader({});
+
+      if (name) query += `&name=${name}`;
+
+      // Set type
+      query += "&type=user";
+
+      const response = await this.api.get(RouteUtils.mergeQuery(url, query), {
+        headers,
+      });
+
+      return response.data.data as Array<User>;
+    } catch (error: any) {
+      console.warn(error.message);
+      return null;
+    }
+  }
+
   /**
    * Update user profile
    * @param userId User ID
@@ -40,16 +71,14 @@ export class UserAPI {
     try {
       const response = await this.api.patch(`/users/${userId}`, profileData, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+          Authorization: API.generateBearerToken() as string,
         },
       });
-      
+
       return response.data;
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
       throw error;
     }
   }
-
 }

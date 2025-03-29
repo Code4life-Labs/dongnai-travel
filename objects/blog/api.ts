@@ -13,6 +13,7 @@ import type { Blog, BlogComment, CreateBlogComment, BlogType } from "./type";
 import type { GetMultipleBaseOptions } from "@/types/api";
 
 type GetBlogsAsyncOptions = {
+  name?: string;
   type?: string;
 } & GetMultipleBaseOptions;
 
@@ -40,10 +41,12 @@ export class BlogAPI {
    */
   async getBlogsAsync(options: GetBlogsAsyncOptions) {
     try {
-      const { limit = 10, skip = 0, type = "all" } = options;
+      const { limit = 10, skip = 0, type = "all", name } = options;
       const url = RouteUtils.getPath("blogs");
       let query = `limit=${limit}&skip=${skip}&types=${type}`;
       let headers: Record<string, any> = API.addAuthorizationToHeader({});
+
+      if (name) query += `&name=${name}`;
 
       const response = await this.api.get(RouteUtils.mergeQuery(url, query), {
         headers,

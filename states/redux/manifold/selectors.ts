@@ -2,15 +2,19 @@
 import type { AppState } from "../type";
 
 export const manifoldSelectors = {
-  selectStatus(state: AppState) {
+  settingsSelector(state: AppState) {
+    return state.manifold.settings;
+  },
+
+  statusSelector(state: AppState) {
     return state.manifold.status;
   },
 
-  selectBottomSheet(state: AppState) {
+  bottomSheetSelector(state: AppState) {
     return state.manifold.bottomSheet;
   },
 
-  selectStatusBar(state: AppState) {
+  statusBarSelector(state: AppState) {
     return state.manifold.statusBar;
   },
 };

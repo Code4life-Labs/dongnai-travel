@@ -27,10 +27,14 @@ export const { useStatus, useStatusActions, useStatusState } = (function () {
       setHasNetworkConnection(status?: boolean) {
         dispatch(manifoldActions.setHasNetworkConnection(status));
       },
+
+      setIsFirstTimeLaunch(status?: boolean) {
+        dispatch(manifoldActions.setIsFirstTimeLaunch(status));
+      },
     };
   };
   const select = function (_useSelector: typeof useSelector) {
-    return _useSelector(manifoldSelectors.selectStatus);
+    return _useSelector(manifoldSelectors.statusSelector);
   };
 
   return {
