@@ -1,0 +1,16 @@
+{
+  "vi": [
+    { "value": "all", "label": "Tất cả" },
+    { "value": "recommended", "label": "Được đề xuất" },
+    { "value": "popular", "label": "Nổi tiếng" },
+    { "value": "most_favorite", "label": "Được yêu thích nhất" },
+    { "value": "high_rating", "label": "Đánh giá cao" }
+  ],
+  "en": [
+    { "value": "all", "label": "All" },
+    { "value": "recommended", "label": "Recommended" },
+    { "value": "popular", "label": "Popular" },
+    { "value": "most_favorite", "label": "Most favorite" },
+    { "value": "high_rating", "label": "High rating" }
+  ]
+}

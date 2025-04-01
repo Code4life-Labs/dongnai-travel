@@ -1,0 +1,32 @@
+{
+  "home": {
+    "inactive": "home-outline",
+    "active": "home",
+    "isHighlight": false,
+    "size": 25
+  },
+  "explore": {
+    "inactive": "compass-outline",
+    "active": "compass",
+    "isHighlight": false,
+    "size": 30
+  },
+  "map": {
+    "inactive": "map-outline",
+    "active": "map",
+    "isHighlight": true,
+    "size": 25
+  },
+  "blogs": {
+    "inactive": "newspaper-outline",
+    "active": "newspaper",
+    "isHighlight": false,
+    "size": 25
+  },
+  "settings": {
+    "inactive": "person-circle-outline",
+    "active": "person-circle",
+    "isHighlight": false,
+    "size": 30
+  }
+}
