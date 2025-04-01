@@ -145,7 +145,13 @@ const DropDown = ({
     <View style={styles.dropdown}>
       <TouchableOpacity
         onPress={toggleDropdown}
-        style={{ ...styles.dropdown_btn, backgroundColor: theme.subBackground }}
+        style={[
+          styles.dropdown_btn,
+          {
+            backgroundColor: theme.subBackground,
+            height: isMode ? 50 : isParagraph ? 100 : 50
+          }
+        ]}
       >
         <View
           style={{
@@ -252,7 +258,7 @@ const DropDown = ({
           <View
             style={{
               borderBottomWidth: 1.5,
-              borderBottomColor: theme.outline,
+              borderBottomColor: theme.onBackground,
               marginTop: 12,
             }}
           ></View>

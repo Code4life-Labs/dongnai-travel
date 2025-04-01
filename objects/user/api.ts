@@ -60,6 +60,7 @@ export class UserAPI {
     }
   }
 
+
   /**
    * Update user profile
    * @param userId User ID
@@ -71,14 +72,16 @@ export class UserAPI {
     try {
       const response = await this.api.patch(`/users/${userId}`, profileData, {
         headers: {
-          Authorization: API.generateBearerToken() as string,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       });
-
+      
       return response.data;
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error('Error updating profile:', error);
       throw error;
     }
   }
+
 }
