@@ -133,6 +133,12 @@ export default function BlogDetailScreen() {
               <FC.CircleButton
                 isOnlyContent
                 defaultColor="type_6"
+                onPress={() => {
+                  router.navigate({
+                    pathname: "/settings/profile/[id]",
+                    params: { id: blog.author._id }
+                  });
+                }}
                 setIcon={
                   blog.author.avatar ? (
                     <Image

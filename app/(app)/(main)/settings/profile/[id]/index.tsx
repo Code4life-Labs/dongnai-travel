@@ -180,14 +180,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
             {_languageData.information[language.code]}
           </Text>
           
-          {(currentUser?.firstName || currentUser?.lastName) && (
+          {(currentUser?.displayName) && (
             <View style={styles.user_info_other}>
               <AntDesign
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
                 name="user"
               />
               <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
-                {[currentUser?.firstName, currentUser?.lastName].filter(Boolean).join(' ')}
+                {[currentUser?.displayName].filter(Boolean).join(' ')}
               </Text>
             </View>
           )}

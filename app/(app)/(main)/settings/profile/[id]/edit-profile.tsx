@@ -180,7 +180,7 @@ export default function EditProfileScreen() {
         };
 
         console.log('Prepared avatar file:', avatarFile);
-        formData.append('avatar', avatarFile as any);
+        formData.append('newAvatar', avatarFile as any);
       }
 
       // Handle cover photo upload with detailed logging
@@ -201,7 +201,7 @@ export default function EditProfileScreen() {
         };
 
         console.log('Prepared cover file:', coverFile);
-        formData.append('coverPhoto', coverFile as any);
+        formData.append('newCoverPhoto', coverFile as any);
       }
 
       // Log final FormData content
@@ -216,10 +216,22 @@ export default function EditProfileScreen() {
         console.log('API Response:', response);
 
         if (response?.data) {
+          // Cập nhật thông tin người dùng trong Redux store
           authDispatchers.setUser(response.data);
+          
+          // Hiển thị thông báo thành công và quay lại màn hình profile
           Alert.alert(
             'Success', 
-            language.code === 'vi' ? 'Cập nhật thông tin thành công' : 'Profile updated successfully'
+            language.code === 'vi' ? 'Cập nhật thông tin thành công' : 'Profile updated successfully',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  // Quay lại màn hình profile sau khi cập nhật thành công
+                  router.back();
+                }
+              }
+            ]
           );
         }
       } catch (apiError: any) {
