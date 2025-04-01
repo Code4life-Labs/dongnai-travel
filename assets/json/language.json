@@ -918,5 +918,11 @@
       "vi": "Lưu vị trí",
       "en": "Save location"
     }
+  },
+  "searchScreen": {
+    "title": {
+      "vi": "Tìm kiếm",
+      "en": "Search"
+    }
   }
 }

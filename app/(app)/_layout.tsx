@@ -131,7 +131,7 @@ export default function AppLayout() {
                 name="search"
                 options={{
                   header: FC.AppHeader,
-                  headerTitle: "Search",
+                  title: "Search",
                   headerShown: true,
                 }}
               />
