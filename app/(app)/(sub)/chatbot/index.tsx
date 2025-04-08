@@ -15,7 +15,8 @@ import {
   Dimensions,
   Keyboard,
   Easing,
-  ScrollView
+  ScrollView,
+  ImageBackground
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, Feather, FontAwesome } from '@expo/vector-icons';
@@ -36,13 +37,14 @@ import { useSafeAreaConfig } from '@/hooks/useSafeArea';
 // Import từ components
 import MessageFeature from '@/components/message_feature/message-feature';
 
-// Bot avatar
+// Bot avatar và background image
 const botAvatar = require('@/assets/images/avatar_chatbot.jpg');
+const backgroundImage = require('@/assets/images/explore2.jpg');
 
 const { width } = Dimensions.get('window');
 
 // Biến môi trường để kiểm soát sử dụng mock hay API thật
-const USE_MOCK_API = true;
+const USE_MOCK_API = false;
 
 // Component hiển thị các nút đề xuất
 interface SuggestionButtonsProps {
@@ -234,6 +236,31 @@ const TypingDots = () => {
   );
 };
 
+// Component Onboarding
+const OnboardingOverlay = ({ onStart }: { onStart: () => void }) => {
+  return (
+    <ImageBackground 
+      source={backgroundImage}
+      style={styles.onboardingContainer}
+      resizeMode='cover'
+    >
+      <View style={styles.modalContainer}>
+        <Text style={styles.nameBot}>TravelBot</Text>
+        <Image source={botAvatar} style={styles.avatarImg}/>
+        <Text style={styles.textIntroduce}>
+          Giúp bạn dễ dàng lên kế hoạch, tư vấn thời tiết, địa điểm, hãng du lịch, chỗ ở, lời khuyên và hơn thế nữa!
+        </Text>
+        <TouchableOpacity
+          style={styles.btnAction}
+          onPress={onStart}
+        >
+          <Text style={styles.textBtnAction}>Trải nghiệm ngay</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
+  );
+};
+
 export default function ChatBotScreen() {
   // Hooks
   const { user: currentUser, tempId } = useAuth();
@@ -254,6 +281,9 @@ export default function ChatBotScreen() {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  
+  // Thêm state để kiểm soát hiển thị onboarding
+  const [showOnboarding, setShowOnboarding] = useState(true);
   
   // Tắt SafeAreaView khi vào màn hình chatbot
   useEffect(() => {
@@ -362,33 +392,6 @@ export default function ChatBotScreen() {
       if (response) {
         const botMessage = ChatbotManager.formatBotMessage(response, botAvatar);
         setMessages([botMessage]);
-        
-        // Thêm tin nhắn follow-up đề xuất sau lời chào
-        setTimeout(async () => {
-          setIsTyping(true);
-          await simulateResponseDelay();
-          const suggestionsMessage: ChatbotMessage = {
-            _id: ChatbotManager.generateMessageId(),
-            text: 'Bạn có thể hỏi tôi về các địa điểm du lịch, thời tiết, bản đồ, chỉ đường, hoặc nhờ tôi tạo lịch trình du lịch cho bạn. Bạn muốn tìm hiểu điều gì?',
-            createdAt: new Date(),
-            user: {
-              _id: 2, // Bot
-              name: 'TravelBot',
-              avatar: botAvatar
-            },
-            action: 'input.welcome-suggestions',
-            data: {
-              suggestions: [
-                { text: 'Thời tiết hôm nay', action: 'query-weather' },
-                { text: 'Địa điểm du lịch', action: 'query-places' },
-                { text: 'Bản đồ', action: 'query-map' },
-                { text: 'Lịch trình du lịch', action: 'query-itinerary' }
-              ]
-            }
-          };
-          setMessages(prevMessages => [...prevMessages, suggestionsMessage]);
-          setIsTyping(false);
-        }, 1000);
       }
     } catch (error) {
       console.error('Error sending welcome message:', error);
@@ -438,18 +441,6 @@ export default function ChatBotScreen() {
         // Tạo tin nhắn bot
         const botMessage = ChatbotManager.formatBotMessage(response, botAvatar);
         setMessages(prevMessages => [...prevMessages, botMessage]);
-        
-        // Thêm tin nhắn follow-up nếu cần
-        const followUpMessage = getFollowUpMessage(response.action, response.data);
-        if (followUpMessage) {
-          // Delay trước khi hiển thị tin nhắn follow-up
-          setTimeout(async () => {
-            setIsTyping(true);
-            await simulateResponseDelay();
-            setMessages(prevMessages => [...prevMessages, followUpMessage]);
-            setIsTyping(false);
-          }, 1000);
-        }
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -654,24 +645,34 @@ export default function ChatBotScreen() {
     setMessages(prevMessages => [...prevMessages, userMessage]);
     setIsTyping(true);
 
-    // Xử lý phản hồi dựa trên các từ khóa hoặc action tương ứng
+    // Xử lý phản hồi
     setTimeout(async () => {
       try {
-        await simulateResponseDelay();
         let response: ChatbotResponse | null = null;
         
-        // Dựa vào nội dung của nút để xác định nên tạo phản hồi nào
-        if (text.toLowerCase().includes('thời tiết')) {
-          response = processMessageWithKeywords('thời tiết');
-        } else if (text.toLowerCase().includes('địa điểm') || text.toLowerCase().includes('du lịch')) {
-          response = processMessageWithKeywords('địa điểm');
-        } else if (text.toLowerCase().includes('bản đồ')) {
-          response = processMessageWithKeywords('bản đồ');
-        } else if (text.toLowerCase().includes('lịch trình')) {
-          response = processMessageWithKeywords('lịch trình');
+        if (USE_MOCK_API) {
+          await simulateResponseDelay();
+          // Dựa vào nội dung của nút để xác định nên tạo phản hồi nào
+          if (text.toLowerCase().includes('thời tiết')) {
+            response = processMessageWithKeywords('thời tiết');
+          } else if (text.toLowerCase().includes('địa điểm') || text.toLowerCase().includes('du lịch')) {
+            response = processMessageWithKeywords('địa điểm');
+          } else if (text.toLowerCase().includes('bản đồ')) {
+            response = processMessageWithKeywords('bản đồ');
+          } else if (text.toLowerCase().includes('lịch trình')) {
+            response = processMessageWithKeywords('lịch trình');
+          } else {
+            // Nếu không tìm thấy từ khóa phù hợp, gửi request thông thường
+            response = processMessageWithKeywords(text);
+          }
         } else {
-          // Nếu không tìm thấy từ khóa phù hợp, gửi request thông thường
-          response = processMessageWithKeywords(text);
+          // Gửi tin nhắn đến API thật
+          response = await ChatbotManager.Api.sendMessage({
+            question: text,
+            currentUserId: currentUser?._id || tempId || '',
+            languageCode: langState.language.code,
+            coor: mapData.userLocation
+          });
         }
 
         if (response) {
@@ -679,16 +680,18 @@ export default function ChatBotScreen() {
           const botMessage = ChatbotManager.formatBotMessage(response, botAvatar);
           setMessages(prevMessages => [...prevMessages, botMessage]);
           
-          // Thêm tin nhắn follow-up nếu cần
-          const followUpMessage = getFollowUpMessage(response.action, response.data);
-          if (followUpMessage) {
-            // Delay trước khi hiển thị tin nhắn follow-up
-            setTimeout(async () => {
-              setIsTyping(true);
-              await simulateResponseDelay();
-              setMessages(prevMessages => [...prevMessages, followUpMessage]);
-              setIsTyping(false);
-            }, 1000);
+          if (USE_MOCK_API) {
+            // Thêm tin nhắn follow-up nếu cần (chỉ trong chế độ mock)
+            const followUpMessage = getFollowUpMessage(response.action, response.data);
+            if (followUpMessage) {
+              // Delay trước khi hiển thị tin nhắn follow-up
+              setTimeout(async () => {
+                setIsTyping(true);
+                await simulateResponseDelay();
+                setMessages(prevMessages => [...prevMessages, followUpMessage]);
+                setIsTyping(false);
+              }, 1000);
+            }
           }
         }
       } catch (error) {
@@ -715,76 +718,86 @@ export default function ChatBotScreen() {
     );
   };
 
+  // Hàm xử lý khi người dùng bấm bắt đầu từ onboarding
+  const handleStartChat = () => {
+    setShowOnboarding(false);
+    sendWelcomeMessage();
+  };
+
   return (
     <>
-      <Stack.Screen options={{ headerShown: false }} />
       <StatusBar barStyle="dark-content" />
-      
       <Animated.View 
         style={[
           styles.container, 
           { 
             opacity: fadeAnim,
             transform: [{ translateY }],
-            paddingTop: insets.top,  // Thêm padding thủ công dựa trên insets
+            paddingTop: insets.top,
           }
         ]}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton} 
-            onPress={handleGoBack}
-          >
-            <Ionicons name="chevron-back" size={28} color="#000" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>TravelBot</Text>
-          <TouchableOpacity style={styles.searchButton}>
-            <Ionicons name="search" size={24} color="#000" />
-          </TouchableOpacity>
-        </View>
+        {showOnboarding ? (
+          <OnboardingOverlay onStart={handleStartChat} />
+        ) : (
+          <>
+            {/* Header */}
+            <View style={styles.header}>
+              <TouchableOpacity 
+                style={styles.backButton} 
+                onPress={handleGoBack}
+              >
+                <Ionicons name="chevron-back" size={28} color="#000" />
+              </TouchableOpacity>
+              <Text style={styles.headerTitle}>TravelBot</Text>
+              <TouchableOpacity style={styles.searchButton}>
+                <Ionicons name="search" size={24} color="#000" />
+              </TouchableOpacity>
+            </View>
 
-        {/* Danh sách tin nhắn */}
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          renderItem={renderMessageItem}
-          keyExtractor={(item) => item._id.toString()}
-          contentContainerStyle={styles.messagesContainer}
-          ListFooterComponent={renderTypingIndicator}
-          showsVerticalScrollIndicator={false}
-        />
-
-        {/* Thanh nhập tin nhắn */}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
-          style={{ paddingBottom: insets.bottom }} // Thêm padding thủ công dựa trên insets
-        >
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              value={inputText}
-              onChangeText={setInputText}
-              placeholder="Nhập tin nhắn..."
-              placeholderTextColor="#999"
-              multiline
-              maxLength={1000}
-              returnKeyType="send"
-              onSubmitEditing={handleSendMessage}
+            {/* Danh sách tin nhắn */}
+            <FlatList
+              ref={flatListRef}
+              data={messages}
+              renderItem={renderMessageItem}
+              keyExtractor={(item) => item._id.toString()}
+              contentContainerStyle={styles.messagesContainer}
+              ListFooterComponent={renderTypingIndicator}
+              showsVerticalScrollIndicator={false}
             />
-            
-            <TouchableOpacity 
-              style={styles.sendButton} 
-              onPress={handleSendMessage}
-              disabled={!inputText.trim()}
+
+            {/* Thanh nhập tin nhắn */}
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0}
+              style={{ paddingBottom: insets.bottom }}
             >
-              <View style={styles.sendButtonInner}>
-                <FontAwesome name="send" size={20} color="#fff" />
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  value={inputText}
+                  onChangeText={setInputText}
+                  placeholder="Nhập tin nhắn..."
+                  placeholderTextColor="#999"
+                  multiline
+                  maxLength={1000}
+                  returnKeyType="send"
+                  onSubmitEditing={handleSendMessage}
+                />
+                
+                <TouchableOpacity 
+                  style={styles.sendButton} 
+                  onPress={handleSendMessage}
+                  disabled={!inputText.trim()}
+                >
+                  <View style={styles.sendButtonInner}>
+                    <FontAwesome name="send" size={20} color="#fff" />
+                  </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+            </KeyboardAvoidingView>
+          </>
+        )}
       </Animated.View>
     </>
   );
@@ -1005,5 +1018,59 @@ const styles = StyleSheet.create({
     borderColor: '#eaeaea',
     backgroundColor: '#fff',
     alignSelf: 'center',
+  },
+  // Styles cho onboarding
+  onboardingContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    zIndex: 5,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 18
+  },
+  modalContainer: {
+    paddingHorizontal: 18,
+    paddingVertical: 42,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000096',
+    borderRadius: 12
+  },
+  nameBot: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: "center",
+    marginBottom: 12
+  },
+  avatarImg: {
+    height: 40,
+    width: 40,
+    borderRadius: 20
+  },
+  textIntroduce: {
+    fontSize: 16,
+    color: '#fff',
+    textAlign: "center",
+    marginBottom: 24,
+    marginTop: 10
+  },
+  btnAction: {
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    backgroundColor: '#3b82f6',
+    borderRadius: 25
+  },
+  textBtnAction: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600'
   },
 }); 
