@@ -30,6 +30,7 @@ export default function Input(props: InputProps) {
 
   return (
     <FloatingLabelInput
+      textContentType={props.type}
       label={props.label}
       hint={props.hint}
       isPassword={props.isPassword}

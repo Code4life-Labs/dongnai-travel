@@ -15,6 +15,7 @@ type GetPlacesAsyncOptions = {
 
 type GetPlaceAsyncOptions = {
   id: string;
+  lang: string;
 };
 
 type GetPlaceReviewsOptions = {
@@ -63,18 +64,22 @@ export class PlaceAPI {
    */
   async getPlaceAsync(options: GetPlaceAsyncOptions) {
     try {
-      const { id } = options;
+      const { id, lang } = options;
+      const params = new URLSearchParams({
+        lang,
+      });
       const url = RouteUtils.getPath("places", id);
       let headers: Record<string, any> = API.addAuthorizationToHeader({});
-
-      const response = await this.api.get(url, {
-        headers,
-      });
+      const response = await this.api.get(
+        RouteUtils.mergeQuery(url, params.toString()),
+        {
+          headers,
+        }
+      );
       // const data = await import("@/assets/mock-data/place/place.json");
-
       return response.data.data as Place;
     } catch (error: any) {
-      console.warn(error.message);
+      console.warn("Error - Get place details:", error.message);
       return [];
     }
   }

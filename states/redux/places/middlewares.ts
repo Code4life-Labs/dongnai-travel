@@ -35,12 +35,15 @@ const getPlacesAsync = createAsyncThunk(
 
 const getPlaceDetailAsync = createAsyncThunk(
   "places/getPlaceDetailAsync",
-  async (payload: string) => {
+  async (payload: any) => {
+    const { id, lang } = payload;
+
     try {
       const data = await PlaceManager.Api.getPlaceAsync({
-        id: payload,
+        id,
+        lang,
       });
-      return [payload, data] as [string, Place];
+      return [id, data] as [string, Place];
     } catch (error: any) {
       console.error(error.message);
     }

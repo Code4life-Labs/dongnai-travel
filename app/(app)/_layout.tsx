@@ -30,8 +30,6 @@ const ConditionalSafeAreaView = ({
   const { useSafeArea } = useSafeAreaConfig();
   const { theme } = useTheme();
 
-  console.log("SafeArea status:", useSafeArea); // Add logging to debug
-
   if (useSafeArea) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>

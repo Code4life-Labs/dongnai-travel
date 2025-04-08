@@ -45,10 +45,10 @@ export default function AboutSlide({ placeId }: { placeId: string }) {
 
   const imageUrls = placeDetails.photos ? placeDetails?.photos : [];
   const type = placeDetails.types ? placeDetails.types[0] : "";
-  const speech = placeDetails.content
-    ? (placeDetails.content as any)[language.code]
-    : "";
+  const speech = placeDetails.content ? placeDetails.content : "";
   const _languageData = (language.data as any)["placeDetailScreen"] as any;
+
+  console.log("Place Details:", placeDetails);
 
   return (
     <View style={styles.pd_content_container}>
@@ -64,7 +64,7 @@ export default function AboutSlide({ placeId }: { placeId: string }) {
           {_languageData.description[language.code]}
         </FC.AppText>
         {placeDetails.content ? (
-          <Markdown>{(placeDetails.content as any)[language.code]}</Markdown>
+          <Markdown>{placeDetails.content}</Markdown>
         ) : (
           <FC.AppText>
             {_languageData.descriptionMessage[language.code]}

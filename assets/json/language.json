@@ -924,5 +924,15 @@
       "vi": "Tìm kiếm",
       "en": "Search"
     }
+  },
+  "speech": {
+    "readStop": {
+      "vi": "Đọc/Dừng",
+      "en": "Read/Stop"
+    },
+    "voice": {
+      "vi": "Giọng đọc",
+      "en": "Voice"
+    }
   }
 }

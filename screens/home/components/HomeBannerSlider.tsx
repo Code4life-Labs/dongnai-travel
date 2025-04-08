@@ -46,7 +46,6 @@ const bannersEn = [
 ];
 
 const HomeBannerSlider = () => {
-  console.log("HomeBannerSlider");
   const { theme } = useTheme();
   const { language } = useLanguage();
   const _languageData = (language.data as any)["homeScreen"] as any;

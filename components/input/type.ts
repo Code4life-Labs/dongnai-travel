@@ -1,8 +1,10 @@
 // Import types
-import { ViewStyleProps } from "@/types/style";
+import type { TextInputProps } from "react-native";
+import type { ViewStyleProps } from "@/types/style";
 
 export type InputProps = {
   label: string;
+  type?: TextInputProps["textContentType"];
   hint?: string;
   value?: string;
   containerStyle?: ViewStyleProps;

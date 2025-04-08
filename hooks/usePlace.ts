@@ -127,8 +127,8 @@ export const { usePlaceDetails, usePlaceDetailsActions, usePlaceDetailsState } =
   (function () {
     const createDispatchers = function (dispatch: AppDispatch) {
       return {
-        fetchPlaceDetail(id: string) {
-          dispatch(placesThunks.getPlaceDetailAsync(id));
+        fetchPlaceDetail(id: string, lang: string) {
+          dispatch(placesThunks.getPlaceDetailAsync({ id, lang }));
         },
 
         favoritePlace(placeId: string) {
