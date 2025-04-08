@@ -323,5 +323,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
     padding: 10,
   },
+  follow_button: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 100,
+  }
 })
 export default styles

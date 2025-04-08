@@ -7,8 +7,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { router } from "expo-router";
 
 // Import components
 import { FC } from "@/components";
@@ -68,6 +70,14 @@ export default function SearchScreen() {
 
   const handleSearchCallback = (searchString: string, data: SearchResult[]) => {
     stateFns.setSearchResults(data);
+  };
+
+  const handleItemPress = (item: SearchResult) => {
+    if (state.type === "user") {
+      // Chuyển hướng đến trang profile của user được chọn
+      router.push(`/(app)/(main)/settings/profile/${(item as User)._id}`);
+    }
+    // Có thể thêm xử lý cho place và blog ở đây nếu cần
   };
 
   const renderSearchResult = (item: SearchResult) => {
@@ -156,7 +166,8 @@ export default function SearchScreen() {
     }
 
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => handleItemPress(item)}
         style={[
           styles.resultItem,
           { backgroundColor: theme.background },
@@ -193,7 +204,7 @@ export default function SearchScreen() {
         <FC.AppText style={{ width: "80%" }}>
           {(item as User).displayName}
         </FC.AppText>
-      </View>
+      </TouchableOpacity>
     );
   };
 
