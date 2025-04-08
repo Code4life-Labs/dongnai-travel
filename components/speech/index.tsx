@@ -80,6 +80,8 @@ export default function Speech({
     sound,
   } = useAudio();
 
+  const _languageData = (language.data as any)["speech"] as any;
+
   const { setVoice, setBase64Audio, addBase64Audio, setPreparingStatus } =
     React.useMemo(function () {
       return {
@@ -274,7 +276,7 @@ export default function Speech({
     >
       <View>
         <AppText size="h3" style={Styles.spacings.mb_6}>
-          Đọc/Dừng
+          {_languageData["readStop"][language.code]}
         </AppText>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <RectangleButton
@@ -310,7 +312,7 @@ export default function Speech({
 
       <View>
         <AppText size="h3" style={Styles.spacings.mb_6}>
-          Giọng Đọc
+          {_languageData["voice"][language.code]}
         </AppText>
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
           <RectangleButton

@@ -400,7 +400,7 @@ export default function SignUpScreen() {
             <FC.RectangleButton
               shape="rounded_8"
               onPress={handleSubmit(onSubmit)}
-              style={Styles.spacings.mt_12}
+              style={[Styles.spacings.mt_12, Styles.spacings.pv_16]}
             >
               {_languageData?.text_header[language.code]}
             </FC.RectangleButton>

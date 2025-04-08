@@ -70,7 +70,7 @@ export default function PlaceDetailsScreen() {
 
   React.useEffect(() => {
     if (place) navigation.setOptions({ title: place.name });
-    placeDetailsDispatchers.fetchPlaceDetail(id);
+    placeDetailsDispatchers.fetchPlaceDetail(id, language.code);
     return () => {
       placeDetailsDispatchers.remove(id);
     };
