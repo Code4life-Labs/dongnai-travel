@@ -49,11 +49,43 @@ export class ChatbotAPI {
     languageCode: string,
     coordinates: any
   ): Promise<ChatbotResponse | null> {
-    return this.sendMessage({
-      question: "Hi",
-      currentUserId: userId,
-      languageCode: languageCode,
-      coor: coordinates,
-    });
+    try {
+      const url = this.baseURL + RouteUtils.getPath("/chatbot/welcome");
+      
+      const response = await api.post(url, {
+        currentUserId: userId,
+        languageCode: languageCode,
+        coor: coordinates,
+      });
+      
+      return response.data.data as ChatbotResponse;
+    } catch (error: any) {
+      console.warn("Chatbot Welcome Message Error:", error.message);
+      // Fallback to regular message endpoint if welcome endpoint fails
+      return this.sendMessage({
+        question: "Xin chào",
+        currentUserId: userId,
+        languageCode: languageCode,
+        coor: coordinates,
+      });
+    }
+  }
+
+  /**
+   * Gửi yêu cầu tạo lịch trình du lịch
+   * @param data Dữ liệu yêu cầu
+   * @returns Phản hồi từ chatbot với lịch trình du lịch
+   */
+  async createTravelItinerary(data: ChatbotRequest): Promise<ChatbotResponse | null> {
+    try {
+      const url = this.baseURL + RouteUtils.getPath("/chatbot/ask_chatgpt");
+      
+      const response = await api.post(url, data);
+      
+      return response.data.data as ChatbotResponse;
+    } catch (error: any) {
+      console.warn("Chatbot Travel Itinerary Error:", error.message);
+      return null;
+    }
   }
 } 

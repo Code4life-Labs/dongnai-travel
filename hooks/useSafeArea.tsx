@@ -15,7 +15,7 @@ interface SafeAreaProviderProps {
 }
 
 export const SafeAreaProvider: React.FC<SafeAreaProviderProps> = ({ children }) => {
-  const [useSafeArea, setUseSafeArea] = useState<boolean>(true);
+  const [useSafeArea, setUseSafeArea] = useState<boolean>(false);
 
   return (
     <SafeAreaContext.Provider value={{ useSafeArea, setUseSafeArea }}>
