@@ -171,7 +171,7 @@ export default function HomeScreen() {
                   return (
                     <FC.VerticalBlogCard
                       data={blog}
-                      key={index}
+                      key={blog._id}
                       style={{
                         marginLeft: index === 0 ? 16 : 0,
                         marginRight: 16,

@@ -94,13 +94,14 @@ const uploadBlogAsync = createAsyncThunk(
       const { metadata, completeBlog } = value;
 
       // Validate metadata before uploading
+      console.log("Validte blog data");
       await BlogManager.Api.validateBlogMetadata(metadata);
 
       // Upload blog
       const result = await BlogManager.Api.postBlog(completeBlog);
       return result;
     } catch (error: any) {
-      console.error(error.message);
+      console.error("Upload Blog Error:", error.message);
     }
   }
 );

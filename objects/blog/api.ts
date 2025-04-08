@@ -208,6 +208,8 @@ export class BlogAPI {
 
       const url = RouteUtils.getPath("users", userId, "blog");
 
+      console.log("URL:", url);
+
       configs = Object.assign(
         {},
         {
@@ -222,7 +224,7 @@ export class BlogAPI {
 
       return response.data.data;
     } catch (error: any) {
-      console.warn(error.message);
+      console.warn(error);
       return null;
     }
   }

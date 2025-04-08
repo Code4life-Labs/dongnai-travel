@@ -102,37 +102,31 @@ export class DatetimeUtils {
     timeStampThen: number,
     timeStampNow: number = Date.now()
   ) {
-    const distanceInSecond = parseInt(
-      (Math.abs(timeStampNow - timeStampThen) / 1000) as any
+    const then = new Date(timeStampThen);
+    const now = new Date(timeStampNow);
+
+    const diffInSeconds = Math.floor(
+      Math.abs(timeStampNow - timeStampThen) / 1000
     );
-    if (distanceInSecond >= 0 && distanceInSecond < 60) {
-      return { type: "second", distance: distanceInSecond };
-    }
+    if (diffInSeconds < 60) return { type: "second", distance: diffInSeconds };
 
-    const distanceInMinute = parseInt((distanceInSecond / 60) as any);
-    if (distanceInMinute > 0 && distanceInMinute < 60) {
-      return { type: "minute", distance: distanceInMinute };
-    }
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return { type: "minute", distance: diffInMinutes };
 
-    const distanceInHour = parseInt((distanceInMinute / 60) as any);
-    if (distanceInHour > 0 && distanceInHour < 24) {
-      return { type: "hour", distance: distanceInHour };
-    }
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return { type: "hour", distance: diffInHours };
 
-    const distanceInDay = parseInt((distanceInHour / 24) as any);
-    const startMonth = new Date(timeStampThen).getMonth() + 1;
-    const dayInMonthOfThen = DatetimeUtils.getDayInMonth(startMonth);
-    if (distanceInDay > 0 && distanceInDay < dayInMonthOfThen) {
-      return { type: "day", distance: distanceInDay };
-    }
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 30) return { type: "day", distance: diffInDays };
 
-    const distanceInMonth = parseInt((distanceInDay / dayInMonthOfThen) as any);
-    if (distanceInMonth > 0 && distanceInMonth < 12) {
-      return { type: "month", distance: distanceInMonth };
-    }
+    // Calculate months and years
+    const years = now.getFullYear() - then.getFullYear();
+    const months = now.getMonth() - then.getMonth() + years * 12;
 
-    const distanceInYear = parseInt((distanceInMonth / 12) as any);
-    return { type: "year", distance: distanceInYear };
+    if (months < 12) return { type: "month", distance: months };
+
+    const fullYears = Math.floor(months / 12);
+    return { type: "year", distance: fullYears };
   }
 
   static getShortDateStr(

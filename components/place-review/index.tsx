@@ -81,6 +81,8 @@ export default function PlaceReview({
       : review.user.displayName;
   const { type, distance } = DatetimeUtils.getTimeDistance(review.createdAt);
 
+  console.log("Review:", review);
+
   return (
     <View {...props} style={[Styles.spacings.pb_12, props.style]}>
       {reviewInfo.isActionsVisible && (

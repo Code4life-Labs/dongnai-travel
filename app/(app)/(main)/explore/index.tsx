@@ -64,6 +64,8 @@ export default function ExploreScreen() {
     placesDispatchers.fetchPlaceTypes();
   }, []);
 
+  console.log("Place types:", placeTypes);
+
   return (
     <View style={{ backgroundColor: theme.background }}>
       {state.isOnTop && (

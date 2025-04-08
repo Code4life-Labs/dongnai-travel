@@ -30,7 +30,7 @@ const ConditionalSafeAreaView = ({
   const { useSafeArea } = useSafeAreaConfig();
   const { theme } = useTheme();
 
-  if (useSafeArea) {
+  if (true) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
         {children}
