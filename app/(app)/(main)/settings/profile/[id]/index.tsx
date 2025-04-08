@@ -15,7 +15,8 @@ import {
   Dimensions,
   Alert,
   FlatList,
-  Modal
+  Modal,
+  ActivityIndicator
 } from "react-native";
 
 // Import icon
@@ -37,6 +38,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useBlogs } from "@/hooks/useBlog";
+import { UserManager } from "@/objects/user";
 
 import styles from "@/screens/profile/styles";
 import { Styles } from "@/styles";
@@ -55,9 +57,18 @@ interface ProfileScreenProps {
   theme: any;
 }
 
+// Định nghĩa interface cho kiểu dữ liệu Follow
+interface Follow {
+  _id: string;
+  target: {
+    _id: string;
+    [key: string]: any;
+  };
+}
+
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
   // 1. Hooks and Context
-  const { user: currentAuthUser } = useAuth();
+  const { user: currentAuthUser, token } = useAuth();
   const { theme } = useTheme();
   const { language } = useLanguage();
   const { blogs, status, blogsDispatchers } = useBlogs();
@@ -66,8 +77,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
   const _languageData = language.data.blogScreenSetting;
 
   // 2. State Management
-  const [currentUser, setCurrentUser] = useState<any>(currentAuthUser);
-  const [isMyProfile, setIsMyProfile] = useState<boolean>(true);
+  const [profileUser, setProfileUser] = useState<any>(null);
+  const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [uploadImageType, setUploadImageType] = useState<'UploadCoverPhoto' | 'UploadAvatar' | null>(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
@@ -77,39 +88,109 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [showImageViewer, setShowImageViewer] = useState<boolean>(false);
   const [selectedViewImage, setSelectedViewImage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [followLoading, setFollowLoading] = useState<boolean>(false);
 
   // 3. Effects
   useEffect(() => {
-    // In ra thông tin user đã đăng nhập
-    console.log('Thông tin user đã đăng nhập:', {
-      id: currentAuthUser?._id,
-      username: currentAuthUser?.username,
-      email: currentAuthUser?.email,
-      fullUser: currentAuthUser
-    });
+    const fetchProfileData = async () => {
+      setIsLoading(true);
+      try {
+        // Check if viewing own profile or someone else's
+        const profileId = id as string;
+        const isOwner = currentAuthUser?._id === profileId;
+        setIsMyProfile(isOwner);
+        
+        if (isOwner) {
+          // Viewing own profile
+          setProfileUser(currentAuthUser);
+          console.log('Viewing own profile:', currentAuthUser?.username);
+        } else {
+          // Viewing someone else's profile - fetch their data
+          console.log('Fetching profile for user ID:', profileId);
+          try {
+            // Fetch the user data for the profile being viewed
+            const users = await UserManager.Api.getUsersAsync({
+              limit: 1,
+              skip: 0,
+              // Add any additional filters if needed
+            });
+            
+            // Find the user with matching ID
+            const targetUser = users?.find(user => user._id === profileId);
+            
+            if (targetUser) {
+              setProfileUser(targetUser);
+              console.log('Fetched profile data for:', targetUser.username);
+            } else {
+              console.error('User not found with ID:', profileId);
+              // Handle user not found case
+              Alert.alert('Error', 'User profile not found');
+            }
+          } catch (error) {
+            console.error('Error fetching user profile:', error);
+            Alert.alert('Error', 'Failed to load user profile');
+          }
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    const profileId = route?.params?.id;
-    const isOwner = currentAuthUser?._id === profileId;
-    setIsMyProfile(isOwner);
-    
-    if (isOwner) {
-      setCurrentUser(currentAuthUser);
-    } else {
+    if (currentAuthUser) {
+      fetchProfileData();
     }
-  }, [currentAuthUser, route?.params?.id]);
+  }, [currentAuthUser, id]);
 
   useEffect(() => {
-    if (currentUser?._id) {
-      console.log('Fetching blogs for user:', currentUser._id);
-      blogsDispatchers.fetchBlogs(currentUser._id);
+    if (profileUser?._id) {
+      console.log('Fetching blogs for user:', profileUser._id);
+      blogsDispatchers.fetchBlogs(profileUser._id);
     }
-  }, [currentUser?._id]);
+  }, [profileUser?._id]);
 
   useEffect(() => {
     if (blogs) {
-      setUserBlogs(blogs);
+      // Make sure we're only showing blogs from this specific user
+      const filteredBlogs = blogs.filter(blog => blog.author?._id === profileUser?._id);
+      setUserBlogs(filteredBlogs);
     }
-  }, [blogs]);
+  }, [blogs, profileUser?._id]);
+
+  useEffect(() => {
+    const checkFollowStatus = async () => {
+      if (!currentAuthUser || !profileUser || isMyProfile) return;
+      
+      try {
+        // Lấy danh sách người dùng đang follow
+        const follows = await UserManager.Api.getFollowsAsync(currentAuthUser._id);
+        
+        // Kiểm tra xem profileUser có trong danh sách follows không
+        // Xử lý cả trường hợp follows là mảng trực tiếp hoặc nằm trong response.data
+        const followsArray = Array.isArray(follows) ? follows : (follows?.data || []);
+        
+        const isFollowed = followsArray.some((follow: Follow) => {
+          // Kiểm tra cấu trúc của mỗi follow object
+          if (!follow || !follow.target) return false;
+          
+          // So sánh ID
+          return follow.target._id === profileUser._id;
+        });
+        
+        setIsFollowing(isFollowed);
+      } catch (error) {
+        console.error('Error checking follow status:', error);
+      }
+    };
+    
+    if (profileUser && currentAuthUser) {
+      console.log("Profile user:", profileUser._id);
+      console.log("Current user:", currentAuthUser._id);
+      console.log("Is my profile:", isMyProfile);
+      checkFollowStatus();
+    }
+  }, [profileUser, currentAuthUser, isMyProfile]);
 
   // 4. Helper Functions
   const sortBlogs = (blogs: any[]) => {
@@ -146,6 +227,49 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
     setSelectedViewImage(null);
   };
 
+  // Add this function at the component level (outside any useEffect)
+  const handleFollowToggle = async () => {
+    if (!currentAuthUser || !profileUser) {
+      console.error("Missing user data:", { currentAuthUser, profileUser });
+      return;
+    }
+    
+    // Kiểm tra không follow chính mình
+    if (currentAuthUser._id === profileUser._id) {
+      Alert.alert('Error', 'You cannot follow yourself');
+      return;
+    }
+
+    setFollowLoading(true);
+    try {
+      console.log("Current user ID:", currentAuthUser._id);
+      console.log("Target user ID:", profileUser._id);
+      console.log("Current follow status:", isFollowing);
+      
+      if (isFollowing) {
+        console.log("Attempting to unfollow user");
+        const result = await UserManager.Api.unfollowUserAsync(profileUser._id);
+        console.log("Unfollow result:", result);
+        setIsFollowing(false);
+      } else {
+        console.log("Attempting to follow user");
+        const result = await UserManager.Api.followUserAsync(profileUser._id);
+        console.log("Follow result:", result);
+        setIsFollowing(true);
+      }
+    } catch (error: any) {
+      console.error('Error toggling follow status:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      
+      // Hiển thị thông tin lỗi chi tiết hơn
+      const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+      Alert.alert('Error', `Failed to update follow status: ${errorMessage}`);
+    } finally {
+      setFollowLoading(false);
+    }
+  };
+
   // 5. Render Functions
   const renderUserInfo = () => (
     <View style={styles.user_block}>
@@ -153,24 +277,54 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
         
         <View style={{ flex: 1, alignItems: "center" }}>
           <Text style={[styles.user_name, { color: theme.onBackground }]}>
-            {currentUser?.displayName || currentUser?.username}
+            {profileUser?.displayName || profileUser?.username}
           </Text>
           <Text style={[styles.user_username, { color: theme.onBackground }]}>
-            @{currentUser?.username}
+            @{profileUser?.username}
           </Text>
+          
+          {!isMyProfile && currentAuthUser && (
+            <TouchableOpacity
+              style={[
+                styles.follow_button,
+                { 
+                  backgroundColor: isFollowing ? theme.background : theme.primary,
+                  borderColor: theme.primary,
+                  borderWidth: isFollowing ? 1 : 0,
+                  marginTop: 10
+                }
+              ]}
+              onPress={() => {
+                console.log("Follow feature clicked - feature in development");
+                Alert.alert(
+                  'Feature in Development',
+                  'The follow feature is currently under development and will be available soon.',
+                  [{ text: 'OK', onPress: () => console.log('Follow alert closed') }]
+                );
+              }}
+              disabled={followLoading}
+            >
+              <Text style={{ 
+                color: isFollowing ? theme.primary : theme.onPrimary,
+                fontWeight: '500'
+              }}>
+                {isFollowing ? 'Following' : 'Follow'}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       
         
       <View style={styles.user_info_follow}>
         <Text style={[styles.user_follower, { color: theme.onBackground }]}>
-          {currentUser?.followerIds?.length || 0} {_languageData.user_follower[language.code]}
+          {profileUser?.followerIds?.length || 0} {_languageData.user_follower[language.code]}
         </Text>
         <Text>
           <Entypo name="dot-single" size={20} color={theme.onBackground} />
         </Text>
         <Text style={[styles.user_following, { color: theme.onBackground }]}>
-          {currentUser?.followingIds?.length || 0} {_languageData.user_following[language.code]}
+          {profileUser?.followingIds?.length || 0} {_languageData.user_following[language.code]}
         </Text>
       </View>
 
@@ -180,14 +334,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
             {_languageData.information[language.code]}
           </Text>
           
-          {(currentUser?.displayName) && (
+          {(profileUser?.displayName) && (
             <View style={styles.user_info_other}>
               <AntDesign
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
                 name="user"
               />
               <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
-                {[currentUser?.displayName].filter(Boolean).join(' ')}
+                {[profileUser?.displayName].filter(Boolean).join(' ')}
               </Text>
             </View>
           )}
@@ -198,23 +352,23 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
               name="mail"
             />
             <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
-              {currentUser?.email}
+              {profileUser?.email}
             </Text>
           </View>
 
-          {currentUser?.birthday && (
+          {profileUser?.birthday && (
             <View style={styles.user_info_other}>
               <AntDesign
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
                 name="calendar"
               />
               <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
-                {new Date(currentUser.birthday).toLocaleDateString()}
+                {new Date(profileUser.birthday).toLocaleDateString()}
               </Text>
             </View>
           )}
 
-          {currentUser?.userInfo?.userAddress && (
+          {profileUser?.userInfo?.userAddress && (
             <View style={styles.user_info_other}>
               <AntDesign
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
@@ -223,13 +377,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
               <Text style={[styles.user_info_other_content, { color: theme.onBackground }]}>
                 <Text>{_languageData.live_in[language.code]} </Text>
                 <Text style={styles.user_info_address}>
-                  {currentUser.userInfo.userAddress}
+                  {profileUser.userInfo.userAddress}
                 </Text>
               </Text>
             </View>
           )}
 
-          {currentUser?.userSocial?.userFacebook && (
+          {profileUser?.userSocial?.userFacebook && (
             <View style={styles.user_info_other}>
               <MaterialCommunityIcons
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
@@ -238,14 +392,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
               <FC.AppText
                 key={1}
                 style={styles.user_info_other_content}
-                hyperLink={currentUser.userSocial.userFacebook}
+                hyperLink={profileUser.userSocial.userFacebook}
               >
-                {currentUser.userSocial.userFacebook}
+                {profileUser.userSocial.userFacebook}
               </FC.AppText>
             </View>
           )}
 
-          {currentUser?.userSocial?.userInstagram && (
+          {profileUser?.userSocial?.userInstagram && (
             <View style={styles.user_info_other}>
               <Entypo
                 style={[styles.user_info_other_icon, { color: theme.onBackground }]}
@@ -254,28 +408,30 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
               <FC.AppText
                 key={2}
                 style={styles.user_info_other_content}
-                hyperLink={currentUser.userSocial.userInstagram}
+                hyperLink={profileUser.userSocial.userInstagram}
               >
-                {currentUser.userSocial.userInstagram}
+                {profileUser.userSocial.userInstagram}
               </FC.AppText>
             </View>
           )}
         </View>
       </View>
       <View style={[styles.line_horizontal, { borderBottomColor: theme.onBackground }]} />
-      <TouchableOpacity 
-        style={[styles.info_row, { alignSelf: 'flex-start' }]}
-        onPress={handleEditProfile}
-      >
-        <Entypo
-          name="dots-three-vertical"
-          size={16}
-          style={{ marginRight: 10, color: theme.onBackground }}
-        />
-        <Text style={{ color: theme.onBackground }}>
-          {language.code === 'vi' ? 'Chỉnh sửa thông tin cá nhân' : 'Edit your profile information'}
-        </Text>
-      </TouchableOpacity>
+      {isMyProfile && (
+        <TouchableOpacity 
+          style={[styles.info_row, { alignSelf: 'flex-start' }]}
+          onPress={handleEditProfile}
+        >
+          <Entypo
+            name="dots-three-vertical"
+            size={16}
+            style={{ marginRight: 10, color: theme.onBackground }}
+          />
+          <Text style={{ color: theme.onBackground }}>
+            {language.code === 'vi' ? 'Chỉnh sửa thông tin cá nhân' : 'Edit your profile information'}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 
@@ -322,14 +478,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
               {_languageData.write_new_blog[language.code]}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity 
+          {/* <TouchableOpacity 
             style={[styles.btn_manage_blog, { backgroundColor: theme.primary }]}
             onPress={() => router.push("/(app)/(main)/blogs/manage")}
           >
             <Text style={[styles.btn_manage_blog_name, { color: theme.onPrimary }]}>
               {_languageData.manage_blogs[language.code]}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </>
       )}
 
@@ -337,7 +493,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
         <View style={styles.blog_title_container}>
           <View style={styles.blog_header}>
             <Text style={[styles.blog_title, { color: theme.onBackground }]}>
-              {isMyProfile ? _languageData.blog_list[language.code] : `${currentUser?.username}'s blogs`}
+              {isMyProfile 
+                ? _languageData.blog_list[language.code] 
+                : `${profileUser?.username || ''}'s blogs`}
             </Text>
             
             <TouchableOpacity 
@@ -353,7 +511,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
           </View>
         </View>
         
-        {status.isFetching ? (
+        {status.isFetching || isLoading ? (
           <View style={styles.loading_container}>
             {[1, 2, 3].map((_, index) => (
               <FC.Skeletons.HorizontalBlogCard key={index} />
@@ -367,8 +525,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.blog_list}
             onEndReached={() => {
-              if (!status.isFetching) {
-                blogsDispatchers.fetchBlogs(currentUser._id);
+              if (!status.isFetching && profileUser?._id) {
+                blogsDispatchers.fetchBlogs(profileUser._id);
               }
             }}
             onEndReachedThreshold={0.5}
@@ -378,7 +536,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
             <Text style={[styles.empty_blog_text, { color: theme.onBackground }]}>
               {isMyProfile 
                 ? "You haven't created any blogs yet"
-                : `${currentUser?.username} hasn't created any blogs yet`}
+                : `${profileUser?.username || 'This user'} hasn't created any blogs yet`}
             </Text>
           </View>
         )}
@@ -387,6 +545,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
   );
 
   // 6. Main Render
+  if (isLoading) {
+    return (
+      <View style={[styles.loading_container, { backgroundColor: theme.background }]}>
+        <FC.Skeletons.HorizontalBlogCard />
+      </View>
+    );
+  }
+
   return (
     <>
       <FlatList
@@ -400,10 +566,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
                 {/* Cover photo section */}
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  onPress={() => currentUser?.coverPhoto && handleViewImage(currentUser.coverPhoto)}
+                  onPress={() => profileUser?.coverPhoto && handleViewImage(profileUser.coverPhoto)}
                 >
-                  {currentUser?.coverPhoto ? (
-                    <Image source={{ uri: currentUser.coverPhoto }} style={styles.imageCover} />
+                  {profileUser?.coverPhoto ? (
+                    <Image source={{ uri: profileUser.coverPhoto }} style={styles.imageCover} />
                   ) : (
                     <View style={[styles.imageCover, { backgroundColor: theme.onSecondary }]} />
                   )}
@@ -413,11 +579,11 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
                 <View style={styles.circle_avatar}>
                   <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => currentUser?.avatar && handleViewImage(currentUser.avatar)}
+                    onPress={() => profileUser?.avatar && handleViewImage(profileUser.avatar)}
                   >
-                    {currentUser?.avatar ? (
+                    {profileUser?.avatar ? (
                       <Image
-                        source={{ uri: currentUser.avatar }}
+                        source={{ uri: profileUser.avatar }}
                         style={{
                           height: 120,
                           width: 120,
@@ -428,26 +594,11 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
                     ) : (
                       <View style={[styles.circle_avatar, { backgroundColor: theme.onSecondary }]}>
                         <Text style={[styles.avatar_placeholder, { color: theme.onBackground }]}>
-                          {currentUser?.username?.charAt(0).toUpperCase()}
+                          {profileUser?.username?.charAt(0).toUpperCase()}
                         </Text>
                       </View>
                     )}
                   </TouchableOpacity>
-                  {isMyProfile && (
-                    <TouchableOpacity
-                      style={styles.avatar_icon}
-                      onPress={() => {
-                        setUploadImageType('UploadAvatar');
-                        handleOpenBottomSheet();
-                      }}
-                    >
-                      <AntDesign
-                        name="camerao"
-                        style={styles.icon_camera}
-                        color={appTheme.colorNames.onTertiary}
-                      />
-                    </TouchableOpacity>
-                  )}
                 </View>
               </View>
             </View>
@@ -534,6 +685,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
     </>
   );
 };
+
 
 export default ProfileScreen;
 

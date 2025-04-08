@@ -226,10 +226,7 @@ export default function EditProfileScreen() {
             [
               {
                 text: 'OK',
-                onPress: () => {
-                  // Quay lại màn hình profile sau khi cập nhật thành công
-                  router.back();
-                }
+               
               }
             ]
           );

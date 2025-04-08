@@ -84,4 +84,77 @@ export class UserAPI {
     }
   }
 
+  /**
+   * Lấy danh sách người dùng đang follow
+   */
+  async getFollowsAsync(userId: string) {
+    try {
+      // Thêm header authorization
+      const headers = API.addAuthorizationToHeader({});
+      const response = await this.api.get(`/users/${userId}/follows`, {
+        headers
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching follows:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Follow một người dùng
+   */
+  async followUserAsync(targetUserId: string) {
+    try {
+      // Lấy ID người dùng hiện tại
+      const currentUserId = API.getUser()?._id;
+      if (!currentUserId) throw new Error("Unauthenticated");
+      
+      console.log("Following user with params:", {
+        currentUserId,
+        targetUserId
+      });
+      
+      // Thử cách khác: gửi request đến endpoint khác
+      const url = `/users/${currentUserId}/follows`;
+      const headers = API.addAuthorizationToHeader({});
+      
+      const response = await this.api.post(url, { targetUserId }, {
+        headers
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error following user:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Unfollow một người dùng
+   */
+  async unfollowUserAsync(targetUserId: string) {
+    try {
+      // Lấy ID người dùng hiện tại
+      const currentUserId = API.getUser()?._id;
+      if (!currentUserId) throw new Error("Unauthenticated");
+      
+      console.log("Unfollowing user with params:", {
+        currentUserId,
+        targetUserId
+      });
+      
+      // Endpoint đúng phải là /users/:id/follows/:userId
+      const url = `/users/${currentUserId}/follows/${targetUserId}`;
+      const headers = API.addAuthorizationToHeader({});
+      console.log("Headers:", headers);
+      
+      const response = await this.api.delete(url, {
+        headers
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error unfollowing user:', error);
+      throw error;
+    }
+  }
 }
