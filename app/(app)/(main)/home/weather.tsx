@@ -32,7 +32,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { FC } from "@/components";
 import weatherImages from "@/assets/images/weather";
 
-// Thêm interface cho dữ liệu thời tiết
+// Interface for weather data
 interface WeatherItem {
   dt: number;
   dt_txt: string;
@@ -74,27 +74,27 @@ interface DailyForecastProps {
   precipitation: number;
 }
 
-// Thêm hàm dịch điều kiện thời tiết
+// Function to translate weather conditions
 const translateWeatherCondition = (condition: string): string => {
   const lowerCondition = condition.toLowerCase();
   
-  // Tìm khớp chính xác trước
+  // Look for exact match first
   if (weatherConditionTranslations[lowerCondition]) {
     return weatherConditionTranslations[lowerCondition];
   }
   
-  // Nếu không tìm thấy khớp chính xác, tìm từ khóa trong chuỗi
+  // If no exact match, look for keywords in the string
   for (const key in weatherConditionTranslations) {
     if (lowerCondition.includes(key)) {
       return weatherConditionTranslations[key];
     }
   }
   
-  // Trả về chuỗi gốc nếu không tìm thấy bản dịch
+  // Return original string if no translation found
   return capitalizeFirstLetter(condition);
 };
 
-// Sử dụng dữ liệu từ utils
+// Using data from utils
 const WeatherScreen = () => {
   const { language } = useLanguage();
   const _languageData = (language.data as any)["homeScreen"] as any;
@@ -103,7 +103,7 @@ const WeatherScreen = () => {
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCity, setSelectedCity] = useState(
-    vietnamCities.find(city => city.name === "Đồng Nai") || vietnamCities[0]
+    vietnamCities.find(city => city.name === "Dong Nai") || vietnamCities[0]
   );
   
   const capitalizeFirstLetter = (str: string) => {
@@ -117,12 +117,12 @@ const WeatherScreen = () => {
       if (response?.data?.data?.data) {
         const weatherData = response.data.data.data;
         
-        // Nếu tên thành phố không khớp với danh sách, tìm thành phố gần nhất
+        // If city name doesn't match the list, find the nearest city
         if (weatherData.city && weatherData.city.coord) {
           const { lat, lon } = weatherData.city.coord;
           const nearestCity = findNearestCity(lat, lon);
           
-          // Cập nhật tên thành phố nếu cần
+          // Update city name if needed
           if (!vietnamCities.some(city => city.name === weatherData.city.name)) {
             weatherData.city.name = nearestCity.name;
           }
@@ -164,7 +164,7 @@ const WeatherScreen = () => {
   const dayOfWeek = date.getDay();
   const dayOfMonth = date.getDate();
   const month = date.getMonth();
-  const weekdays = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"];
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const months = ["1","2","3","4","5","6","7","8","9","10","11","12"];
   const dayOfWeekName = weekdays[dayOfWeek];
   const monthName = months[month];
@@ -180,7 +180,7 @@ const WeatherScreen = () => {
     };
   });
 
-  // Sử dụng sampleDailyForecasts thay vì khai báo trực tiếp
+  // Use sampleDailyForecasts instead of direct declaration
   const dailyForecasts = sampleDailyForecasts;
 
   return (
@@ -213,7 +213,7 @@ const WeatherScreen = () => {
             {translateWeatherCondition(currentWeather.weather[0].description)}
           </Text>
           <Text style={styles.high_low_temp}>
-            {Math.round(currentWeather.main.temp_max)}° / {Math.round(currentWeather.main.temp_min)}° Cảm giác như {Math.round(currentWeather.main.feels_like)}°
+            {Math.round(currentWeather.main.temp_max)}° / {Math.round(currentWeather.main.temp_min)}° Feels like {Math.round(currentWeather.main.feels_like)}°
           </Text>
         </View>
 
@@ -247,7 +247,7 @@ const WeatherScreen = () => {
       </LinearGradient>
 
       <View style={styles.forecast_container}>
-        <Text style={styles.forecast_title}>Dự báo trong 5 ngày</Text>
+        <Text style={styles.forecast_title}>5-Day Forecast</Text>
         
         {dailyForecasts.map((forecast: any, index: number) => (
           <DailyForecast 
@@ -281,7 +281,7 @@ const HourlyForecast = ({ hour, icon, temp, isNow = false }: HourlyForecastProps
 
   return (
     <View style={styles.hourly_item}>
-      <Text style={styles.hourly_time}>{isNow ? "Bây giờ" : formatHour(hour)}</Text>
+      <Text style={styles.hourly_time}>{isNow ? "Now" : formatHour(hour)}</Text>
       <Ionicons 
         name={icon as any} 
         size={28} 
@@ -312,15 +312,15 @@ const DailyForecast = ({ day, condition, highTemp, lowTemp, icon, precipitation 
   );
 };
 
-// Component cho modal chọn thành phố
+// Component for city selection modal
 const CitySelectionModal = ({ visible, onClose, onSelectCity, cities }: { visible: boolean, onClose: () => void, onSelectCity: (city: any) => void, cities: any[] }) => {
   const [searchText, setSearchText] = useState('');
   
-  // Sắp xếp lại danh sách với Đồng Nai ở đầu tiên
+  // Sort the list with Dong Nai at the top
   const sortedCities = React.useMemo(() => {
     return [...cities].sort((a, b) => {
-      if (a.name === "Đồng Nai") return -1;
-      if (b.name === "Đồng Nai") return 1;
+      if (a.name === "Dong Nai") return -1;
+      if (b.name === "Dong Nai") return 1;
       return a.name.localeCompare(b.name);
     });
   }, [cities]);
@@ -339,7 +339,7 @@ const CitySelectionModal = ({ visible, onClose, onSelectCity, cities }: { visibl
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Chọn thành phố</Text>
+            <Text style={styles.modalTitle}>Select City</Text>
             <TouchableOpacity onPress={onClose}>
               <Ionicons name="close" size={24} color="#333" />
             </TouchableOpacity>
@@ -349,7 +349,7 @@ const CitySelectionModal = ({ visible, onClose, onSelectCity, cities }: { visibl
             <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
             <TextInput
               style={styles.searchInput}
-              placeholder="Tìm kiếm thành phố..."
+              placeholder="Search for a city..."
               value={searchText}
               onChangeText={setSearchText}
             />
@@ -362,7 +362,7 @@ const CitySelectionModal = ({ visible, onClose, onSelectCity, cities }: { visibl
               <TouchableOpacity 
                 style={[
                   styles.cityItem,
-                  item.name === "Đồng Nai" && styles.highlightedCityItem
+                  item.name === "Dong Nai" && styles.highlightedCityItem
                 ]}
                 onPress={() => {
                   onSelectCity(item);
@@ -372,7 +372,7 @@ const CitySelectionModal = ({ visible, onClose, onSelectCity, cities }: { visibl
                 <Text 
                   style={[
                     styles.cityName,
-                    item.name === "Đồng Nai" && styles.highlightedCityName
+                    item.name === "Dong Nai" && styles.highlightedCityName
                   ]}
                 >
                   {item.name}
@@ -380,7 +380,7 @@ const CitySelectionModal = ({ visible, onClose, onSelectCity, cities }: { visibl
                 <Ionicons 
                   name="location" 
                   size={16} 
-                  color={item.name === "Đồng Nai" ? "#3949AB" : "#666"} 
+                  color={item.name === "Dong Nai" ? "#3949AB" : "#666"} 
                 />
               </TouchableOpacity>
             )}

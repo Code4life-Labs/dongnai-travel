@@ -28,6 +28,20 @@ export default function SettingsScreen() {
   const { language } = useLanguage();
   const { user, authDispatchers } = useAuth();
 
+  // Add detailed logging for user authentication status
+  React.useEffect(() => {
+    console.log('Settings Screen - Auth Status:', {
+      'User logged in': !!user,
+      'User details': user ? {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        fullName: user.displayName,
+        role: user.role,
+      } : 'Not logged in'
+    });
+  }, [user]);
+
   const handleSignOut = async () => {
     try {
       await authDispatchers.signOut();
@@ -56,7 +70,14 @@ export default function SettingsScreen() {
               name={language.data.settingScreen.ac_profile[language.code]}
               icon={<Ionicons name="person-circle-outline" size={25} />}
               isDrop={false}
-              handlePressButton={() => router.push("/settings/profile/[id]")}
+              handlePressButton={() => {
+                if (user && user._id) {
+                  router.push(`/settings/profile/${user._id}`);
+                } else {
+                  console.log("No user logged in, cannot access profile");
+                  router.replace('/');
+                }
+              }}
             />
           </View>
         </View>
@@ -76,7 +97,14 @@ export default function SettingsScreen() {
               isTransparent={false}
               style={[styles.option_setting, { backgroundColor: theme.subBackground }]}
               defaultColor="type_1"
-              onPress={() => router.push("/settings/profile/[id]/saved-places")}
+              onPress={() => {
+                if (user && user._id) {
+                  router.push(`/settings/profile/${user._id}/saved-places`);
+                } else {
+                  console.log("No user logged in, cannot access saved places");
+                  router.replace('/');
+                }
+              }}
             >
               {(isActive, textStyle) => (
                 <View style={styles.rectangle_button_container}>
@@ -98,7 +126,14 @@ export default function SettingsScreen() {
               isTransparent={false}
               style={[styles.option_setting, { backgroundColor: theme.subBackground }]}
               defaultColor="type_1"
-              onPress={() => router.push("/settings/profile/[id]/saved-blogs")}
+              onPress={() => {
+                if (user && user._id) {
+                  router.push(`/settings/profile/${user._id}/saved-blogs`);
+                } else {
+                  console.log("No user logged in, cannot access saved blogs");
+                  router.replace('/');
+                }
+              }}
             >
               {(isActive, textStyle) => (
                 <View style={styles.rectangle_button_container}>
