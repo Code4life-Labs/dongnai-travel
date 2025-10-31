@@ -1,50 +1,52 @@
-# Welcome to your Expo app 👋
+<div>
+    <h1>
+        <a align="left"><img src="https://i.ibb.co/SQWy8xC/logo-big.png" alt="" style="width: 80px; float: left; margin-right: 1rem" border="0"></a>
+        DONG NAI TRAVEL
+        <br>
+        Cẩm nang du lịch cho mọi người
+    </h1>
+</div>
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Ứng dụng được xây dựng cho mục đích tham gia __cuộc thi Sáng tạo Khoa học Kĩ thuật__ tỉnh Đồng Nai - 2023, __cuộc thi tìm kiếm giải pháp chuyển đổi số Tỉnh Đồng Nai 2023__ và là đồ án tốt nghiệp 2024.
+## Achieved
+Giải pháp đạt được giải __Ba__ chung cuộc __cuộc thi tìm kiếm giải pháp chuyển đổi số Tỉnh Đồng Nai 2023__. xem thông tin [tại đây](https://dntu.edu.vn/tin-tuc/sinh-vien-khoa-cong-nghe-thong-tin-dat-giai-3-cuoc-thi-chuyen-doi-so-tinh-dong-nai?fbclid=IwZXh0bgNhZW0CMTEAAR071lmE5A1yVjtAYpqd98t6Sx_NDK32SO6PXAlYGeHX72WDPibXpx1C3Bo_aem_AdVg_F5Y82KVeij1Hm3lGWFEz3KoM9cGDidyC1ATMfAONtGm8H2F82xYegC2JzJVO_Qev--DM_nRiNLRyI0jWzTb).
 
-## Get started
+Giải pháp đạt được giải __Khuyến khích__ chung cuộc __cuộc thi Sáng tạo Khoa học Kĩ thuật__ tỉnh Đồng Nai - 2023. Xem thêm thông tin [tại đây](https://drive.google.com/file/d/1rtrAE14D4_O47xg_cKyicr1dSMoTsqJe/view?usp=sharing).
 
-1. Install dependencies
+## Demo
+Xem [tại đây](https://www.youtube.com/watch?v=6lMZkIQiZ68)
 
-   ```bash
-   npm install
-   ```
+## Thông tin
+Hỗ trợ khám phá các địa điểm du lịch ở Đồng Nai, đồng thời người dùng có thể chia sẻ được các trải nghiệm của người dùng thông qua các bài viết và quản lý hồ sơ cá nhân... Hơn thế nữa, người dùng còn có thể dùng Travel Bot để tham khảo lộ trình, kế hoạch đi du lịch; xem thông tin về thời tiết; xem lộ trình đường đi với Map tích hợp.
 
-2. Start the app
+__Công nghệ__: `React-Native`, `NodeJS`, `Express`, `MongoDB`, `GoogleAPI`, `Cloudinary`, `GPT` , các thư viện khác của React Native, NodeJS.
 
-   ```bash
-    npx expo start
-   ```
+__Thời gian__: từ tháng 02 - tới tháng 07 năm 2023.
 
-In the output, you'll find options to open the app in a
+__Người tham gia__:
+- Thái Anh Đức, [xem thêm](https://github.com/ThaiAnhDuc02).
+- Lương Văn Pháp, [xem thêm](https://github.com/phapdev).
+- Từ Nhật Phương, [xem thêm](https://github.com/FromSunNews).
+- Nguyễn Anh Tuấn, [xem thêm](https://github.com/NguyenAnhTuan1912).
+- Nguyễn Thị Liệu (giảng viên hướng dẫn).
+- Lê Nhật Tùng (giảng viên hướng dẫn).
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Các chức năng chính
+Giới thiệu sơ qua các chức năng chính của ứng dụng. Ứng dụng được chia ra làm 4 chức năng chính, trong đó:
+- Xem các thông tin mới nhất về địa điểm, bài viết, sự kiện. Ngoài ra thì người dùng có thể lưu thông tin địa điểm, bài viết.
+- Tìm lộ trình đi tới điểm điểm, xem các thông tin chi tiết về địa điểm.
+- Đọc, nghe thông tin về địa điểm, bài viết.
+- Sử dụng Travel Bot để tham khảo, tạo lộ trình, kế hoạch đi du lịch.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Tài liệu liệu quan
+- Tài liệu chính, [tại đây](https://docs.google.com/document/d/1KdUV5ahihEOVYrn73MnY4GPgdbXIl4ou/edit?usp=sharing&ouid=102396661633118680496&rtpof=true&sd=true).
+- Các issues của dự án, [tại đây](https://github.com/FromSunNews/DongNaiTravelApp/issues).
+- Inforgraphic, [tại đây](https://www.behance.net/gallery/177198847/DongNaiTravel-App).
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Tài liệu kỹ thuật
+- Cloudinary Document for NodeJS (2023). Nguồn: [https://cloudinary.com/documentation/node_integration](https://cloudinary.com/documentation/node_integration)
+- Expo Document (2023). Nguồn: [https://docs.expo.dev](https://docs.expo.dev)
+- Google API Document (2023). Nguồn: [https://developers.google.com/workspace/products](https://developers.google.com/workspace/products)
+- React Document (2023). Nguồn: [https://react.dev](https://react.dev/)
+- React-Native Document (2023). Nguồn: [https://reactnative.dev](https://reactnative.dev)
+- React-Navigation Document (2023). Nguồn: [https://reactnavigation.org](https://reactnavigation.org)
