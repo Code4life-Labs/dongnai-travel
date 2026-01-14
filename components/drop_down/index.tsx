@@ -1,5 +1,5 @@
 import { FC } from "@/components"
-import React, { useState, memo, useEffect }  from "react"
+import React, { useState, memo, useEffect, useCallback }  from "react"
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { useDispatch } from "react-redux"
 
-
 // Import styles
 import { Styles } from "@/styles";
 import styles from "./styles"
@@ -21,25 +20,15 @@ import { useStateManager } from "@/hooks/useStateManager";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useTheme } from "@/hooks/useTheme";
 
-import { themeActions } from "@/states/redux/theme";
 import { settingActions } from "@/states/redux/settings"
 
 // Import states
 import { StateManager } from "@/screens/settings/state";
 
-
 interface NotificationSettings {
   updateFromFollowing: boolean;
   comments: boolean;
   events: boolean;
-}
-
-interface Theme {
-  subBackground: string;
-  onSubBackground: string;
-  tertiary: string;
-  outline: string;
-  background: string;
 }
 
 interface DropDownProps {
@@ -52,12 +41,14 @@ interface DropDownProps {
   handlePressButton?: () => void;
   paragraphTitle?: string;
   idOption?: 'UPDATE_FROM_FOLLOWING' | 'COMMENTS' | 'EVENTS' | 'DARK_MODE';
-  isFromFollowing?: boolean;
-  isComment?: boolean;
-  isEvent?: boolean;
 }
 
-const DropDown = ({
+// Enable LayoutAnimation for Android
+if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+const DropDown = memo(({
   name,
   isMode = false,
   isParagraph = false,
@@ -77,69 +68,102 @@ const DropDown = ({
   );
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [selectedOption, setSelectedOption] = useState<boolean | null>(null)
-  const [btnBgColor, setBtnBgColor] = useState<string>(theme.onTertiary)
 
   const _languageData = (language.data as any)["settingScreen"] as any;
 
   useEffect(() => {
-    if (idOption ==='UPDATE_FROM_FOLLOWING' ) {
-      setSelectedOption(state.notification.updateFromFollowing)
-    }
-    if (idOption === 'COMMENTS') {
-      setSelectedOption(state.notification.comments)
-    }
-    if (idOption === 'EVENTS') {
-      setSelectedOption(state.notification.events)
-    }
-    if (idOption === 'DARK_MODE') {
-      setSelectedOption(state?.darkMode)
-    }
-  }, [state])
-
-
-  const handleOptionChange = () => {
-    let data: boolean | NotificationSettings
+    if (!idOption) return;
     
+    switch (idOption) {
+      case 'UPDATE_FROM_FOLLOWING':
+        setSelectedOption(state.notification.updateFromFollowing);
+        break;
+      case 'COMMENTS':
+        setSelectedOption(state.notification.comments);
+        break;
+      case 'EVENTS':
+        setSelectedOption(state.notification.events);
+        break;
+      case 'DARK_MODE':
+        setSelectedOption(state?.darkMode);
+        break;
+    }
+  }, [state, idOption]);
+
+  const handleOptionChange = useCallback(() => {
+    if (!idOption) return;
+
     if (idOption === 'DARK_MODE') {
-      data = !selectedOption
-      setSelectedOption(data);
+      const newValue = !selectedOption;
+      setSelectedOption(newValue);
       toggleTheme();
-      dispatch(settingActions.updateDarkMode(data))
+      dispatch(settingActions.updateDarkMode(newValue));
     } else {
-      if (idOption ==='UPDATE_FROM_FOLLOWING') {
-        data = {
-          ...state.notification,
-          updateFromFollowing: !selectedOption
-        }
-      } else if (idOption ==='COMMENTS') {
-        data = {
-          ...state.notification,
-          comments: !selectedOption
-        }
-      } else if (idOption ==='EVENTS') {
-        data = {
-          ...state.notification,
-          events: !selectedOption
-        }
-      } else {
-        return;
+      let data: NotificationSettings;
+      
+      switch (idOption) {
+        case 'UPDATE_FROM_FOLLOWING':
+          data = { ...state.notification, updateFromFollowing: !selectedOption };
+          break;
+        case 'COMMENTS':
+          data = { ...state.notification, comments: !selectedOption };
+          break;
+        case 'EVENTS':
+          data = { ...state.notification, events: !selectedOption };
+          break;
+        default:
+          return;
       }
-      dispatch(settingActions.updateNotification(data as NotificationSettings))
+      
+      dispatch(settingActions.updateNotification(data));
     }
-  }
+  }, [idOption, selectedOption, state.notification, toggleTheme, dispatch]);
 
-  if (Platform.OS === "android") {
-    UIManager.setLayoutAnimationEnabledExperimental &&
-      UIManager.setLayoutAnimationEnabledExperimental(true)
-  }
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen)
+  const toggleDropdown = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setIsOpen(prev => !prev);
     if (!isDrop) {
-      handlePressButton()
+      handlePressButton();
     }
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-  }
+  }, [isDrop, handlePressButton]);
+
+  const renderModeOptions = useCallback(() => {
+    if (!isMode) return null;
+
+    return (
+      <>
+        <TouchableOpacity
+          onPress={() => {
+            if (!selectedOption) handleOptionChange();
+          }}
+        >
+          <View style={styles.dropdown_content}>
+            <View style={[styles.circle_outline, { borderColor: theme.onSubBackground }]}>
+              {selectedOption && <View style={[styles.circle, { backgroundColor: theme.onSubBackground }]} />}
+            </View>
+            <Text style={[styles.option_name, { color: theme.onSubBackground }]}>
+              {_languageData["open_dropdown"][language.code]}
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            if (selectedOption) handleOptionChange();
+          }}
+        >
+          <View style={styles.dropdown_content}>
+            <View style={[styles.circle_outline, { borderColor: theme.onSubBackground }]}>
+              {!selectedOption && <View style={[styles.circle, { backgroundColor: theme.onSubBackground }]} />}
+            </View>
+            <Text style={[styles.option_name, { color: theme.onSubBackground }]}>
+              {_languageData["close_dropdown"][language.code]}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </>
+    );
+  }, [isMode, selectedOption, handleOptionChange, theme.onSubBackground, _languageData, language.code]);
 
   return (
     <View style={styles.dropdown}>
@@ -202,37 +226,7 @@ const DropDown = ({
       </TouchableOpacity>
       {isOpen && isDrop && (
         <View style={{ paddingTop: 12 }}>
-          {isMode &&
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  if (!selectedOption)
-                    handleOptionChange()
-                }}
-              >
-                <View style={styles.dropdown_content}>
-                  <View style={[styles.circle_outline, { borderColor: theme.onSubBackground }]}>
-                    {selectedOption && <View style={[styles.circle, { backgroundColor: theme.onSubBackground }]}></View> }
-                  </View>
-                  <Text style={[styles.option_name,{color: theme.onSubBackground}]}>{_languageData["open_dropdown"][language.code]}</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  if (selectedOption)
-                    handleOptionChange()
-                }}
-              >
-                <View style={styles.dropdown_content}>
-                  <View style={[styles.circle_outline,{borderColor: theme.onSubBackground}]}>
-                    {!selectedOption && <View style={[styles.circle, {backgroundColor: theme.onSubBackground}]}></View> }
-                  </View>
-                  <Text style={[styles.option_name,{color:theme.onSubBackground}]}>{_languageData["close_dropdown"][language.code]}</Text>
-                </View>
-              </TouchableOpacity>
-            </>
-          }
+          {renderModeOptions()}
           {isParagraph && (
             <View style={{ paddingLeft: 12 }}>
               <Text
@@ -261,11 +255,13 @@ const DropDown = ({
               borderBottomColor: theme.onBackground,
               marginTop: 12,
             }}
-          ></View>
+          />
         </View>
       )}
     </View>
   )
-}
+});
+
+DropDown.displayName = 'DropDown';
 
 export default DropDown

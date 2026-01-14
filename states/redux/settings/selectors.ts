@@ -6,8 +6,14 @@ const selectNotificationSettings = (state: AppState) => state.setting.currentSet
 
 const selectDarkMode = (state: AppState) => state.setting.currentSetting.darkMode;
 
+const selectSettingLoading = (state: AppState) => state.setting.isLoading;
+
+const selectSettingError = (state: AppState) => state.setting.error;
+
 export const settingSelectors = {
   selectCurrentSetting,
   selectNotificationSettings,
-  selectDarkMode
+  selectDarkMode,
+  selectSettingLoading,
+  selectSettingError
 };
