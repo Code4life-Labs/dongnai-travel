@@ -3,22 +3,16 @@ import * as React from "react";
 import {
   View,
   Text,
-  StatusBar,
-  Dimensions,
-  ActivityIndicator,
   StyleSheet,
 } from "react-native";
 import Swiper from "react-native-swiper";
-import { useSelector } from "react-redux";
 import { FC } from "@/components";
 import { useTheme } from "@/hooks/useTheme";
 import { useImagePreload } from "@/hooks/useImageCache";
 import { useLanguage } from "@/hooks/useLanguage";
 
-const { width, height } = Dimensions.get("window");
-
 // Danh sách banner tiếng Việt
-const bannersVi = [
+const BANNERS_VI = [
   "https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983477/banners/vi/1_nqx0pu.jpg",
   "https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983478/banners/vi/3_i3makt.jpg",
   "https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983478/banners/vi/5_uijds1.jpg",
@@ -32,7 +26,7 @@ const bannersVi = [
 ];
 
 // Danh sách banner tiếng Anh
-const bannersEn = [
+const BANNERS_EN = [
   "https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983504/banners/en/2_vwpe7c.jpg",
   "https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983504/banners/en/4_trp9xj.jpg",
   "https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983504/banners/en/6_tdup44.jpg",
@@ -45,38 +39,44 @@ const bannersEn = [
   "https://res.cloudinary.com/dbtb0sjby/image/upload/v1685983503/banners/en/20_lnzglb.jpg",
 ];
 
-const HomeBannerSlider = () => {
+const HomeBannerSlider = React.memo(() => {
   const { theme } = useTheme();
   const { language } = useLanguage();
-  const _languageData = (language.data as any)["homeScreen"] as any;
-  // Mặc định sử dụng banner tiếng Việt
-  const [banners, setBanners] = React.useState(bannersVi);
+  
+  const _languageData = React.useMemo(
+    () => (language.data as any)["homeScreen"] as any,
+    [language.data]
+  );
+
+  // Select banners based on language
+  const banners = React.useMemo(
+    () => (language.code === 'vi' ? BANNERS_VI : BANNERS_EN),
+    [language.code]
+  );
 
   // Sử dụng hook preload ảnh cho banner
   const { isPreloading, progress, preloadImages } = useImagePreload(banners);
 
-  // Preload ảnh khi component mount
+  // Preload ảnh khi component mount hoặc banners thay đổi
   React.useEffect(() => {
     preloadImages();
-  }, [banners]);
+  }, [banners, preloadImages]);
+
+  const renderBanner = React.useCallback((banner: string, index: number) => (
+    <View key={`banner-${index}`} style={styles.slide}>
+      <FC.CachedImage
+        uri={banner}
+        style={styles.image}
+        resizeMode="cover"
+      />
+    </View>
+  ), []);
 
   return (
     <View style={styles.container}>
       {/* Hiển thị trạng thái preload ảnh */}
       {isPreloading && (
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 10,
-            padding: 5,
-            alignItems: "center",
-            backgroundColor: theme.background,
-            opacity: 0.8,
-          }}
-        >
+        <View style={[styles.loadingOverlay, { backgroundColor: theme.background }]}>
           <Text style={{ color: theme.onBackground, fontSize: 12 }}>
             {_languageData["desWeather"][language.code]} {progress}%
           </Text>
@@ -90,28 +90,18 @@ const HomeBannerSlider = () => {
           loop
           dot={<View style={styles.dot} />}
           activeDot={<View style={styles.active_dot} />}
-          paginationStyle={{
-            bottom: -12,
-          }}
+          paginationStyle={styles.pagination}
         >
-          {banners.map((banner, index) => {
-            return (
-              <View key={index} style={styles.slide}>
-                <FC.CachedImage
-                  uri={banner}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
-              </View>
-            );
-          })}
+          {banners.map(renderBanner)}
         </Swiper>
       ) : (
-        <FC.Skeleton style={{ width: "100%", height: "100%" }} />
+        <FC.Skeleton style={styles.skeleton} />
       )}
     </View>
   );
-};
+});
+
+HomeBannerSlider.displayName = 'HomeBannerSlider';
 
 export default HomeBannerSlider;
 
@@ -127,15 +117,26 @@ const styles = StyleSheet.create({
     height: 200,
     position: "relative",
   },
-  imgBackground: {
-    width,
-    height,
-    backgroundColor: "transparent",
-    position: "absolute",
-  },
   image: {
     height: 200,
     width: "100%",
+  },
+  loadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+    padding: 5,
+    alignItems: "center",
+    opacity: 0.8,
+  },
+  skeleton: {
+    width: "100%",
+    height: "100%",
+  },
+  pagination: {
+    bottom: -12,
   },
   dot: {
     backgroundColor: Styles.theme.data.light.onPrimary,

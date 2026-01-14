@@ -8,7 +8,6 @@ export const styles = StyleSheet.create({
     backgroundColor: "#E3F2FD",
     borderRadius: 16,
     padding: 16,
-    // marginHorizontal: 16,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -18,21 +17,51 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  temperature_left: {
-    alignItems: "flex-start",
-    gap: 4,
-  },
-  temperature_right: {
-    alignItems: "flex-end",
-    gap: 4,
-  },
-  temperature_details: {
+  errorContainer: {
     flexDirection: "row",
-    gap: 12,
+    alignItems: "center",
+    padding: 16,
+  },
+  weatherContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+  },
+  temperatureSection: {
+    flex: 0.3,
+    alignItems: "center",
+  },
+  temperatureText: {
+    color: "#0D47A1",
+  },
+  weatherInfoSection: {
+    flex: 0.7,
+    paddingHorizontal: 12,
+  },
+  cityName: {
+    color: "#1565C0",
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 4,
+  },
+  weatherDescription: {
+    color: "#1E88E5",
+    fontSize: 14,
+  },
+  metricsContainer: {
+    flexDirection: "row",
     marginTop: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
+  },
+  metricItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 16,
+  },
+  metricIcon: {
+    marginRight: 4,
+  },
+  metricText: {
+    color: "#424242",
+    fontSize: 12,
   },
 });
